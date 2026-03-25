@@ -3,33 +3,14 @@ package com.aj.shared.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,12 +29,16 @@ import com.aj.shared.theme.whiteColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommonDropDown(
+fun <T> CommonDropDown(
     label: String = "",
     placeholder: String = "",
-    items: List<String> = emptyList(),
-    selectedItem: String = "",
-    onItemSelected: (String) -> Unit = {},
+    items: List<T> = emptyList(),
+    selectedItem: T? = null,
+    selectedItems: List<T> = emptyList(),
+    isMultiSelect: Boolean = false,
+    itemLabel: ((T) -> String)? = null,
+    onItemSelected: (T) -> Unit = {},
+    onItemsSelected: (List<T>) -> Unit = {},
     onClick: () -> Unit = {},
     trailingIcon: ImageVector? = null,
     trailingImage: Painter? = null,
@@ -65,36 +50,43 @@ fun CommonDropDown(
     var showDialog by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
     var displayText by remember { mutableStateOf("") }
-
+    var tempSelectedItems by remember { mutableStateOf(emptySet<T>()) }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    // Sync selected value
-    LaunchedEffect(selectedItem) {
-        displayText = selectedItem
+    LaunchedEffect(selectedItem, selectedItems) {
+        displayText = if (isMultiSelect)
+            selectedItems.joinToString(", ") { item -> itemLabel?.invoke(item) ?: item.toString() }
+        else
+            selectedItem?.let { item -> itemLabel?.invoke(item) ?: item.toString() } ?: ""
+    }
+    LaunchedEffect(showDialog) {
+        if (showDialog) {
+            tempSelectedItems = selectedItems.toMutableSet()
+        }
     }
 
     val showSearch = items.size > 10
 
     val filteredItems by remember(searchText, items) {
         derivedStateOf {
-            when {
-                items.isEmpty() -> emptyList()
-
-                !showSearch -> if (showFullList) items else items.take(30)
-
-                searchText.isBlank() -> if (showFullList) items else items.take(30)
-
-                else -> items.filter { it.contains(searchText, ignoreCase = true) }.take(50)
-            }
+            val filtered = if (searchText.isBlank()) items
+            else
+                items.filter { item ->
+                    val label = itemLabel?.invoke(item) ?: item.toString() // Logic yahan bhi same
+                    label.contains(searchText, ignoreCase = true)
+                }
+            if (showFullList) filtered
+            else filtered.take(50)
         }
     }
-
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = modifier) {
-
-        // 🔹 FIELD
-        Box(modifier = Modifier.fillMaxWidth()) {
-
+    Column(
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = modifier
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
             OutLinedSimpleTextField(
                 value = displayText,
                 label = label,
@@ -107,7 +99,8 @@ fun CommonDropDown(
                 trailingIcon = trailingIcon ?: Icons.Default.KeyboardArrowDown,
                 trailingIconTine = trailingIconTint,
                 trailingImage = trailingImage,
-                borderColor = if (error != null) rejectedRedColor else borderBGColor,
+                borderColor = if (error != null) rejectedRedColor
+                else borderBGColor,
                 radius = 6,
                 enabled = false
             )
@@ -122,19 +115,15 @@ fun CommonDropDown(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         searchText = ""
-                        if (items.isNotEmpty()) {
+                        if (items.isNotEmpty())
                             showDialog = true
-                        }
                         onClick()
                     }
             )
         }
 
-        // 🔴 DIALOG
         if (showDialog) {
-
             val isLargeList = filteredItems.size > 15
-
             Dialog(
                 onDismissRequest = {
                     showDialog = false
@@ -142,7 +131,6 @@ fun CommonDropDown(
                     keyboardController?.hide()
                 }
             ) {
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -150,31 +138,21 @@ fun CommonDropDown(
                             if (isLargeList) Modifier.fillMaxHeight()
                             else Modifier.wrapContentHeight()
                         )
-                        .background(Color.White, RoundedCornerShape(12.dp))
+                        .background(whiteColor, RoundedCornerShape(12.dp))
                 ) {
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
+                        Text(
+                            text = label.ifBlank { "Select Item" },
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                        // 🔹 HEADER
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = label.ifBlank { "Select Item" },
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
-
-                        // 🔍 SEARCH (Conditional)
                         if (showSearch) {
+                            Spacer(Modifier.height(8.dp))
+
                             OutLinedSimpleTextField(
                                 value = searchText,
                                 onValueChange = { searchText = it },
@@ -182,11 +160,10 @@ fun CommonDropDown(
                                 modifier = Modifier.fillMaxWidth(),
                                 radius = 6
                             )
-
-                            Spacer(modifier = Modifier.height(10.dp))
                         }
 
-                        // 📋 LIST
+                        Spacer(Modifier.height(8.dp))
+
                         Column(
                             modifier = Modifier
                                 .weight(1f, fill = isLargeList)
@@ -204,94 +181,125 @@ fun CommonDropDown(
                                     fontSize = 12.sp
                                 )
                             } else {
-
                                 filteredItems.forEachIndexed { index, item ->
+                                    val isSelected = if (isMultiSelect) tempSelectedItems.contains(item)
+                                    else item == selectedItem
 
-                                    val isSelected = item == selectedItem
-
-                                    Text(
-                                        text = item,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = if (isSelected)
-                                            MaterialTheme.colorScheme.primary
-                                        else
-                                            Color.Black,
+                                    Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .background(
-                                                if (isSelected)
-                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                                else
-                                                    Color.Transparent
+                                                if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                                                else Color.Transparent
                                             )
                                             .clickable {
-                                                onItemSelected(item)
-                                                displayText = item
-                                                showDialog = false
-                                                focusManager.clearFocus()
-                                                keyboardController?.hide()
-                                            }
-                                            .padding(14.dp)
-                                    )
 
-                                    if (index < filteredItems.lastIndex) {
-                                        HorizontalDivider()
+                                                if (isMultiSelect) {
+                                                    tempSelectedItems =
+                                                        if (tempSelectedItems.contains(item)) {
+                                                            tempSelectedItems - item // Remove
+                                                        } else {
+                                                            tempSelectedItems + item // Add
+                                                        }
+                                                } else {
+                                                    onItemSelected(item)
+                                                    displayText = itemLabel?.invoke(item) ?: item.toString()
+
+                                                    showDialog = false
+                                                }
+                                            }
+                                            .padding(14.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+
+                                    ) {
+                                        if (isMultiSelect) {
+                                            CustomCheckbox(
+                                                checked = isSelected,
+                                                onCheckedChange = {
+                                                    tempSelectedItems = if (it) {
+                                                        tempSelectedItems + item // Add
+                                                    } else {
+                                                        tempSelectedItems - item // Remove
+                                                    }
+                                                }
+                                            )
+                                            Spacer(Modifier.width(8.dp))
+                                        }
+
+                                        Text(
+                                            text = itemLabel?.invoke(item) ?: item.toString(),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Black
+                                        )
                                     }
+
+                                    if (index < filteredItems.lastIndex)
+                                        HorizontalDivider()
                                 }
                             }
                         }
 
-                        // 🔻 FOOTER BUTTONS
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(Modifier.height(12.dp))
                         HorizontalDivider()
-                        Spacer(modifier = Modifier.height(8.dp))
-
+                        Spacer(Modifier.height(8.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-
-                            // RESET
-                            if (selectedItem.isNotBlank()) {
+                            if ((isMultiSelect && tempSelectedItems.isNotEmpty()) || (!isMultiSelect && selectedItem != null)) {
                                 Text(
                                     text = "Reset",
                                     color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier =
+                                        Modifier
+                                            .clickable {
+                                                displayText = ""
+                                                if (isMultiSelect) {
+                                                    tempSelectedItems - tempSelectedItems
+                                                    onItemsSelected(emptyList())
+
+                                                }
+                                                showDialog = false
+                                            }
+                                            .padding(8.dp)
+                                )
+                            } else { Spacer(Modifier) }
+
+                            Row {
+                                if (isMultiSelect) {
+                                    Text(
+                                        text = "Done",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier
+                                            .clickable {
+                                                val result = tempSelectedItems.toList()
+
+                                                onItemsSelected(result)
+
+                                                displayText = result.joinToString(", ") { item ->
+                                                    itemLabel?.invoke(item) ?: item.toString()
+                                                }
+                                                showDialog = false
+                                            }
+                                            .padding(8.dp)
+                                    )
+                                }
+
+                                Text(
+                                    text = "Cancel",
+                                    color = Color.Gray,
                                     modifier = Modifier
-                                        .clickable {
-                                            onItemSelected("")
-                                            displayText = ""
-                                            showDialog = false
-                                            focusManager.clearFocus()
-                                            keyboardController?.hide()
-                                        }
+                                        .clickable { showDialog = false }
                                         .padding(8.dp)
                                 )
-                            } else {
-                                Spacer(modifier = Modifier)
                             }
-
-                            // CANCEL
-                            Text(
-                                text = "Cancel",
-                                color = Color.Gray,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier
-                                    .clickable {
-                                        showDialog = false
-                                        focusManager.clearFocus()
-                                        keyboardController?.hide()
-                                    }
-                                    .padding(8.dp)
-                            )
                         }
                     }
                 }
             }
         }
 
-        // 🔻 ERROR
         if (error != null) {
             Text(
                 text = error,
