@@ -20,3 +20,28 @@ var normalBrush = Brush.linearGradient(
         Color(0xFF2979FF)
     )
 )
+val orangeColor = Color(0xFFE28242)
+val yellowColor = Color(0xFFEBD10B)
+val colorGreenLight = Color(0xFFF54CAF50)
+
+var successBrush = Brush.linearGradient(
+    colors = listOf(
+        colorGreenLight,
+        colorGreenLight,
+        whiteColor
+    )
+)
+var errorBrush = Brush.linearGradient(
+    colors = listOf(
+        rejectedRedColor,
+        rejectedRedColor,
+        whiteColor
+    )
+)
+var warningBrush = Brush.linearGradient(
+    colors = listOf(
+        orangeColor,
+        yellowColor,
+        whiteColor
+    )
+)
