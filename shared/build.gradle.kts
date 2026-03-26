@@ -89,25 +89,14 @@ compose.resources {
  * Publishing config for new KMP structure
  */
 publishing {
-
     publications {
-
         create<MavenPublication>("shared") {
-
-            groupId = "com.aj"
-
+            groupId = "com.github.Imajy"
             artifactId = "shared"
-
             version = "1.0.0"
-
             afterEvaluate {
-
                 from(components["kotlin"])
-
             }
-
         }
-
     }
-
 }
