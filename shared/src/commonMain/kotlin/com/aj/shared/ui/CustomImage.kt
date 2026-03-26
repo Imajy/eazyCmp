@@ -31,87 +31,167 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
-import test.shared.generated.resources.Res
 
+
+/*
+---------------------------------------
+PLACEHOLDER TYPES
+---------------------------------------
+*/
+
+sealed interface Placeholder {
+
+    data class LottieUrl(
+        val url: String
+    ) : Placeholder
+
+    data class LottieJson(
+        val json: String
+    ) : Placeholder
+
+    data class LottieBytes(
+        val bytes: ByteArray
+    ) : Placeholder
+
+
+    data class PainterResource(
+        val painter: Painter
+    ) : Placeholder
+
+
+    data class VectorResource(
+        val imageVector: ImageVector
+    ) : Placeholder
+
+
+    data class ImageUrl(
+        val url: String
+    ) : Placeholder
+
+}
+
+
+/*
+---------------------------------------
+MAIN IMAGE
+---------------------------------------
+*/
 
 @Composable
 fun CustomImage(
-    model: Any? = null,
-    placeholder: Placeholder? =
-        Placeholder.LottieUrl(
-            "https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"
-        ),
-    contentDescription: String? = null,
+
+    model: Any?,
+
     modifier: Modifier = Modifier,
+
+    contentDescription: String? = null,
+
+    placeholder: Placeholder? = null,
+
     alignment: Alignment = Alignment.Center,
+
     contentScale: ContentScale = ContentScale.Fit,
+
     alpha: Float = DefaultAlpha,
+
     colorFilter: ColorFilter? = null,
-) {
+
+    ) {
 
     val context = LocalPlatformContext.current
 
     val imageLoader = remember {
+
         ImageLoader.Builder(context)
+
             .components {
+
                 add(SvgDecoder.Factory())
+
             }
+
             .build()
+
     }
+
+
+    /*
+    ------------------------
+    PLACEHOLDER RENDERER
+    ------------------------
+    */
 
     val showPlaceholder: @Composable () -> Unit = {
 
         when (placeholder) {
 
-            is Placeholder.LottieUrl ->
+            is Placeholder.LottieUrl,
+            is Placeholder.LottieJson,
+            is Placeholder.LottieBytes ->
+
                 LottiePlaceholder(
-                    placeholder.url,
+
+                    placeholder,
+
                     modifier,
+
                     contentScale
+
                 )
 
-            is Placeholder.LottieFile ->
-                LottiePlaceholder(
-                    placeholder.fileName,
-                    modifier,
-                    contentScale
+            is Placeholder.PainterResource ->
+
+                Image(
+
+                    painter = placeholder.painter,
+
+                    contentDescription = null,
+
+                    modifier = modifier,
+
+                    contentScale = contentScale
+
                 )
 
-            is Placeholder.Drawable ->
+            is Placeholder.VectorResource ->
+
+                Image(
+
+                    imageVector = placeholder.imageVector,
+
+                    contentDescription = null,
+
+                    modifier = modifier,
+
+                    contentScale = contentScale
+
+                )
+
+            is Placeholder.ImageUrl ->
 
                 AsyncImage(
-                    model =
-                        Res.getUri(
-                            "drawable/${placeholder.fileName}"
-                        ),
+
+                    model = placeholder.url,
+
                     contentDescription = null,
+
                     modifier = modifier,
+
                     contentScale = contentScale
-                )
 
-            is Placeholder.Painter ->
-
-                Image(
-                    painter = placeholder.painter,
-                    contentDescription = null,
-                    modifier = modifier,
-                    contentScale = contentScale
-                )
-
-            is Placeholder.ImageVector ->
-
-                Image(
-                    imageVector = placeholder.imageVector,
-                    contentDescription = null,
-                    modifier = modifier,
-                    contentScale = contentScale
                 )
 
             null -> {}
-
         }
 
     }
+
+
+    /*
+    ------------------------
+    NULL CASE
+    ------------------------
+    */
 
     if (model == null) {
 
@@ -121,37 +201,84 @@ fun CustomImage(
 
     }
 
+
+    /*
+    ------------------------
+    MODEL TYPES
+    ------------------------
+    */
+
     when (model) {
+
+        /*
+        painter
+        */
 
         is Painter ->
 
             Image(
+
                 painter = model,
+
                 contentDescription = contentDescription,
+
                 modifier = modifier,
+
                 alignment = alignment,
+
                 contentScale = contentScale,
+
                 alpha = alpha,
+
                 colorFilter = colorFilter
+
             )
+
+
+        /*
+        vector
+        */
 
         is ImageVector ->
 
             Image(
+
                 imageVector = model,
+
                 contentDescription = contentDescription,
+
                 modifier = modifier,
+
                 alignment = alignment,
+
                 contentScale = contentScale,
+
                 alpha = alpha,
+
                 colorFilter = colorFilter
+
             )
+
+
+        /*
+        bytearray image
+        */
 
         is ByteArray ->
 
             SubcomposeAsyncImage(
 
-                model = model,
+                model = ImageRequest.Builder(context)
+
+                    .data(model)
+
+                    .crossfade(true)
+
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+
+                    .diskCachePolicy(CachePolicy.ENABLED)
+
+                    .build(),
 
                 imageLoader = imageLoader,
 
@@ -165,53 +292,88 @@ fun CustomImage(
 
                 val state by painter.state.collectAsState()
 
-                when (state) {
+                if (state is AsyncImagePainter.State.Success)
 
-                    is AsyncImagePainter.State.Success ->
-                        SubcomposeAsyncImageContent()
+                    SubcomposeAsyncImageContent()
 
-                    else ->
-                        showPlaceholder()
+                else
 
-                }
+                    showPlaceholder()
 
             }
+
+
+        /*
+        string url
+        */
 
         is String -> {
 
             val cleanUrl =
-                model.replace("\\/", "/")
+
+                model
+
+                    .trim()
+
+                    .replace("\\/", "/")
+
 
             val isUrl =
+
                 cleanUrl.startsWith("http")
 
+
             val isJson =
+
                 cleanUrl.endsWith(".json", true)
+
+
+            /*
+            lottie url
+            */
 
             if (isJson) {
 
                 LottiePlaceholder(
-                    cleanUrl,
+
+                    Placeholder.LottieUrl(cleanUrl),
+
                     modifier,
+
                     contentScale
+
                 )
 
                 return
 
             }
 
+
+            /*
+            network image
+            */
+
             if (isUrl) {
 
                 SubcomposeAsyncImage(
 
-                    model =
-                        ImageRequest.Builder(context)
-                            .data(cleanUrl)
-                            .crossfade(true)
-                            .memoryCachePolicy(CachePolicy.ENABLED)
-                            .diskCachePolicy(CachePolicy.ENABLED)
-                            .scale(Scale.FILL)
-                            .build(),
+                    model = ImageRequest.Builder(context)
+
+                        .data(cleanUrl)
+
+                        .memoryCacheKey(cleanUrl)
+
+                        .diskCacheKey(cleanUrl)
+
+                        .crossfade(true)
+
+                        .diskCachePolicy(CachePolicy.ENABLED)
+
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+
+                        .scale(Scale.FILL)
+
+                        .build(),
 
                     imageLoader = imageLoader,
 
@@ -225,15 +387,13 @@ fun CustomImage(
 
                     val state by painter.state.collectAsState()
 
-                    when (state) {
+                    if (state is AsyncImagePainter.State.Success)
 
-                        is AsyncImagePainter.State.Success ->
-                            SubcomposeAsyncImageContent()
+                        SubcomposeAsyncImageContent()
 
-                        else ->
-                            showPlaceholder()
+                    else
 
-                    }
+                        showPlaceholder()
 
                 }
 
@@ -241,76 +401,94 @@ fun CustomImage(
 
             }
 
-            AsyncImage(
 
-                model =
-                    Res.getUri(
-                        "drawable/$cleanUrl"
-                    ),
+            /*
+            fallback
+            */
 
-                contentDescription = contentDescription,
-
-                modifier = modifier,
-
-                contentScale = contentScale
-
-            )
+            showPlaceholder()
 
         }
 
-        else -> showPlaceholder()
+
+        else ->
+
+            showPlaceholder()
 
     }
 
 }
 
+
+/*
+---------------------------------------
+LOTTIE
+---------------------------------------
+*/
+
 @Composable
 fun LottiePlaceholder(
-    jsonFile: String,
-    modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Fit
+
+    placeholder: Placeholder,
+
+    modifier: Modifier,
+
+    contentScale: ContentScale
+
 ) {
 
-    val client = remember { HttpClient() }
-
-    val jsonString by produceState<String?>(null, jsonFile) {
+    val jsonString by produceState<String?>(null, placeholder) {
 
         value = try {
 
-            if (jsonFile.startsWith("http")) {
+            when (placeholder) {
 
-                println("LOTTIE URL => $jsonFile")
+                is Placeholder.LottieUrl ->
 
-                client
-                    .get(jsonFile)
-                    .bodyAsText()
+                    HttpClient()
 
-            } else {
+                        .get(placeholder.url)
 
-                Res.readBytes("files/$jsonFile")
-                    .decodeToString()
+                        .bodyAsText()
+
+
+                is Placeholder.LottieJson ->
+
+                    placeholder.json
+
+
+                is Placeholder.LottieBytes ->
+
+                    placeholder.bytes
+
+                        .decodeToString()
+
+
+                else -> null
 
             }
 
         } catch (e: Exception) {
 
-            println("❌ Lottie load error: $e")
+            println("Lottie error: $e")
 
             null
+
         }
+
     }
+
 
     val composition by rememberLottieComposition(
 
-        spec = jsonString?.let {
+        LottieCompositionSpec.JsonString(
 
-            LottieCompositionSpec.JsonString(it)
+            jsonString ?: "{}"
 
-        }
-
-            ?: LottieCompositionSpec.JsonString("{}")
+        )
 
     )
+
 
     val progress by animateLottieCompositionAsState(
 
@@ -320,61 +498,23 @@ fun LottiePlaceholder(
 
     )
 
-    if (composition != null) {
 
-        Image(
+    Image(
 
-            painter = rememberLottiePainter(
+        painter = rememberLottiePainter(
 
-                composition = composition,
+            composition = composition,
 
-                progress = { progress }
+            progress = { progress }
 
-            ),
+        ),
 
-            contentDescription = null,
+        contentDescription = null,
 
-            modifier = modifier,
+        modifier = modifier,
 
-            contentScale = contentScale
+        contentScale = contentScale
 
-        )
-    }
-}
+    )
 
-
-sealed interface Placeholder {
-
-    data class LottieUrl(
-        val url: String
-    ) : Placeholder
-
-    data class LottieFile(
-        val fileName: String
-    ) : Placeholder
-
-    data class Painter(
-        val painter: androidx.compose.ui.graphics.painter.Painter
-    ) : Placeholder
-
-    data class ImageVector(
-        val imageVector: androidx.compose.ui.graphics.vector.ImageVector
-    ) : Placeholder
-
-    data class Drawable(
-        val fileName: String
-    ) : Placeholder
-
-}
-
-
-fun String.extractS3ImagePath(): String? {
-    return try {
-        val crmIndex = indexOf("/crm/")
-        if (crmIndex == -1) return null
-
-        substring(crmIndex + "/crm/".length)
-    } catch (_: Exception) {
-        null
-    }
 }
