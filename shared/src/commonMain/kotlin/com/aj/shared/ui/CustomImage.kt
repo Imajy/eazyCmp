@@ -1,7 +1,11 @@
 package com.aj.shared.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -9,24 +13,30 @@ import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-
 import coil3.ImageLoader
-import coil3.compose.*
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.LocalPlatformContext
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Scale
 import coil3.svg.SvgDecoder
-
-import io.github.alexzhirkevich.compottie.*
-
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import test.shared.generated.resources.Res
-
 
 @Composable
 fun CustomImage(
     model: Any? = null,
-    placeholderJson: String = "loading.json",
+    placeholderJson: String = "https://enc.infinityfree.me/loading.json",
     contentDescription: String? = null,
     modifier: Modifier = Modifier,
     alignment: Alignment = Alignment.Center,
@@ -54,61 +64,61 @@ fun CustomImage(
     when (model) {
         is ByteArray -> {
 
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(model) // 🔥 pass byte array directly
-                        .crossfade(true)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                    imageLoader = imageLoader,
-                    contentDescription = contentDescription,
-                    modifier = modifier,
-                    contentScale = contentScale
-                ) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(model) // 🔥 pass byte array directly
+                    .crossfade(true)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+                imageLoader = imageLoader,
+                contentDescription = contentDescription,
+                modifier = modifier,
+                contentScale = contentScale
+            ) {
 
-                    val state by painter.state.collectAsState()
+                val state by painter.state.collectAsState()
 
-                    when (state) {
+                when (state) {
 
-                        is AsyncImagePainter.State.Success -> {
-                            SubcomposeAsyncImageContent()
-                        }
+                    is AsyncImagePainter.State.Success -> {
+                        SubcomposeAsyncImageContent()
+                    }
 
-                        is AsyncImagePainter.State.Loading -> {
-                            LottiePlaceholder(
-                                placeholderJson,
-                                Modifier.matchParentSize(),
-                                contentScale
-                            )
-                        }
+                    is AsyncImagePainter.State.Loading -> {
+                        LottiePlaceholder(
+                            placeholderJson,
+                            Modifier.matchParentSize(),
+                            contentScale
+                        )
+                    }
 
-                        is AsyncImagePainter.State.Error -> {
+                    is AsyncImagePainter.State.Error -> {
 
-                            val error = (state as AsyncImagePainter.State.Error)
-                                .result.throwable
+                        val error = (state as AsyncImagePainter.State.Error)
+                            .result.throwable
 
-                            println("❌ BYTE ERROR: $error")
+                        println("❌ BYTE ERROR: $error")
 
-                            LottiePlaceholder(
-                                placeholderJson,
-                                Modifier.matchParentSize(),
-                                contentScale
-                            )
-                        }
+                        LottiePlaceholder(
+                            placeholderJson,
+                            Modifier.matchParentSize(),
+                            contentScale
+                        )
+                    }
 
-                        else -> {
-                            LottiePlaceholder(
-                                placeholderJson,
-                                Modifier.matchParentSize(),
-                                contentScale
-                            )
-                        }
+                    else -> {
+                        LottiePlaceholder(
+                            placeholderJson,
+                            Modifier.matchParentSize(),
+                            contentScale
+                        )
                     }
                 }
-
-                return
             }
+
+            return
+        }
 
         is Painter -> {
             Image(
@@ -148,7 +158,7 @@ fun CustomImage(
             println("CLEAN URL => $cleanUrl")
 
             // 🔹 LOCAL LOTTIE
-            if (!isUrl && isJson) {
+            if (isJson) {
                 LottiePlaceholder(cleanUrl, modifier, contentScale)
                 return
             }
@@ -222,7 +232,6 @@ fun CustomImage(
     }
 }
 
-
 @Composable
 fun LottiePlaceholder(
     jsonFile: String,
@@ -230,30 +239,34 @@ fun LottiePlaceholder(
     contentScale: ContentScale = ContentScale.Fit
 ) {
 
-    val jsonString by produceState<String?>(initialValue = null, jsonFile) {
+    val isUrl = jsonFile.startsWith("http")
+
+    val jsonString by produceState<String?>(null, jsonFile) {
         value = try {
-            Res.readBytes("files/$jsonFile").decodeToString()
+            if (isUrl) {
+                HttpClient().get(jsonFile).bodyAsText()
+            } else {
+                Res.readBytes("files/$jsonFile")
+                    .decodeToString()
+            }
         } catch (e: Exception) {
             println("❌ Lottie error: $e")
             null
         }
     }
-
     val composition by rememberLottieComposition {
-        jsonString?.let { LottieCompositionSpec.JsonString(it) }
-            ?: LottieCompositionSpec.JsonString("{}")
+        jsonString?.let {
+            LottieCompositionSpec.JsonString(it)
+        } ?: LottieCompositionSpec.JsonString("{}")
     }
 
     val progress by animateLottieCompositionAsState(
-        composition = composition,
+        composition,
         iterations = Int.MAX_VALUE
     )
 
     Image(
-        painter = rememberLottiePainter(
-            composition = composition,
-            progress = { progress }
-        ),
+        painter = rememberLottiePainter(composition, { progress }),
         contentDescription = null,
         modifier = modifier,
         contentScale = contentScale
