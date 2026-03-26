@@ -1,6 +1,7 @@
 package com.aj.shared.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.blackColor
@@ -159,6 +163,9 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
     val snackbarHostState = remember { SnackbarHostState() }
     var currentSnackbar by remember { mutableStateOf<AppSnackbar?>(null) }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     AppSnackbarManager.init(
         hostState = snackbarHostState,
         onSnackbarDataChange = { currentSnackbar = it }
@@ -167,6 +174,12 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         modifier = Modifier
             .fillMaxSize()
             .background(brush)
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
+            }
     ) {
         content()
         currentSnackbar?.let { snackbar ->
