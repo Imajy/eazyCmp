@@ -28,6 +28,7 @@ material-icons-extended = { module = "org.jetbrains.compose.material:material-ic
 material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "runtime" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 
 
 # Koin
@@ -55,6 +56,7 @@ multiplatform-settings-core = { module = "com.russhwolf:multiplatform-settings",
 multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatform-settings" }
 compose-lottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "lottie" }
 
+compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

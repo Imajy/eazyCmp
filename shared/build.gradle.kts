@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.compose")
     id("maven-publish")
 }
 
@@ -12,6 +13,13 @@ kotlin {
         compileSdk = 36
         minSdk = 24
 
+        compilerOptions {
+
+            jvmTarget.set(
+                org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+            )
+
+        }
         withHostTestBuilder {}
 
         withDeviceTestBuilder {
@@ -20,7 +28,6 @@ kotlin {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
-
     val xcfName = "sharedKit"
 
     iosX64()
@@ -33,6 +40,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.material.icons.extended)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.compose.components.resources)
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.client.core)
@@ -51,7 +59,7 @@ kotlin {
                 implementation(libs.multiplatform.settings.core)
                 implementation(libs.multiplatform.settings.serialization)
 
-
+//                implementation(libs.compose.uiToolingPreview)
             }
         }
 
@@ -70,6 +78,11 @@ kotlin {
             }
         }
     }
+}
+
+
+compose.resources {
+    publicResClass = true
 }
 
 /**
