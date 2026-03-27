@@ -33,58 +33,42 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-                // ⚠️ Yahan se material-icons-extended HATA DIYA HAI (Ambiguity Fix)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.compose.components.resources)
+        commonMain.dependencies {
+            implementation(libs.kotlin.stdlib)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.compose.components.resources)
 
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.runtime)
-                implementation(libs.foundation)
-                implementation(libs.material3)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.runtime)
+            implementation(libs.foundation)
+            implementation(libs.material3)
 
-                implementation(libs.koin.compose)
-                api(libs.koin.core)
-                api(libs.koin.compose.viewmodel)
-                implementation(libs.compose.lottie)
-                implementation(libs.bundles.ktor)
-                implementation(libs.bundles.coil)
-                implementation(libs.multiplatform.settings.core)
-                implementation(libs.multiplatform.settings.serialization)
-            }
+            implementation(libs.koin.compose)
+            api(libs.koin.core)
+            api(libs.koin.compose.viewmodel)
+            implementation(libs.compose.lottie)
+            implementation(libs.bundles.ktor)
+            implementation(libs.bundles.coil)
+            implementation(libs.multiplatform.settings.core)
+            implementation(libs.multiplatform.settings.serialization)
         }
 
-        androidMain {
-            dependencies {
-                // Platform specific icon variant
-                implementation("org.jetbrains.compose.material:material-icons-extended-android:1.7.3")
-                implementation(libs.ktor.client.okhttp)
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.koin.android)
-            }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
         }
 
-        iosMain {
-            dependencies {
-                // iOS ke liye generic variant kaam karega
-                implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
-                implementation(libs.ktor.client.darwin)
-            }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
 
-        val desktopMain by getting {
-            dependencies {
-                // Platform specific icon variant for Desktop
-                implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.7.3")
-                // ⚠️ currentOs HATA DIYA HAI (Library publishing fix)
-                implementation(libs.kotlinx.coroutinesSwing)
-                implementation(libs.ktor.client.cio)
-            }
+        jvmMain.dependencies {
+            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.okhttp)
         }
     }
 }
