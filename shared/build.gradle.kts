@@ -38,7 +38,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(libs.material.icons.extended)
+//                implementation(libs.material.icons.extended)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.compose.components.resources)
 
@@ -69,6 +69,7 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.koin.android)
+                implementation(libs.material.icons.extended)
             }
         }
 
@@ -79,7 +80,7 @@ kotlin {
         }
 
         jvmMain.dependencies {
-
+            implementation(libs.material.icons.extended)
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.core)
@@ -94,10 +95,12 @@ compose.resources {
     publicResClass = true
 }
 
+group = "com.github.Imajy"
+version = "1.0.03-alpha-08"
 /**
  * Publishing config for new KMP structure
  */
-publishing {
+/*publishing {
     publications {
         create<MavenPublication>("shared") {
             groupId = "com.github.Imajy"
@@ -108,4 +111,4 @@ publishing {
             }
         }
     }
-}
+}*/
