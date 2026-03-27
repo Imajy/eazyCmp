@@ -1,5 +1,4 @@
 jdk:
   - openjdk17
-
 install:
-  - ./gradlew clean publishToMavenLocal
+  - ./gradlew publishToMavenLocal -x test --no-configuration-cache

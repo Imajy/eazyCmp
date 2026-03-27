@@ -14,22 +14,20 @@ kotlin {
         minSdk = 24
 
         compilerOptions {
-
-            jvmTarget.set(
-                org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
-            )
-
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
         }
-        withHostTestBuilder {}
 
+        withHostTestBuilder {}
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
-    val xcfName = "sharedKit"
-    jvm()
+
+    // JVM Target for Desktop
+    jvm("desktop")
+
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -38,7 +36,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(libs.material.icons.extended)
+                // ⚠️ Yahan se material-icons-extended HATA DIYA HAI (Ambiguity Fix)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.compose.components.resources)
 
@@ -58,58 +56,50 @@ kotlin {
                 implementation(libs.bundles.coil)
                 implementation(libs.multiplatform.settings.core)
                 implementation(libs.multiplatform.settings.serialization)
-
-//                implementation(libs.compose.uiToolingPreview)
             }
         }
 
         androidMain {
             dependencies {
+                // Platform specific icon variant
+                implementation("org.jetbrains.compose.material:material-icons-extended-android:1.7.3")
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.androidx.activity.compose)
-                implementation(libs.ktor.client.okhttp)
                 implementation(libs.koin.android)
             }
         }
 
         iosMain {
             dependencies {
+                // iOS ke liye generic variant kaam karega
+                implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
                 implementation(libs.ktor.client.darwin)
             }
         }
 
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.client.cio)
-
+        val desktopMain by getting {
+            dependencies {
+                // Platform specific icon variant for Desktop
+                implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.7.3")
+                // ⚠️ currentOs HATA DIYA HAI (Library publishing fix)
+                implementation(libs.kotlinx.coroutinesSwing)
+                implementation(libs.ktor.client.cio)
+            }
         }
     }
 }
-
 
 compose.resources {
     publicResClass = true
 }
 
+// Library module mein iski zaroorat nahi hoti, par error na de isliye rehne diya hai
 compose.desktop {
     application {}
 }
 
 group = "com.github.Imajy"
-version = "1.0.03-alpha-08"
-/**
- * Publishing config for new KMP structure
- */
-/*publishing {
-    publications {
-        create<MavenPublication>("shared") {
-            groupId = "com.github.Imajy"
-            artifactId = "shared"
-            version = "1.0.03-alpha-07"
-            afterEvaluate {
-                from(components["kotlin"])
-            }
-        }
-    }
-}*/
+version = "1.0.03-alpha-10" // 🚀 Naya version try karo
+
+// JitPack build fail na ho isliye ye clean rakha hai
+// Resolution strategy ki ab zaroorat nahi padni chahiye
