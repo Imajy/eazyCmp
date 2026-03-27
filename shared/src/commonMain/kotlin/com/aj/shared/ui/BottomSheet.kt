@@ -100,9 +100,6 @@ fun GenericBottomSheet(
                 ) {
                     content()
                 }
-                Spacer(
-                    modifier = Modifier.height(20.dp)
-                )
             }
         }
     }

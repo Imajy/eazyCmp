@@ -29,7 +29,7 @@ kotlin {
         }
     }
     val xcfName = "sharedKit"
-
+    jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -77,6 +77,15 @@ kotlin {
                 implementation(libs.ktor.client.darwin)
             }
         }
+
+        jvmMain.dependencies {
+
+            implementation(compose.desktop.currentOs)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.coroutines.swing)
+
+        }
     }
 }
 
@@ -93,7 +102,7 @@ publishing {
         create<MavenPublication>("shared") {
             groupId = "com.github.Imajy"
             artifactId = "shared"
-            version = "1.0.0"
+            version = "1.0.03-alpha-07"
             afterEvaluate {
                 from(components["kotlin"])
             }
