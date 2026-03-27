@@ -80,7 +80,7 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation(libs.material.icons.extended)
+            implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.7.3")
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.core)
