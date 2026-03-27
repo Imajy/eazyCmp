@@ -86,7 +86,7 @@ fun CustomImage(
 
     contentDescription: String? = null,
 
-    placeholder: Placeholder? = null,
+    placeholder: Placeholder? = Placeholder.LottieUrl("https://lottie.host/a9be1300-ee73-471a-969d-6ebe32a5fb64/NT7azVsdv1.json"),
 
     alignment: Alignment = Alignment.Center,
 
