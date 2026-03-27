@@ -38,7 +38,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-//                implementation(libs.material.icons.extended)
+                implementation(libs.material.icons.extended)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.compose.components.resources)
 
@@ -69,7 +69,6 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.koin.android)
-                implementation(libs.material.icons.extended)
             }
         }
 
@@ -80,11 +79,9 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.7.3")
             implementation(compose.desktop.currentOs)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.cio)
 
         }
     }
