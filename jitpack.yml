@@ -1,4 +1,4 @@
 jdk:
   - openjdk17
 install:
-  - ./gradlew publishToMavenLocal -x test --no-configuration-cache
+  - ./gradlew publishToMavenLocal -Pgradle.publish.skip.confirmation=true --no-configuration-cache
