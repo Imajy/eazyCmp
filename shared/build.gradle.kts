@@ -26,7 +26,7 @@ kotlin {
     }
 
     // JVM Target for Desktop
-    jvm("desktop")
+    jvm()
 
     iosX64()
     iosArm64()
@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.bundles.coil)
             implementation(libs.multiplatform.settings.core)
             implementation(libs.multiplatform.settings.serialization)
+            implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
         }
 
         androidMain.dependencies {
