@@ -62,8 +62,7 @@ fun GenericBottomSheet(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding(),
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

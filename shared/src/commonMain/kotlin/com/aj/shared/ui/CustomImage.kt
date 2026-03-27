@@ -265,149 +265,128 @@ fun CustomImage(
         */
 
         is ByteArray ->
-
             SubcomposeAsyncImage(
-
                 model = ImageRequest.Builder(context)
-
                     .data(model)
-
+                    .decoderFactory(SvgDecoder.Factory())
                     .crossfade(true)
-
                     .memoryCachePolicy(CachePolicy.ENABLED)
-
                     .diskCachePolicy(CachePolicy.ENABLED)
-
                     .build(),
-
                 imageLoader = imageLoader,
-
                 contentDescription = contentDescription,
-
                 modifier = modifier,
-
                 contentScale = contentScale
-
             ) {
 
                 val state by painter.state.collectAsState()
-
                 if (state is AsyncImagePainter.State.Success)
-
                     SubcomposeAsyncImageContent()
-
                 else
-
                     showPlaceholder()
-
             }
-
 
         /*
         string url
         */
-
         is String -> {
+            val cleanPath = model.trim().replace("\\/", "/")
 
-            val cleanUrl =
+            val isUrl = cleanPath.startsWith("http")
 
-                model
+            val isJson = cleanPath.endsWith(".json", true)
 
-                    .trim()
-
-                    .replace("\\/", "/")
-
-
-            val isUrl =
-
-                cleanUrl.startsWith("http")
-
-
-            val isJson =
-
-                cleanUrl.endsWith(".json", true)
-
+            val looksLikeFile = cleanPath.contains(".")
 
             /*
-            lottie url
+            ----------------
+            LOTTIE JSON URL
+            ----------------
             */
-
-            if (isJson) {
-
+            if (isJson && isUrl) {
                 LottiePlaceholder(
-
-                    Placeholder.LottieUrl(cleanUrl),
-
+                    Placeholder.LottieUrl(cleanPath),
                     modifier,
-
                     contentScale
-
                 )
-
                 return
-
             }
 
+            /*
+            ----------------
+            NETWORK IMAGE
+            (png / jpg / svg)
+            ----------------
+            */
+            if (isUrl) {
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(cleanPath)
+                        .decoderFactory(SvgDecoder.Factory())
+                        .memoryCacheKey(cleanPath)
+                        .diskCacheKey(cleanPath)
+                        .crossfade(true)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .scale(Scale.FIT)
+                        .build(),
+                    imageLoader = imageLoader,
+                    contentDescription = contentDescription,
+                    modifier = modifier,
+                    contentScale = contentScale
+                ) {
+                    val state by painter.state.collectAsState()
+                    if (state is AsyncImagePainter.State.Success) SubcomposeAsyncImageContent()
+                    else showPlaceholder()
+                }
+                return
+            }
 
             /*
-            network image
+            ----------------
+            LOCAL RESOURCE
+            svg / png / jpg
+            ----------------
             */
-
-            if (isUrl) {
-
-                SubcomposeAsyncImage(
-
-                    model = ImageRequest.Builder(context)
-
-                        .data(cleanUrl)
-
-                        .memoryCacheKey(cleanUrl)
-
-                        .diskCacheKey(cleanUrl)
-
-                        .crossfade(true)
-
-                        .diskCachePolicy(CachePolicy.ENABLED)
-
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-
-                        .scale(Scale.FILL)
-
-                        .build(),
-
-                    imageLoader = imageLoader,
-
-                    contentDescription = contentDescription,
-
-                    modifier = modifier,
-
-                    contentScale = contentScale
-
+            if (looksLikeFile) {
+                val bytes by produceState<ByteArray?>(
+                    initialValue = null,
+                    key1 = cleanPath
                 ) {
-
-                    val state by painter.state.collectAsState()
-
-                    if (state is AsyncImagePainter.State.Success)
-
-                        SubcomposeAsyncImageContent()
-
-                    else
-
-                        showPlaceholder()
-
+                    value = try {
+                        CustomImageResourceResolver
+                            .resolveBytes
+                            ?.invoke(cleanPath)
+                    } catch (e: Exception) {
+                        println("Image resolve failed: $cleanPath")
+                        null
+                    }
                 }
 
-                return
-
+                if (bytes != null) {
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(context)
+                            .data(bytes)
+                            .decoderFactory(SvgDecoder.Factory())
+                            .crossfade(true)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        imageLoader = imageLoader,
+                        contentDescription = contentDescription,
+                        modifier = modifier,
+                        contentScale = contentScale
+                    )
+                    return
+                }
             }
 
-
             /*
-            fallback
+            ----------------
+            FALLBACK
+            ----------------
             */
-
             showPlaceholder()
-
         }
 
 
@@ -425,96 +404,54 @@ fun CustomImage(
 LOTTIE
 ---------------------------------------
 */
-
 @Composable
 fun LottiePlaceholder(
-
     placeholder: Placeholder,
-
     modifier: Modifier,
-
     contentScale: ContentScale
-
 ) {
-
     val jsonString by produceState<String?>(null, placeholder) {
-
         value = try {
-
             when (placeholder) {
-
-                is Placeholder.LottieUrl ->
-
-                    HttpClient()
-
-                        .get(placeholder.url)
-
-                        .bodyAsText()
-
-
-                is Placeholder.LottieJson ->
-
-                    placeholder.json
-
-
-                is Placeholder.LottieBytes ->
-
-                    placeholder.bytes
-
-                        .decodeToString()
-
-
+                is Placeholder.LottieUrl -> HttpClient().get(placeholder.url).bodyAsText()
+                is Placeholder.LottieJson -> placeholder.json
+                is Placeholder.LottieBytes -> placeholder.bytes.decodeToString()
                 else -> null
-
             }
-
         } catch (e: Exception) {
-
             println("Lottie error: $e")
-
             null
-
         }
-
     }
 
-
     val composition by rememberLottieComposition(
-
         LottieCompositionSpec.JsonString(
-
             jsonString ?: "{}"
-
         )
-
     )
-
 
     val progress by animateLottieCompositionAsState(
-
         composition = composition,
-
         iterations = Int.MAX_VALUE
-
     )
-
 
     Image(
-
         painter = rememberLottiePainter(
-
             composition = composition,
-
             progress = { progress }
-
         ),
-
         contentDescription = null,
-
         modifier = modifier,
-
         contentScale = contentScale
-
     )
+}
 
+
+
+object CustomImageResourceResolver {
+    /**
+     * Project can override this
+     * to provide bytes for local resources
+     */
+    var resolveBytes: (suspend (String) -> ByteArray?)? = null
 }
