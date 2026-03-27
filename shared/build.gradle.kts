@@ -95,6 +95,10 @@ compose.resources {
     publicResClass = true
 }
 
+compose.desktop {
+    application {}
+}
+
 group = "com.github.Imajy"
 version = "1.0.03-alpha-08"
 /**
