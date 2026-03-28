@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -28,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.transparentColor
@@ -141,24 +145,30 @@ fun CustomScaffold(
         containerColor = transparentColor,
         modifier = Modifier.background(screenGradientColor)
     ) { padding ->
-        Column(
+        val imeBottom = WindowInsets.ime
+            .asPaddingValues()
+            .calculateBottomPadding()
+
+        val bottomSpace = if (imeBottom > 0.dp) 0.dp
+        else padding.calculateBottomPadding()
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .imePadding()
+                .padding(top = padding.calculateTopPadding())
         ) {
             Column(
-                modifier = Modifier
-                    .weight(1f)            // important
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxSize()
+                    .padding(bottom = bottomSpace, start = padding.calculateRightPadding(LayoutDirection.Rtl), end = padding.calculateEndPadding(LayoutDirection.Rtl))
+                    .verticalScroll(rememberScrollState())
             ) {
-                content(PaddingValues(0.dp))
+                Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    content(PaddingValues(0.dp))
+                }
             }
-
-        }
-        if (isLoading) {
-            CustomLoading()
+            if (isLoading) {
+                CustomLoading()
+            }
         }
     }
 }
