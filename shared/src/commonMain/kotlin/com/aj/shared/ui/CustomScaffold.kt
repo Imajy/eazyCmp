@@ -57,6 +57,7 @@ fun CustomScaffold(
     iconSize: Int = 35,
     gradient: Brush = screenGradientColor,
     loading: (@Composable () -> Unit)? = null,
+    loadingLottieUrl : Placeholder = Placeholder.LottieUrl("https://letterhead.ajmonic.com/loading.json"),
     bottomBar: (@Composable () -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit
@@ -180,7 +181,7 @@ fun CustomScaffold(
             }
             if (isLoading) {
                 if (loading == null) {
-                    CustomLoading()
+                    CustomLoading(loadingLottieUrl)
                 } else {
                     loading()
                 }
