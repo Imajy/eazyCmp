@@ -10,7 +10,7 @@ abstract class BaseViewModel : ViewModel() {
 
     val baseState = _baseState.asStateFlow()
 
-    protected fun setLoading(value: Boolean) {
+    fun setLoading(value: Boolean) {
 
         _baseState.update {
 
@@ -21,7 +21,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
 
-    protected fun setError(message: String?) {
+    fun setError(message: String?) {
 
         _baseState.update {
 
@@ -36,7 +36,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
 
-    protected fun <T> Flow<Resource<T>>.collectApi(
+    fun <T> Flow<Resource<T>>.collectApi(
 
         scope: CoroutineScope,
 
