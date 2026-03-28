@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val coreModule = module {
@@ -49,16 +50,7 @@ val coreModule = module {
 }
 
 
-private var started = false
-fun initAjay() {
-    if (started) return
-    startKoin {
-        modules(
-            coreModule
-        )
-    }
-    started = true
-}
+fun ajayModule(): Module = coreModule
 
 val json = Json {
     ignoreUnknownKeys = true
