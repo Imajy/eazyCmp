@@ -43,6 +43,7 @@ fun CustomScaffold(
     action2Click: () -> Unit = {},
     action1Img: Any? = null,
     action2Img: Any? = null,
+    backImg: Any? = null,
     isLoading: Boolean = false,
     bottomBar: (@Composable () -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
@@ -78,7 +79,7 @@ fun CustomScaffold(
                 navigationIcon = {
                     if (showBack) {
                         CustomImage(
-                            model = "ic_back_svg.svg",
+                            model = backImg,
                             modifier = Modifier
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
