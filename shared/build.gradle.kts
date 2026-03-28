@@ -52,8 +52,6 @@ kotlin {
             implementation(libs.compose.lottie)
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.coil)
-            implementation(libs.multiplatform.settings.core)
-            implementation(libs.multiplatform.settings.serialization)
             implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
         }
 

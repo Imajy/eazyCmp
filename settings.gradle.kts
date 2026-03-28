@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 }
 
 include(":shared")
+include(":api")
