@@ -3,6 +3,7 @@ package com.aj.api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import kotlinx.serialization.json.Json
+import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -23,7 +24,7 @@ val coreModule = module {
     }
 
 
-    single {provideSettings()}
+    single { provideSettings() }
 
 
     single {
@@ -48,13 +49,15 @@ val coreModule = module {
 }
 
 
-
+private var started = false
 fun initAjay() {
+    if (started) return
     startKoin {
         modules(
             coreModule
         )
     }
+    started = true
 }
 
 val json = Json {
