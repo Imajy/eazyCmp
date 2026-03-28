@@ -41,6 +41,7 @@ import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.borderBGColor
 import com.aj.shared.theme.grayColor
 import com.aj.shared.theme.rejectedRedColor
+import com.aj.shared.theme.transparentColor
 
 
 @ExperimentalMaterial3Api
@@ -114,19 +115,7 @@ fun OutLinedSimpleTextField(
                         onClick()
                     }
                 )
-//                .then(
-//                    Modifier.pointerInput(Unit) {
-//                        awaitPointerEventScope {
-//                            while (true) {
-//                                val event = awaitPointerEvent()
-//                                if (event.changes.any { it.changedToUp() }) {
-//                                    onClick()
-//                                }
-//                            }
-//                        }
-//                    }
-//                )
-                .background(Color.Transparent),
+                .background(transparentColor),
             textStyle = TextStyle(
                 color = blackColor,
                 fontSize = fontSize.sp,

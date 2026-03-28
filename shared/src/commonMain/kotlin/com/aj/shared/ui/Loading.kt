@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun CustomLoading() {
+fun CustomLoading(loading : Placeholder = Placeholder.LottieUrl("https://letterhead.ajmonic.com/loading.json")) {
 
     Dialog(onDismissRequest = { }) {
         Box(
@@ -23,7 +23,7 @@ fun CustomLoading() {
         ) {
 
             CustomImage(
-                placeholder = Placeholder.LottieUrl("https://letterhead.ajmonic.com/loading.json"),
+                placeholder = loading,
                 model = null
             )
         }

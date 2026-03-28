@@ -29,8 +29,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.blackColor
@@ -49,6 +52,11 @@ fun CustomScaffold(
     action2Img: Any? = null,
     backImg: Any? = null,
     isLoading: Boolean = false,
+    titleColor: Color = blackColor,
+    titleStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    iconSize: Int = 35,
+    gradient: Brush = screenGradientColor,
+    loading: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit
@@ -70,14 +78,14 @@ fun CustomScaffold(
 
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0,0,0,0),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = title,
-                        color = blackColor,
-                        style = MaterialTheme.typography.titleSmall
+                        color = titleColor,
+                        style = titleStyle
                     )
                 },
                 navigationIcon = {
@@ -90,7 +98,7 @@ fun CustomScaffold(
                                     indication = null,
                                     onClick = onBackClick
                                 )
-                                .size(35.dp).padding(start = 4.dp)
+                                .size(iconSize.dp).padding(start = 4.dp)
                         )
                     }
                 },
@@ -109,7 +117,7 @@ fun CustomScaffold(
                                         indication = null,
                                         onClick = action1Click
                                     )
-                                    .size(35.dp).padding(start = 4.dp)
+                                    .size(iconSize.dp).padding(start = 4.dp)
                             )
                         }
                         if (action2Img != null) {
@@ -121,7 +129,7 @@ fun CustomScaffold(
                                         indication = null,
                                         onClick = action2Click
                                     )
-                                    .size(35.dp).padding(start = 4.dp)
+                                    .size(iconSize.dp).padding(start = 4.dp)
                             )
                         }
                     }
@@ -143,7 +151,7 @@ fun CustomScaffold(
             }
         },
         containerColor = transparentColor,
-        modifier = Modifier.background(screenGradientColor)
+        modifier = Modifier.background(gradient)
     ) { padding ->
         val imeBottom = WindowInsets.ime
             .asPaddingValues()
@@ -159,7 +167,11 @@ fun CustomScaffold(
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
-                    .padding(bottom = bottomSpace, start = padding.calculateRightPadding(LayoutDirection.Rtl), end = padding.calculateEndPadding(LayoutDirection.Rtl))
+                    .padding(
+                        bottom = bottomSpace,
+                        start = padding.calculateRightPadding(LayoutDirection.Rtl),
+                        end = padding.calculateEndPadding(LayoutDirection.Rtl)
+                    )
                     .verticalScroll(rememberScrollState())
             ) {
                 Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
@@ -167,7 +179,11 @@ fun CustomScaffold(
                 }
             }
             if (isLoading) {
-                CustomLoading()
+                if (loading == null) {
+                    CustomLoading()
+                } else {
+                    loading()
+                }
             }
         }
     }

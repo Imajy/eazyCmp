@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.bottomSheetHeaderBackGround
 import com.aj.shared.theme.rejectedRedColor
@@ -36,7 +37,9 @@ import com.aj.shared.theme.whiteColor
 fun GenericBottomSheet(
     show: Boolean,
     title: String? = null,
+    titleStyle : TextStyle = MaterialTheme.typography.titleMedium,
     skipPartiallyExpanded: Boolean = true,
+    titleBackGround : Color = bottomSheetHeaderBackGround,
     onDismiss: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -70,14 +73,14 @@ fun GenericBottomSheet(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(bottomSheetHeaderBackGround)
+                            .background(titleBackGround)
                             .padding(15.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             text = it,
-                            style = MaterialTheme.typography.titleMedium
+                            style = titleStyle
                         )
                         Icon(
                             imageVector = CloseIcon,
