@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
+    alias(libs.plugins.kotlinSerialization)
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
     id("maven-publish")
@@ -15,13 +16,6 @@ kotlin {
 
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-        }
-
-        withHostTestBuilder {}
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
 
@@ -41,18 +35,33 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)
 
             implementation(libs.koin.compose)
-            api(libs.koin.core)
             api(libs.koin.compose.viewmodel)
             implementation(libs.compose.lottie)
-            implementation(libs.bundles.ktor)
             implementation(libs.bundles.coil)
             implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
+
+            api(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.serialization.json)
+            implementation(libs.bundles.ktor)
+            api(libs.multiplatform.settings.core)
+
+            api(libs.multiplatform.settings.serialization)
+
+            api(libs.runtime)
+
+            /**
+             * dependency injection exposed
+             */
+            api(libs.koin.core)
+            api(libs.androidx.lifecycle.viewmodel)
+
+            api(libs.androidx.lifecycle.runtime)
+            api(libs.kotlinx.datetime)
         }
 
         androidMain.dependencies {
@@ -68,6 +77,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.cio)
         }
     }
 }
