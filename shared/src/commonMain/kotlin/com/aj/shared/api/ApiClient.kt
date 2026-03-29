@@ -66,7 +66,8 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
     ): Flow<Resource<Res>> = flow {
 
         try {
-            if (!NetworkMonitor.connected.value) {
+            println("NETWORK STATUS → ${NetworkMonitor.connected.value}")
+           /* if (!NetworkMonitor.connected.value) {
                 if (options.retryOnConnection) {
                     NetworkMonitor.connected
                         .filter { it }
@@ -76,7 +77,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                     return@flow
                 }
             }
-
+*/
             val response = client.request(buildUrl(base, endpoint)) {
                 this.method = method
                 applyDefaults(base)
