@@ -1,6 +1,7 @@
 package com.aj.shared.api
 
 import androidx.lifecycle.ViewModel
+import com.aj.shared.ui.AppSnackbarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 
@@ -27,6 +28,7 @@ abstract class BaseViewModel : ViewModel() {
             it.copy(error = message)
 
         }
+        AppSnackbarManager.show(message)
 
     }
 
