@@ -77,8 +77,9 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                     return@flow
                 }
             }
-*/
+*/println("STEP 1 → before request")
             val response = client.request(buildUrl(base, endpoint)) {
+                println("STEP 2 → inside ktor")
                 this.method = method
                 applyDefaults(base)
 
@@ -86,7 +87,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                  * query params
                  */
                 query.forEach { parameter(it.key, it.value) }
-
+                println("STEP 3 → defaults applied")
                 /**
                  * multipart
                  */
@@ -142,15 +143,22 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
             emit(Resource.Error(e.message ?: "unknown error"))
         }
     }
-
     @PublishedApi
     internal fun <T> priorityWrapper(
         upstream: Flow<Resource<T>>,
         priority: ApiPriority
-    ): Flow<Resource<T>> = channelFlow {
+    ): Flow<Resource<T>> = flow {
+
         ApiDispatcher.dispatch(priority) {
-            upstream.collect { send(it) }
+
+            upstream.collect {
+
+                emit(it)
+
+            }
+
         }
+
     }
 }
 
