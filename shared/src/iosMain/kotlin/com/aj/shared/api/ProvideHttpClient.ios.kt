@@ -5,6 +5,8 @@ import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import platform.Foundation.NSUserDefaults
@@ -22,6 +24,13 @@ actual fun provideHttpClient(): HttpClient {
                 }
             )
         }
+
+        install(Logging) {
+
+            level = LogLevel.ALL
+
+        }
+
     }
 }
 
