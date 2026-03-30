@@ -115,6 +115,7 @@ val CloseIcon: ImageVector
         if (_closeIcon != null) {
             return _closeIcon!!
         }
+
         _closeIcon = ImageVector.Builder(
             name = "CloseIcon",
             defaultWidth = 24.dp,
@@ -124,7 +125,8 @@ val CloseIcon: ImageVector
         ).apply {
 
             path(
-                fill = SolidColor(Color.Black),
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = 2f,
                 pathFillType = PathFillType.NonZero
             ) {
 
@@ -133,7 +135,6 @@ val CloseIcon: ImageVector
 
                 moveTo(6f, 6f)
                 lineTo(18f, 18f)
-
             }
 
         }.build()
