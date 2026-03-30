@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +43,7 @@ fun GenericBottomSheet(
     skipPartiallyExpanded: Boolean = true,
     titleBackGround : Color = bottomSheetHeaderBackGround,
     onDismiss: () -> Unit,
-    disMissButtonColor : Color = Color(0xFFFF5160),
+    closeIcon : Any = Placeholder.VectorResource(Icons.Default.Close),
     content: @Composable () -> Unit
 ) {
     if (!show) return
@@ -83,16 +85,14 @@ fun GenericBottomSheet(
                             text = it,
                             style = titleStyle
                         )
-                        Icon(
-                            imageVector = CloseIcon,
-                            contentDescription = null,
+                        CustomImage(
+                            model = closeIcon,
                             modifier = Modifier
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null,
                                     onClick = onDismiss
                                 ),
-                            tint = disMissButtonColor
                         )
                     }
                 }
