@@ -41,6 +41,7 @@ fun GenericBottomSheet(
     skipPartiallyExpanded: Boolean = true,
     titleBackGround : Color = bottomSheetHeaderBackGround,
     onDismiss: () -> Unit,
+    disMissButtonColor : Color = Color(0xFFFF5160),
     content: @Composable () -> Unit
 ) {
     if (!show) return
@@ -91,7 +92,7 @@ fun GenericBottomSheet(
                                     indication = null,
                                     onClick = onDismiss
                                 ),
-                            tint = rejectedRedColor
+                            tint = disMissButtonColor
                         )
                     }
                 }
