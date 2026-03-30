@@ -325,7 +325,7 @@ fun <T> CommonDropDown(
             Text(
                 text = error,
                 color = rejectedRedColor,
-                fontSize = 12.sp
+                style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp)
             )
         }
     }
