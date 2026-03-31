@@ -9,6 +9,7 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.parameter
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
@@ -160,13 +161,12 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
             val duration = Clock.System.now() - startTime
 
             println("============== API RESPONSE =============")
-            println("URL         → $url")
-            println("TIME        → ${duration}ms")
-
             val data: Res = response.body()
+            val rawResponse = response.bodyAsText()
 
-            println("DATA        → $data")
-            println("=========================================")
+            println("RAW RESPONSE ↓↓↓")
+            println("$url => $duration=> ${rawResponse}")
+            println("RAW RESPONSE ↑↑↑")
             emit(Resource.Success(data))
         } catch (e: Exception) {
             val duration = Clock.System.now() - startTime
