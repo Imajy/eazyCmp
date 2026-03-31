@@ -1,52 +1,15 @@
 package com.aj.shared.api
 
-import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModel
 import kotlinx.serialization.json.Json
-import org.koin.core.KoinApplication
-import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val coreModule = module {
-    single {
-        json
-    }
-
-
-    single {
-
-        Json {
-
-            ignoreUnknownKeys = true
-
-        }
-
-    }
-
-
+    single { json }
     single { provideSettings() }
+    single { SharedViewModel(settings = get(), json = get()) }
 
-
-    single {
-
-        SharedViewModel(
-
-            settings = get(),
-
-            json = get()
-
-        )
-
-    }
-
-
-    single {
-
-        ApiClient()
-
-    }
-
+    single { ApiClient() }
 }
 
 
