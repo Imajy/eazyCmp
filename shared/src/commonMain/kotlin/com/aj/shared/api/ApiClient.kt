@@ -24,11 +24,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
+import kotlin.time.Clock
+
 class ApiClient(val client: HttpClient = HttpClientProvider.client) {
     inline fun <reified Req : Any, reified Res> request(
         base: String,
         endpoint: String,
-        method: HttpMethod = HttpMethod.Get,
+        method: ApiMethod = ApiMethod.GET,
         body: Req? = null,
         query: Map<String, String> = emptyMap(),
         files: List<FilePart> = emptyList(),
@@ -41,7 +43,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 requestFlow(
                     base,
                     endpoint,
-                    method,
+                    method.toKtor(),
                     body,
                     query,
                     files,
@@ -65,8 +67,13 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         options: RequestOptions
     ): Flow<Resource<Res>> = flow {
 
+        val config = ApiConfig.getConfig(base)
+
+        val url = buildUrl(base, endpoint)
+
+        val startTime = Clock.System.now()
         try {
-            println("NETWORK STATUS → ${NetworkMonitor.connected.value}")
+
            /* if (!NetworkMonitor.connected.value) {
                 if (options.retryOnConnection) {
                     NetworkMonitor.connected
@@ -77,7 +84,20 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                     return@flow
                 }
             }
-*/println("STEP 1 → before request")
+*/
+
+            println("============== API REQUEST ==============")
+            println("BASE        → $base")
+            println("URL         → $url")
+            println("METHOD      → $method")
+            println("QUERY       → $query")
+            println("BODY TYPE   → $bodyType")
+            println("BODY        → $body")
+            println("FILES       → ${files.size}")
+            println("TOKEN       → ${config.token != null}")
+            println("HEADERS     → ${config.defaultHeaders}")
+            println("=========================================")
+
             val response = client.request(buildUrl(base, endpoint)) {
                 println("STEP 2 → inside ktor")
                 this.method = method
@@ -137,9 +157,25 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 }
             }
 
+            val duration = Clock.System.now() - startTime
+
+            println("============== API RESPONSE =============")
+            println("URL         → $url")
+            println("TIME        → ${duration}ms")
+
             val data: Res = response.body()
+
+            println("DATA        → $data")
+            println("=========================================")
             emit(Resource.Success(data))
         } catch (e: Exception) {
+            val duration = Clock.System.now() - startTime
+
+            println("============== API ERROR ================")
+            println("URL         → $url")
+            println("TIME        → ${duration}ms")
+            println("ERROR       → ${e.message}")
+            println("=========================================")
             emit(Resource.Error(e.message ?: "unknown error"))
         }
     }
@@ -206,4 +242,35 @@ internal fun ParametersBuilder.appendFields(obj: Any) {
                 it.value.toString()
             )
         }
+}
+
+
+enum class ApiMethod {
+
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    PATCH
+
+}
+
+
+
+fun ApiMethod.toKtor(): HttpMethod {
+
+    return when (this) {
+
+        ApiMethod.GET -> HttpMethod.Get
+
+        ApiMethod.POST -> HttpMethod.Post
+
+        ApiMethod.PUT -> HttpMethod.Put
+
+        ApiMethod.DELETE -> HttpMethod.Delete
+
+        ApiMethod.PATCH -> HttpMethod.Patch
+
+    }
+
 }
