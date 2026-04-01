@@ -87,6 +87,7 @@ fun GenericBottomSheet(
                         )
                         CustomImage(
                             model = closeIcon,
+                            placeholder = Placeholder.VectorResource(Icons.Default.Close),
                             modifier = Modifier
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
