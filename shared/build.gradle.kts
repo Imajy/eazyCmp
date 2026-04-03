@@ -43,23 +43,16 @@ kotlin {
             api(libs.koin.compose.viewmodel)
             implementation(libs.compose.lottie)
             implementation(libs.bundles.coil)
-            implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
+            implementation(libs.material.icons.core)
+            implementation(libs.bundles.ktor)
 
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.serialization.json)
-            implementation(libs.bundles.ktor)
             api(libs.multiplatform.settings.core)
-
             api(libs.multiplatform.settings.serialization)
-
             api(libs.runtime)
-
-            /**
-             * dependency injection exposed
-             */
             api(libs.koin.core)
             api(libs.androidx.lifecycle.viewmodel)
-
             api(libs.androidx.lifecycle.runtime)
             api(libs.kotlinx.datetime)
         }
