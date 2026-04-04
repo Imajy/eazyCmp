@@ -1,5 +1,6 @@
 package com.aj.shared.picker
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,12 +16,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.aj.shared.permission.AppPermission
 import com.aj.shared.permission.PermissionManager
 import com.aj.shared.permission.PermissionStatus
 import com.aj.shared.ui.GenericBottomSheet
+import com.github.imajy.shared.generated.resources.Res
+import com.github.imajy.shared.generated.resources.ic_camera
+import com.github.imajy.shared.generated.resources.ic_documents
+import com.github.imajy.shared.generated.resources.ic_photos
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,38 +121,36 @@ fun AttachmentOptionsUI(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         if (showCamera)
-            AttachmentItem(
-                "Camera",
-                onCamera
-            )
+            AttachmentItem(Res.drawable.ic_camera, "Take Photo", onCamera)
+
 
         if (showGallery)
-            AttachmentItem(
-                "Photos",
-                onGallery
-            )
+            AttachmentItem(Res.drawable.ic_photos, "Photos", onGallery)
 
         if (showDocument)
-            AttachmentItem(
-                "Document",
-                onDocument
-            )
+        AttachmentItem(Res.drawable.ic_documents, "Documents", onDocument)
     }
 }
 
 
 @Composable
-fun AttachmentItem(
-    title: String,
-    onClick: () -> Unit
-) {
+fun AttachmentItem(icon: DrawableResource, label: String, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null
-        ) { onClick() }
+        modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick()
+            },
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(title)
+        Image(
+            painter = painterResource(icon),
+            contentDescription = null,
+            modifier = Modifier.size(54.dp)
+        )
+        Text(label, fontSize = 14.sp, color = Color.Black)
     }
 }
