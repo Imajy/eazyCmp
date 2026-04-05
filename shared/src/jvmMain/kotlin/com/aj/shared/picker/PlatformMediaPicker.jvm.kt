@@ -1,145 +1,86 @@
 package com.aj.shared.picker
 
 import androidx.compose.runtime.Composable
+import com.aj.shared.ui.AppSnackbarManager
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.bytedeco.javacv.OpenCVFrameGrabber
-import org.bytedeco.javacv.Java2DFrameConverter
+import javax.swing.*
+import java.awt.BorderLayout
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
-import javax.swing.*
 import java.io.ByteArrayOutputStream
+import org.bytedeco.javacv.OpenCVFrameGrabber
+import org.bytedeco.javacv.Java2DFrameConverter
 
 actual class PlatformMediaPicker actual constructor() {
 
     @Composable
-    actual fun RegisterLaunchers() {
-    }
+    actual fun RegisterLaunchers() {}
 
     actual fun launch(
+
         type: PickerType,
+
         documentConfig: DocumentConfig?,
+
         onResult: (PickedFile?) -> Unit
-    ) {
 
-        val chooser = JFileChooser()
+    ){
 
-        chooser.isMultiSelectionEnabled = false
+        try{
 
-        // remove "All files" option
-        chooser.isAcceptAllFileFilterUsed = false
+            when(type){
 
-        when (type) {
+                PickerType.CAMERA ->
 
-            PickerType.IMAGE -> {
+                    openDesktopCamera(onResult)
 
-                chooser.currentDirectory =
-                    File(System.getProperty("user.home"), "Pictures")
 
-                chooser.fileFilter =
-                    FileNameExtensionFilter(
-                        "Images only",
-                        "jpg",
-                        "jpeg",
-                        "png",
-                        "webp"
+                PickerType.IMAGE ->
+
+                    openFileChooser(
+
+                        PickerType.IMAGE,
+
+                        onResult
+
                     )
-            }
 
-            PickerType.DOCUMENT -> {
 
-                chooser.currentDirectory =
-                    File(System.getProperty("user.home"), "Documents")
+                PickerType.DOCUMENT ->
 
-                chooser.fileFilter =
-                    FileNameExtensionFilter(
-                        "Documents only",
-                        "pdf",
-                        "doc",
-                        "docx"
+                    openFileChooser(
+
+                        PickerType.DOCUMENT,
+
+                        onResult
+
                     )
+
             }
 
-            PickerType.CAMERA -> {
-                openDesktopCamera(onResult = onResult)
-            }
         }
-        val result = chooser.showOpenDialog(null)
-        if (result == JFileChooser.APPROVE_OPTION) {
-            val file = chooser.selectedFile
-            if (!file.exists() || file.isDirectory) {
-                onResult(null)
-                return
-            }
-            // final validation safety check
-            if (!isValidSelection(type, file)) {
-                println("invalid file type selected")
-                onResult(null)
-                return
-            }
-            val bytes = file.readBytes()
-            onResult(
-                PickedFile(
-                    bytes = bytes,
-                    fileName = file.name,
-                    mimeType = guessMimeType(file.extension)
-                )
+        catch(e: Exception){
+
+            e.printStackTrace()
+
+            AppSnackbarManager.show(
+
+                "Unexpected error"
+
             )
-        } else {
+
             onResult(null)
+
         }
+
     }
 }
 
-private fun isValidSelection(
+private fun openFileChooser(
+
     type: PickerType,
-    file: File
-): Boolean {
-
-    val ext = file.extension.lowercase()
-
-    return when (type) {
-
-        PickerType.IMAGE,
-        PickerType.CAMERA -> {
-
-            ext in listOf(
-                "jpg",
-                "jpeg",
-                "png",
-                "webp"
-            )
-        }
-
-        PickerType.DOCUMENT -> {
-
-            ext in listOf(
-                "pdf",
-                "doc",
-                "docx"
-            )
-        }
-    }
-}
-
-private fun guessMimeType(ext: String): String {
-    return when (ext.lowercase()) {
-        "jpg", "jpeg" -> "image/jpeg"
-        "png" -> "image/png"
-        "webp" -> "image/webp"
-        "pdf" -> "application/pdf"
-        "doc" -> "application/msword"
-        "docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        else -> "application/octet-stream"
-    }
-}
-
-fun safeFileChooser(
-
-    folder: String?,
-
-    extensions: List<String>?,
 
     onResult: (PickedFile?) -> Unit
 
@@ -151,44 +92,86 @@ fun safeFileChooser(
 
         chooser.isMultiSelectionEnabled = false
 
-        extensions?.let {
+        chooser.fileSelectionMode =
+            JFileChooser.FILES_ONLY
 
-            chooser.isAcceptAllFileFilterUsed = false
+        chooser.isAcceptAllFileFilterUsed = false
 
-            chooser.fileFilter =
-                FileNameExtensionFilter(
 
-                    "Allowed files",
+        val home =
+            System.getProperty("user.home")
 
-                    *it.toTypedArray()
 
-                )
+        val startDir = when(type){
+
+            PickerType.IMAGE ->
+                File(home, "Pictures")
+
+            PickerType.DOCUMENT ->
+                File(home, "Documents")
+
+            else ->
+                File(home)
 
         }
 
-        folder?.let {
 
-            val dir = File(
+        if(startDir.exists()){
 
-                System.getProperty("user.home"),
-                it
-            )
+            chooser.currentDirectory = startDir
 
-            if (dir.exists()) {
+        }
 
-                chooser.currentDirectory = dir
+
+        chooser.fileFilter =
+            when(type){
+
+                PickerType.IMAGE ->
+
+                    FileNameExtensionFilter(
+
+                        "Images",
+
+                        "jpg",
+                        "jpeg",
+                        "png",
+                        "webp"
+
+                    )
+
+
+                PickerType.DOCUMENT ->
+
+                    FileNameExtensionFilter(
+
+                        "Documents",
+
+                        "pdf",
+                        "doc",
+                        "docx"
+
+                    )
+
+
+                else -> null
 
             }
 
-        }
 
-        val result = chooser.showOpenDialog(null)
+        val result =
+            chooser.showOpenDialog(null)
 
-        if (result == JFileChooser.APPROVE_OPTION) {
 
-            val file = chooser.selectedFile
+        if(result ==
+            JFileChooser.APPROVE_OPTION){
 
-            if (!file.exists() || !file.isFile) {
+            val file =
+                chooser.selectedFile
+
+
+            if(!file.exists()){
+
+                AppSnackbarManager.show("File not found")
 
                 onResult(null)
 
@@ -196,7 +179,10 @@ fun safeFileChooser(
 
             }
 
-            val bytes = file.readBytes()
+
+            val bytes =
+                file.readBytes()
+
 
             onResult(
 
@@ -206,21 +192,30 @@ fun safeFileChooser(
 
                     fileName = file.name,
 
-                    mimeType = guessMime(file.extension)
+                    mimeType =
+                        guessMime(file.extension)
 
                 )
 
             )
 
-        } else {
+        }
+        else{
 
             onResult(null)
 
         }
 
-    } catch (e: Exception) {
+    }
+    catch (e: Exception){
 
         e.printStackTrace()
+
+        AppSnackbarManager.show(
+
+            "Unable to open file"
+
+        )
 
         onResult(null)
 
@@ -228,7 +223,230 @@ fun safeFileChooser(
 
 }
 
-fun guessMime(ext: String): String {
+
+private fun openDesktopCamera(
+
+    onResult: (PickedFile?) -> Unit
+
+) {
+
+    Thread {
+
+        try {
+
+            val grabber =
+                OpenCVFrameGrabber(0)
+
+            grabber.start()
+
+
+            val converter =
+                Java2DFrameConverter()
+
+
+            val preview =
+                JLabel()
+
+
+            val captureBtn =
+                JButton("Capture")
+
+
+            val cancelBtn =
+                JButton("Cancel")
+
+
+            val panel =
+                JPanel(BorderLayout())
+
+
+            panel.add(
+
+                preview,
+
+                BorderLayout.CENTER
+
+            )
+
+
+            val buttons =
+                JPanel()
+
+
+            buttons.add(captureBtn)
+
+            buttons.add(cancelBtn)
+
+
+            panel.add(
+
+                buttons,
+
+                BorderLayout.SOUTH
+
+            )
+
+
+            val window =
+                JFrame("Camera")
+
+
+            window.contentPane = panel
+
+
+            window.setSize(600,500)
+
+
+            window.setLocationRelativeTo(null)
+
+
+            window.isVisible = true
+
+
+            var running = true
+
+
+            Thread{
+
+                while(running){
+
+                    val frame =
+                        grabber.grab()
+
+
+                    val image =
+                        converter.convert(frame)
+
+
+                    if(image != null){
+
+                        SwingUtilities.invokeLater {
+
+                            preview.icon =
+                                ImageIcon(image)
+
+                        }
+
+                    }
+
+
+                    Thread.sleep(30)
+
+                }
+
+            }.start()
+
+
+
+            captureBtn.addActionListener{
+
+                try{
+
+                    val frame =
+                        grabber.grab()
+
+
+                    val img =
+                        converter.convert(frame)
+
+
+                    val baos =
+                        ByteArrayOutputStream()
+
+
+                    ImageIO.write(
+
+                        img,
+
+                        "jpg",
+
+                        baos
+
+                    )
+
+
+                    val bytes =
+                        baos.toByteArray()
+
+
+                    running = false
+
+
+                    grabber.stop()
+
+
+                    window.dispose()
+
+
+                    onResult(
+
+                        PickedFile(
+
+                            bytes = bytes,
+
+                            fileName =
+                                "capture.jpg",
+
+                            mimeType =
+                                "image/jpeg"
+
+                        )
+
+                    )
+
+                }
+                catch(e: Exception){
+
+                    e.printStackTrace()
+
+                    AppSnackbarManager.show(
+
+                        "Camera capture failed"
+
+                    )
+
+                    onResult(null)
+
+                }
+
+            }
+
+
+
+            cancelBtn.addActionListener{
+
+                running = false
+
+                grabber.stop()
+
+                window.dispose()
+
+                onResult(null)
+
+            }
+
+
+        }
+        catch(e: Exception){
+
+            e.printStackTrace()
+
+            AppSnackbarManager.show(
+
+                "Camera not available"
+
+            )
+
+            onResult(null)
+
+        }
+
+    }.start()
+
+}
+
+
+private fun guessMime(ext: String): String {
 
     return when (ext.lowercase()) {
 
@@ -246,209 +464,6 @@ fun guessMime(ext: String): String {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
         else -> "application/octet-stream"
-
-    }
-
-}
-
-fun safeCameraCapture(
-    onResult: (PickedFile?) -> Unit
-) {
-
-    try {
-
-        val grabber = OpenCVFrameGrabber(0)
-
-        grabber.start()
-
-        val converter = Java2DFrameConverter()
-
-        val frame = grabber.grab()
-
-        val previewImage: BufferedImage =
-            converter.convert(frame)
-
-        val label = JLabel(ImageIcon(previewImage))
-
-        val captureBtn = JButton("Capture")
-
-        val frameWindow = JFrame("Camera")
-
-        frameWindow.layout = BoxLayout(
-            frameWindow.contentPane,
-            BoxLayout.Y_AXIS
-        )
-        frameWindow.add(label)
-        frameWindow.add(captureBtn)
-        frameWindow.setSize(400, 400)
-        frameWindow.isVisible = true
-        captureBtn.addActionListener {
-            try {
-                val capturedFrame = grabber.grab()
-                val img = converter.convert(capturedFrame)
-                val baos = ByteArrayOutputStream()
-                ImageIO.write(img, "jpg", baos)
-                val bytes = baos.toByteArray()
-                frameWindow.dispose()
-                grabber.stop()
-                onResult(
-                    PickedFile(
-                        bytes = bytes,
-                        fileName = "capture_${System.currentTimeMillis()}.jpg",
-                        mimeType = "image/jpeg"
-                    )
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-                frameWindow.dispose()
-                onResult(null)
-            }
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        println("camera failed → fallback")
-        safeFileChooser(
-            folder = "Pictures",
-            extensions = listOf(
-                "jpg",
-                "jpeg",
-                "png"
-            ),
-            onResult
-        )
-    }
-}
-
-
-fun openDesktopCamera(
-    onResult: (PickedFile?) -> Unit
-) {
-
-    SwingUtilities.invokeLater {
-
-        try {
-
-            val grabber = OpenCVFrameGrabber(0)
-
-            grabber.start()
-
-            val converter = Java2DFrameConverter()
-
-            val previewLabel = JLabel()
-
-            val captureBtn = JButton("Capture")
-
-            val cancelBtn = JButton("Cancel")
-
-            val window = JFrame("Camera")
-
-            window.layout = BoxLayout(
-                window.contentPane,
-                BoxLayout.Y_AXIS
-            )
-
-            window.add(previewLabel)
-
-            window.add(captureBtn)
-
-            window.add(cancelBtn)
-
-            window.setSize(500, 400)
-
-            window.isVisible = true
-
-            var running = true
-
-            Thread {
-
-                while (running) {
-
-                    val frame = grabber.grab()
-
-                    val image: BufferedImage? =
-                        converter.convert(frame)
-
-                    if (image != null) {
-
-                        previewLabel.icon =
-                            ImageIcon(image)
-
-                    }
-
-                    Thread.sleep(33)
-
-                }
-
-            }.start()
-
-            captureBtn.addActionListener {
-
-                try {
-
-                    val frame = grabber.grab()
-
-                    val img = converter.convert(frame)
-
-                    val baos =
-                        ByteArrayOutputStream()
-
-                    ImageIO.write(img, "jpg", baos)
-
-                    val bytes =
-                        baos.toByteArray()
-
-                    running = false
-
-                    grabber.stop()
-
-                    window.dispose()
-
-                    onResult(
-
-                        PickedFile(
-
-                            bytes = bytes,
-
-                            fileName =
-                                "capture_${System.currentTimeMillis()}.jpg",
-
-                            mimeType = "image/jpeg"
-
-                        )
-
-                    )
-
-                } catch (e: Exception) {
-
-                    e.printStackTrace()
-
-                    onResult(null)
-
-                }
-
-            }
-
-            cancelBtn.addActionListener {
-
-                running = false
-
-                grabber.stop()
-
-                window.dispose()
-
-                onResult(null)
-
-            }
-
-        } catch (e: Exception) {
-
-            e.printStackTrace()
-
-            println("camera not available")
-
-            onResult(null)
-
-        }
 
     }
 
