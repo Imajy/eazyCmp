@@ -1,3 +1,18 @@
+<p align="center">
+
+<img src="assets/logo.png" width="180"/>
+
+</p>
+
+<h1 align="center">EazyCMP</h1>
+
+<p align="center">
+
+Kotlin Multiplatform Toolkit for API, UI, Permissions & Media Picker
+
+</p>
+
+![banner](assets/logo.png)
 ![Kotlin](https://img.shields.io/badge/Kotlin-Multiplatform-blue)
 ![Compose](https://img.shields.io/badge/Compose-Multiplatform-green)
 ![Ktor](https://img.shields.io/badge/Ktor-Client-orange)
