@@ -1,17 +1,19 @@
 package com.aj.shared.picker
 
 import androidx.compose.runtime.Composable
-import com.github.sarxos.webcam.Webcam
-import java.io.ByteArrayOutputStream
+import org.bytedeco.javacpp.BytePointer
 import java.io.File
-import javax.imageio.ImageIO
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
+import org.bytedeco.opencv.opencv_videoio.VideoCapture
+import org.bytedeco.opencv.global.opencv_imgcodecs.imencode
+import org.bytedeco.opencv.opencv_core.Mat
 
 actual class PlatformMediaPicker actual constructor() {
 
     @Composable
-    actual fun RegisterLaunchers() {}
+    actual fun RegisterLaunchers() {
+    }
 
     actual fun launch(
         type: PickerType,
@@ -57,7 +59,9 @@ actual class PlatformMediaPicker actual constructor() {
                     )
             }
 
-            PickerType.CAMERA -> {captureFromCamera(onResult = onResult)}
+            PickerType.CAMERA -> {
+                captureFromCamera(onResult = onResult)
+            }
         }
         val result = chooser.showOpenDialog(null)
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -116,6 +120,7 @@ private fun isValidSelection(
         }
     }
 }
+
 private fun guessMimeType(ext: String): String {
     return when (ext.lowercase()) {
         "jpg", "jpeg" -> "image/jpeg"
@@ -131,28 +136,55 @@ private fun guessMimeType(ext: String): String {
 fun captureFromCamera(
     onResult: (PickedFile?) -> Unit
 ) {
+
     try {
-        val webcam = Webcam.getDefault()
-        if (webcam == null) {
-            println("no camera detected")
+
+        val camera = VideoCapture(0)
+
+        if (!camera.isOpened) {
+
+            println("camera not available")
+
             onResult(null)
+
             return
+
         }
-        webcam.open()
-        val image = webcam.image
-        val output = ByteArrayOutputStream()
-        ImageIO.write(image, "jpg", output)
-        val bytes = output.toByteArray()
-        webcam.close()
+
+        val frame = Mat()
+
+        camera.read(frame)
+
+        val buffer = BytePointer()
+
+        imencode(".jpg", frame, buffer)
+
+        val bytes = ByteArray(buffer.limit().toInt())
+
+        buffer.get(bytes)
+
+        camera.release()
+
         onResult(
+
             PickedFile(
+
                 bytes = bytes,
+
                 fileName = "camera_${System.currentTimeMillis()}.jpg",
+
                 mimeType = "image/jpeg"
+
             )
+
         )
+
     } catch (e: Exception) {
+
         e.printStackTrace()
+
         onResult(null)
+
     }
+
 }

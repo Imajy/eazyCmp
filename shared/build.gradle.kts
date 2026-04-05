@@ -71,7 +71,9 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.cio)
-            implementation("com.github.sarxos:webcam-capture:0.3.12")
+            implementation("org.bytedeco:javacv:1.5.10")
+
+            implementation("org.bytedeco:opencv:4.9.0-1.5.10")
         }
     }
 }
