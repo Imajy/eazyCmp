@@ -6,7 +6,7 @@ import org.koin.dsl.module
 
 val coreModule = module {
     single { json }
-    single { provideSettings(SETTINGS_NAME) }
+    single { provideSettings() }
     single { SharedViewModel(settings = get(), json = get()) }
 
     single { ApiClient() }
