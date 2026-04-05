@@ -25,6 +25,8 @@ androidx-activity = "1.13.0"
 kotlinx-coroutines = "1.10.2"
 multiplatform-settings = "1.3.0"
 lifecycle = "2.10.0"
+webcamCapture = "0.3.12"
+
 
 [libraries]
 foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "foundation" }
@@ -67,6 +69,7 @@ multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-s
 # lifecycle (for BaseViewModel)
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "lifecycle" }
+webcam-capture = { module = "com.github.sarxos:webcam-capture", version.ref = "webcamCapture" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

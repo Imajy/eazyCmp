@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.cio)
+            implementation("com.github.sarxos:webcam-capture:0.3.12")
         }
     }
 }
