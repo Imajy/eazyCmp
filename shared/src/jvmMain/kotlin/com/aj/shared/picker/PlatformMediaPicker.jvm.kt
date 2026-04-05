@@ -1,17 +1,15 @@
 package com.aj.shared.picker
 
 import androidx.compose.runtime.Composable
-import org.bytedeco.javacpp.BytePointer
-import org.bytedeco.opencv.global.opencv_highgui.destroyAllWindows
-import org.bytedeco.opencv.global.opencv_highgui.imshow
-import org.bytedeco.opencv.global.opencv_highgui.namedWindow
-import org.bytedeco.opencv.global.opencv_highgui.waitKey
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import org.bytedeco.opencv.opencv_videoio.VideoCapture
-import org.bytedeco.opencv.global.opencv_imgcodecs.imencode
-import org.bytedeco.opencv.opencv_core.Mat
+import org.bytedeco.javacv.OpenCVFrameGrabber
+import org.bytedeco.javacv.Java2DFrameConverter
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+import javax.swing.*
+import java.io.ByteArrayOutputStream
 
 actual class PlatformMediaPicker actual constructor() {
 
@@ -64,7 +62,7 @@ actual class PlatformMediaPicker actual constructor() {
             }
 
             PickerType.CAMERA -> {
-                captureFromCamera(onResult = onResult)
+                safeCameraCapture(onResult = onResult)
             }
         }
         val result = chooser.showOpenDialog(null)
@@ -137,52 +135,68 @@ private fun guessMimeType(ext: String): String {
     }
 }
 
-fun captureFromCamera(
+fun safeFileChooser(
+
+    folder: String?,
+
+    extensions: List<String>?,
+
     onResult: (PickedFile?) -> Unit
+
 ) {
 
-    val cameraIndex = findLaptopCamera()
+    try {
 
-    val camera = VideoCapture(cameraIndex)
+        val chooser = JFileChooser()
 
-    if (!camera.isOpened) {
+        chooser.isMultiSelectionEnabled = false
 
-        println("camera not found")
+        extensions?.let {
 
-        onResult(null)
+            chooser.isAcceptAllFileFilterUsed = false
 
-        return
+            chooser.fileFilter =
+                FileNameExtensionFilter(
 
-    }
+                    "Allowed files",
 
-    val frame = Mat()
+                    *it.toTypedArray()
 
-    namedWindow("Capture Photo")
+                )
 
-    println("Press SPACE to capture")
+        }
 
-    while (true) {
+        folder?.let {
 
-        camera.read(frame)
+            val dir = File(
 
-        imshow("Capture Photo", frame)
+                System.getProperty("user.home"),
+                it
+            )
 
-        val key = waitKey(30)
+            if (dir.exists()) {
 
-        if (key == 32) { // space key
+                chooser.currentDirectory = dir
 
-            val buffer = BytePointer()
+            }
 
-            imencode(".jpg", frame, buffer)
+        }
 
-            val bytes =
-                ByteArray(buffer.limit().toInt())
+        val result = chooser.showOpenDialog(null)
 
-            buffer.get(bytes)
+        if (result == JFileChooser.APPROVE_OPTION) {
 
-            camera.release()
+            val file = chooser.selectedFile
 
-            destroyAllWindows()
+            if (!file.exists() || !file.isFile) {
+
+                onResult(null)
+
+                return
+
+            }
+
+            val bytes = file.readBytes()
 
             onResult(
 
@@ -190,60 +204,117 @@ fun captureFromCamera(
 
                     bytes = bytes,
 
-                    fileName = "capture_${System.currentTimeMillis()}.jpg",
+                    fileName = file.name,
 
-                    mimeType = "image/jpeg"
+                    mimeType = guessMime(file.extension)
 
                 )
 
             )
 
-            break
-
-        }
-
-        if (key == 27) { // ESC cancel
-
-            camera.release()
-
-            destroyAllWindows()
+        } else {
 
             onResult(null)
 
-            break
-
         }
+
+    } catch (e: Exception) {
+
+        e.printStackTrace()
+
+        onResult(null)
 
     }
 
 }
 
-fun findLaptopCamera(): Int {
+fun guessMime(ext: String): String {
 
-    for (i in 0..5) {
+    return when (ext.lowercase()) {
 
-        val cam = VideoCapture(i)
+        "jpg", "jpeg" -> "image/jpeg"
 
-        if (cam.isOpened) {
+        "png" -> "image/png"
 
-            val frame = Mat()
+        "webp" -> "image/webp"
 
-            cam.read(frame)
+        "pdf" -> "application/pdf"
 
-            cam.release()
+        "doc" -> "application/msword"
 
-            if (!frame.empty()) {
+        "docx" ->
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
-                println("camera index = $i")
-
-                return i
-
-            }
-
-        }
+        else -> "application/octet-stream"
 
     }
 
-    return 0
+}
 
+fun safeCameraCapture(
+    onResult: (PickedFile?) -> Unit
+) {
+
+    try {
+
+        val grabber = OpenCVFrameGrabber(0)
+
+        grabber.start()
+
+        val converter = Java2DFrameConverter()
+
+        val frame = grabber.grab()
+
+        val previewImage: BufferedImage =
+            converter.convert(frame)
+
+        val label = JLabel(ImageIcon(previewImage))
+
+        val captureBtn = JButton("Capture")
+
+        val frameWindow = JFrame("Camera")
+
+        frameWindow.layout = BoxLayout(
+            frameWindow.contentPane,
+            BoxLayout.Y_AXIS
+        )
+        frameWindow.add(label)
+        frameWindow.add(captureBtn)
+        frameWindow.setSize(400, 400)
+        frameWindow.isVisible = true
+        captureBtn.addActionListener {
+            try {
+                val capturedFrame = grabber.grab()
+                val img = converter.convert(capturedFrame)
+                val baos = ByteArrayOutputStream()
+                ImageIO.write(img, "jpg", baos)
+                val bytes = baos.toByteArray()
+                frameWindow.dispose()
+                grabber.stop()
+                onResult(
+                    PickedFile(
+                        bytes = bytes,
+                        fileName = "capture_${System.currentTimeMillis()}.jpg",
+                        mimeType = "image/jpeg"
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                frameWindow.dispose()
+                onResult(null)
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        println("camera failed → fallback")
+        safeFileChooser(
+            folder = "Pictures",
+            extensions = listOf(
+                "jpg",
+                "jpeg",
+                "png"
+            ),
+            onResult
+        )
+    }
 }
