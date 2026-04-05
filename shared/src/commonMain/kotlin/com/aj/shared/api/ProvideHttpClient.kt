@@ -4,7 +4,8 @@ import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 expect fun provideHttpClient(): HttpClient
 
-expect fun provideSettings(): Settings
+
+expect fun provideSettings(name : String): Settings
 
 object HttpClientProvider {
     val client: HttpClient by lazy {

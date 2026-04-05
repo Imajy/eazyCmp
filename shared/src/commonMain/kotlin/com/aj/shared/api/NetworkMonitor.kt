@@ -1,5 +1,6 @@
 package com.aj.shared.api
 
+import com.aj.shared.picker.PickedFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -33,10 +34,4 @@ enum class BodyType {
 data class FilePart(
     val name: String,
     val file: PickedFile?
-)
-
-data class PickedFile(
-    val bytes: ByteArray,
-    val fileName: String?,
-    val mimeType: String?
 )

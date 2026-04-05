@@ -35,17 +35,18 @@ actual fun provideHttpClient(): HttpClient {
         }
     }
 }
-
 lateinit var appContext: Context
+private var settingsName: String = "app_settings"
 
-fun initSettings(context: Context) {
+fun initEazyCmp(context: Context) {
     appContext = context
 }
 
-actual fun provideSettings(): Settings {
+
+actual fun provideSettings(name: String): Settings {
 
     val pref = appContext.getSharedPreferences(
-        "app_settings",
+        name,
         Context.MODE_PRIVATE
     )
 

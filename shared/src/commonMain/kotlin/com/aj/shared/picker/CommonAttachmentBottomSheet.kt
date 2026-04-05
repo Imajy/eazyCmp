@@ -30,6 +30,8 @@ import com.github.imajy.shared.generated.resources.ic_photos
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -34,7 +34,7 @@ actual fun provideHttpClient(): HttpClient {
     }
 }
 
-actual fun provideSettings(): Settings {
+actual fun provideSettings(name : String): Settings {
     val delegate = NSUserDefaults.standardUserDefaults
     return NSUserDefaultsSettings(delegate)
 }
