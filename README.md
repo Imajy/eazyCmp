@@ -1,3 +1,11 @@
+![Kotlin](https://img.shields.io/badge/Kotlin-Multiplatform-blue)
+![Compose](https://img.shields.io/badge/Compose-Multiplatform-green)
+![Ktor](https://img.shields.io/badge/Ktor-Client-orange)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+![Version](https://img.shields.io/badge/version-1.0.0-purple)
+![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Desktop-blue)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
 EazyCMP
 
 EazyCMP is a Kotlin Multiplatform toolkit that provides a complete foundation for building modern apps using:
