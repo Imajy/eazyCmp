@@ -5,7 +5,12 @@ import io.ktor.client.HttpClient
 expect fun provideHttpClient(): HttpClient
 
 
-expect fun provideSettings(name : String): Settings
+expect fun provideSettings() : Settings
+
+
+fun initSettingsName(name: String) {
+    SETTINGS_NAME = name
+}
 
 object HttpClientProvider {
     val client: HttpClient by lazy {

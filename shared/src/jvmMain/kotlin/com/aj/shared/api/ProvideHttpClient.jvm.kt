@@ -44,7 +44,7 @@ actual fun provideHttpClient(): HttpClient {
 
 }
 
-actual fun provideSettings(name : String): Settings {
-    val delegate = Preferences.userRoot().node(name)
+actual fun provideSettings() : Settings {
+    val delegate = Preferences.userRoot().node(SETTINGS_NAME)
     return PreferencesSettings(delegate)
 }

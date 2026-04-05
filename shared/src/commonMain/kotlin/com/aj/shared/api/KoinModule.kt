@@ -6,14 +6,15 @@ import org.koin.dsl.module
 
 val coreModule = module {
     single { json }
-    single { provideSettings() }
+    single { provideSettings(SETTINGS_NAME) }
     single { SharedViewModel(settings = get(), json = get()) }
 
     single { ApiClient() }
 }
+var SETTINGS_NAME = "app_settings"
 
 
-fun ajayModule(): Module = coreModule
+fun eazyModule(): Module = coreModule
 
 val json = Json {
     ignoreUnknownKeys = true
