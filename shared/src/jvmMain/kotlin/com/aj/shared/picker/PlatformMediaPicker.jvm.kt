@@ -62,7 +62,7 @@ actual class PlatformMediaPicker actual constructor() {
             }
 
             PickerType.CAMERA -> {
-                safeCameraCapture(onResult = onResult)
+                openDesktopCamera(onResult = onResult)
             }
         }
         val result = chooser.showOpenDialog(null)
@@ -317,4 +317,139 @@ fun safeCameraCapture(
             onResult
         )
     }
+}
+
+
+fun openDesktopCamera(
+    onResult: (PickedFile?) -> Unit
+) {
+
+    SwingUtilities.invokeLater {
+
+        try {
+
+            val grabber = OpenCVFrameGrabber(0)
+
+            grabber.start()
+
+            val converter = Java2DFrameConverter()
+
+            val previewLabel = JLabel()
+
+            val captureBtn = JButton("Capture")
+
+            val cancelBtn = JButton("Cancel")
+
+            val window = JFrame("Camera")
+
+            window.layout = BoxLayout(
+                window.contentPane,
+                BoxLayout.Y_AXIS
+            )
+
+            window.add(previewLabel)
+
+            window.add(captureBtn)
+
+            window.add(cancelBtn)
+
+            window.setSize(500, 400)
+
+            window.isVisible = true
+
+            var running = true
+
+            Thread {
+
+                while (running) {
+
+                    val frame = grabber.grab()
+
+                    val image: BufferedImage? =
+                        converter.convert(frame)
+
+                    if (image != null) {
+
+                        previewLabel.icon =
+                            ImageIcon(image)
+
+                    }
+
+                    Thread.sleep(33)
+
+                }
+
+            }.start()
+
+            captureBtn.addActionListener {
+
+                try {
+
+                    val frame = grabber.grab()
+
+                    val img = converter.convert(frame)
+
+                    val baos =
+                        ByteArrayOutputStream()
+
+                    ImageIO.write(img, "jpg", baos)
+
+                    val bytes =
+                        baos.toByteArray()
+
+                    running = false
+
+                    grabber.stop()
+
+                    window.dispose()
+
+                    onResult(
+
+                        PickedFile(
+
+                            bytes = bytes,
+
+                            fileName =
+                                "capture_${System.currentTimeMillis()}.jpg",
+
+                            mimeType = "image/jpeg"
+
+                        )
+
+                    )
+
+                } catch (e: Exception) {
+
+                    e.printStackTrace()
+
+                    onResult(null)
+
+                }
+
+            }
+
+            cancelBtn.addActionListener {
+
+                running = false
+
+                grabber.stop()
+
+                window.dispose()
+
+                onResult(null)
+
+            }
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+            println("camera not available")
+
+            onResult(null)
+
+        }
+
+    }
+
 }
