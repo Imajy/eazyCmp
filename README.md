@@ -1,317 +1,663 @@
-eazyCmp 🚀
+EazyCMP
 
-A powerful, lightweight Compose Multiplatform (CMP) toolkit that provides:
-•	🎨 Reusable UI components
-•	🌐 Ktor-based API client
-•	🔄 Flow<Resource> networking pattern
-•	⚙️ Configurable base URL system
-•	📱 Works on Android, iOS, Desktop
+EazyCMP is a Kotlin Multiplatform toolkit that provides a complete foundation for building modern apps using:
+  • Compose Multiplatform UI components
+  • Ktor-based API client
+  • File picker & permissions abstraction
+  • Shared Settings storage
+  • Base ViewModel architecture
+  • Ready-to-use form components
+  • Multipart upload utilities
+  • Request dispatcher with priority
+  • BottomSheet & UI helpers
 
-Designed to reduce boilerplate in Compose Multiplatform projects and standardize:
-•	UI patterns
-•	API calling
-•	response handling
-•	configuration management
-
-⸻
-
-✨ Features
-
-🎨 UI Components
-
-Feature	Description
-🎭 Lottie	Render animations directly from URL or local json.
-📅 DatePicker	Single & Range date selection with constraints.
-🔽 Dropdown	Generic Single/Multi-select with Search support.
-🔘 Checkbox	Custom size checkbox (no bulky Material default).
-📏 Dashed Divider	Clean dashed separator for modern UI.
-🏗️ Bottom Bar	Generic navigation bar with state handling.
-✍️ TextFields	Optimized outlined inputs with validation helpers
-📑 Dialog Selectors	Multi-select dialog with state persistence
-
+Designed to reduce boilerplate in:
+  • Android
+  • iOS
+  • Desktop
+  • JVM
 
 ⸻
 
-🌐 API Layer
+Features
 
-Feature	Description
-🔗 Ktor Client	Multiplatform HTTP client
-🔐 Token Management	Dynamically update auth token
-🧩 Base Config	Manage multiple base URLs
-🔄 Flow<Resource>	Clean loading/success/error handling
-🧠 Auto merge params	Default body/query params auto attach
-⚡ Lightweight	No Retrofit / heavy dependencies
-💾 Settings Support	Multiplatform key-value storage
+Networking
+  • Base URL management
+  • Automatic headers injection
+  • Token management
+  • Multipart file upload
+  • Query & body merging
+  • Request priority queue
+  • Unified response wrapper
+
+Storage
+  • Multiplatform Settings (SharedPreferences / NSUserDefaults / JVM)
+  • SharedViewModel for global state
+
+File Handling
+  • Unified PickedFile model
+  • File size validation helpers
+  • Image / PDF detection
+  • Base64 conversion ready
+
+Permissions
+  • Camera permission
+  • Storage permission
+  • Photos permission abstraction
+  • Unified API across platforms
+
+Media Picker
+  • Camera capture
+  • Image gallery picker
+  • PDF picker
+  • File picker
+  • Multi-file selection
+
+Compose Multiplatform UI Kit
+  • Custom Scaffold
+  • BottomSheet
+  • TextField
+  • DatePicker
+  • Dropdown
+  • RadioButton
+  • Checkbox
+  • Snackbar
+  • Image loader
+  • Loading indicator
+  • Divider
+  • Tabs
+  • Theme colors
+  • Modifier extensions
+
+⸻
+
+Installation
+
+dependencies {
+
+    implementation("com.aj:eazycmp:1.0.0")
+
+}
 
 
 ⸻
 
-📦 Installation
+Project Structure
 
-Add dependency in commonMain
-
-implementation("com.github.Imajy:eazyCmp:Tag")
+eazycmp
+│
+├── api
+│   ├── ApiClient
+│   ├── ApiConfig
+│   ├── ApiDispatcher
+│   ├── ProvideHttpClient
+│   ├── mergeBody
+│   └── applyDefaults
+│
+├── storage
+│   ├── provideSettings
+│   └── SharedViewModel
+│
+├── file
+│   ├── PickedFile
+│   └── PlatformMediaPicker
+│
+├── permission
+│   ├── PermissionManager
+│   ├── AppPermission
+│   └── PermissionCallback
+│
+├── ui
+│   ├── CustomScaffold
+│   ├── BottomSheet
+│   ├── TextField
+│   ├── DropDown
+│   ├── DatePicker
+│   ├── SnackBar
+│   ├── RadioCheckBox
+│   ├── Divider
+│   ├── Loading
+│   ├── CustomImage
+│   ├── Tab
+│   └── Color
+│
+└── base
+    ├── BaseViewModel
+    ├── Resource
+    └── NetworkMonitor
 
 
 ⸻
 
-📂 Modules Overview
+Setup
 
-UI module
+Initialize settings in Android App:
 
-dropdown
-datepicker
-textfield
-checkbox
-bottomBar
-dialog
-divider
-lottie
+class App : Application() {
 
-API module
+    override fun onCreate() {
 
-ApiClient
-ApiConfig
-HttpClientProvider
-Resource
-mergeBody
-SettingsProvider
+        super.onCreate()
+
+        initSettings(this)
+
+    }
+
+}
 
 
 ⸻
 
-⚙️ API Setup
+Dependency Injection
 
-1️⃣ Register Base URL
+val coreModule = module {
+
+    single { json }
+
+    single {
+
+        provideSettings("app_settings")
+
+    }
+
+    single {
+
+        SharedViewModel(
+
+            settings = get(),
+
+            json = get()
+
+        )
+
+    }
+
+    single {
+
+        ApiClient()
+
+    }
+
+}
+
+Start Koin:
+
+startKoin {
+
+    modules(
+
+        coreModule
+
+    )
+
+}
+
+
+⸻
+
+Base URL Configuration
 
 ApiConfig.registerBaseUrl(
 
     name = "main",
 
-    baseUrl = "https://example.com/api/",
+    baseUrl = "https://api.example.com",
 
-    token = null,
+    token = "user_token",
 
     defaultHeaders = mapOf(
 
-        "Content-Type" to "application/json"
+        "platform" to "android"
+
     ),
 
-    defaultQueryParams = emptyMap(),
+    defaultQueryParams = mapOf(
+
+        "lang" to "en"
+
+    ),
 
     defaultBodyParams = mapOf(
 
-        "device" to "android"
+        "deviceType" to "android"
+
     )
+
 )
 
 
 ⸻
 
-2️⃣ Update Token
+API Call Examples
 
-ApiConfig.updateToken(
+GET request
 
-    name = "main",
-
-    token = "your_token"
-)
-
-
-⸻
-
-3️⃣ Create ApiClient
-
-val apiClient = ApiClient()
-
-
-⸻
-
-4️⃣ GET API
-
-apiClient.get<MyResponse>(
+apiClient.request<Unit, UserResponse>(
 
     base = "main",
 
-    endpoint = "users",
+    endpoint = "users"
 
-    query = mapOf(
-
-        "page" to "1"
-    )
-
-).collect {
-
-    when (it) {
-
-        is Resource.Loading -> {}
-
-        is Resource.Success -> {
-
-            val data = it.data
-        }
-
-        is Resource.Error -> {
-
-            println(it.message)
-        }
-    }
-}
+)
 
 
 ⸻
 
-5️⃣ POST API
+POST request
 
-apiClient.post<MyResponse>(
+apiClient.request<LoginRequest, LoginResponse>(
 
     base = "main",
 
     endpoint = "login",
 
-    body = mapOf(
+    method = ApiMethod.POST,
 
-        "email" to "test@mail.com",
+    body = LoginRequest(
 
-        "password" to "123456"
+        email = "test@gmail.com",
+
+        password = "1234"
+
     )
 
-).collect {
-
-    when (it) {
-
-        is Resource.Loading -> {}
-
-        is Resource.Success -> {}
-
-        is Resource.Error -> {}
-    }
-}
+)
 
 
 ⸻
 
-🔁 Resource Wrapper
+Query parameters
 
-sealed class Resource<T>(
+apiClient.request<Unit, ProductResponse>(
 
-    val data: T? = null,
+    base = "main",
 
-    val message: String? = null
+    endpoint = "products",
+
+    query = mapOf(
+
+        "page" to "1"
+
+    )
+
+)
+
+
+⸻
+
+Multipart File Upload
+
+apiClient.request<Unit, UploadResponse>(
+
+    base = "main",
+
+    endpoint = "upload",
+
+    method = ApiMethod.POST,
+
+    files = listOf(
+
+        FilePart(
+
+            name = "document",
+
+            file = pickedFile
+
+        )
+
+    )
+
+)
+
+
+⸻
+
+PickedFile
+
+PickedFile(
+
+    bytes = byteArray,
+
+    fileName = "aadhar.jpg",
+
+    mimeType = "image/jpeg"
+
+)
+
+Utilities
+
+file.isImage
+
+file.isPdf
+
+file.sizeInMb
+
+file.isUnder2Mb()
+
+file.isUnder4Mb()
+
+file.isUnder10Mb()
+
+
+⸻
+
+Permissions
+
+PermissionManager.requestPermission(
+
+    AppPermission.Camera
+
 ) {
 
-    class Success<T>(data: T) : Resource<T>(data)
-
-    class Error<T>(message: String) : Resource<T>(null, message)
-
-    class Loading<T> : Resource<T>()
 }
 
 
 ⸻
 
-🧠 Default Param Merge
+Media Picker
 
-defaultBodyParams = mapOf(
+PlatformMediaPicker.open(
 
-    "app_version" to "1.0"
+    PickerType.ImageGallery
+
+) { files ->
+
+}
+
+Supported types:
+
+PickerType.Camera
+PickerType.ImageGallery
+PickerType.Pdf
+PickerType.File
+PickerType.Video
+
+
+⸻
+
+Attachment Bottom Sheet
+
+CommonAttachmentBottomSheet(
+
+    onCameraClick = { },
+
+    onGalleryClick = { },
+
+    onPdfClick = { }
+
 )
 
-request body:
 
-body = mapOf(
+⸻
 
-    "email" to "abc@mail.com"
-)
+Resource Wrapper
 
-final body:
+Resource.Loading
 
-{
-"app_version":"1.0",
-"email":"abc@mail.com"
+Resource.Success
+
+Resource.Error
+
+Usage:
+
+apiClient.request<Unit, User>(...)
+
+.collectApi(
+
+    scope = viewModelScope
+
+) { data ->
+
 }
 
 
 ⸻
 
-🖥️ Platform Implementation
+BaseViewModel
 
-provideHttpClient()
+class ProfileViewModel(
 
-expect fun provideHttpClient(): HttpClient
+    private val apiClient: ApiClient
 
-example:
+) : BaseViewModel()
 
-HttpClient {
 
-    install(ContentNegotiation) {
+⸻
 
-        json(
+SharedViewModel
 
-            Json {
+sharedViewModel.saveToken(token)
 
-                ignoreUnknownKeys = true
+sharedViewModel.token
 
-                isLenient = true
-            }
-        )
+
+⸻
+
+Network Monitor
+
+NetworkMonitor.connected
+
+
+⸻
+
+Compose UI Components
+
+Custom Scaffold
+
+CustomScaffold(
+
+    title = "Home"
+
+) {
+
+}
+
+
+⸻
+
+BottomSheet
+
+BottomSheet(
+
+    visible = true
+
+) {
+
+}
+
+
+⸻
+
+TextField
+
+TextField(
+
+    value = name,
+
+    onValueChange = { }
+
+)
+
+
+⸻
+
+DatePicker
+
+DatePicker(
+
+    selectedDate = date
+
+)
+
+
+⸻
+
+Dropdown
+
+DropDown(
+
+    items = listOf(
+
+        "Male",
+
+        "Female"
+
+    )
+
+)
+
+
+⸻
+
+Radio / Checkbox
+
+RadioCheckBox(
+
+    selected = true
+
+)
+
+
+⸻
+
+Snackbar
+
+SnackBar(
+
+    message = "Saved successfully"
+)
+
+
+⸻
+
+Image Loader
+
+CustomImage(
+
+    url = imageUrl
+
+)
+
+
+⸻
+
+Loading Indicator
+
+Loading()
+
+
+⸻
+
+Divider
+
+Divider()
+
+
+⸻
+
+Tabs
+
+Tab(
+
+    title = "Home"
+)
+
+
+⸻
+
+Colors
+
+AppColors.primary
+
+AppColors.secondary
+
+
+⸻
+
+Request Priority
+
+ApiPriority.HIGH
+
+ApiPriority.NORMAL
+
+ApiPriority.LOW
+
+
+⸻
+
+Complete Example Flow
+
+PermissionManager.requestPermission(
+
+    AppPermission.Camera
+
+) {
+
+    PlatformMediaPicker.open(
+
+        PickerType.Camera
+
+    ) { files ->
+
+        val file = files.first()
+
+        if(file.isUnder2Mb()){
+
+            apiClient.request(
+
+                base = "main",
+
+                endpoint = "upload",
+
+                files = listOf(
+
+                    FilePart(
+
+                        name = "file",
+
+                        file = file
+
+                    )
+
+                )
+
+            )
+
+        }
+
     }
+
 }
 
 
 ⸻
 
-provideSettings()
+Platform Support
 
-expect fun provideSettings(): Settings
-
-
-⸻
-
-🧱 Architecture Recommendation
-
-presentation
-↓
-viewmodel
-↓
-repository
-↓
-apiClient
+Feature Android iOS Desktop
+API yes yes yes
+Settings  yes yes yes
+Permissions yes yes partial
+Media Picker  yes yes yes
+Compose UI  yes yes yes
 
 
 ⸻
 
-🎯 Use Cases
+Why EazyCMP
 
-✔ CMP apps with shared API layer
-✔ scalable UI systems
-✔ reusable dropdown & dialogs
-✔ form heavy applications
-✔ enterprise multi-module apps
+EazyCMP removes the need to separately implement:
+  • networking layer
+  • permission handling
+  • file picking
+  • form components
+  • base architecture
+  • shared preferences abstraction
 
-⸻
-
-🔮 Planned Additions
-•	pagination helper
-•	file upload
-•	retry interceptor
-•	token refresh handler
-•	form validator kit
-•	theme system
-•	compose navigation helpers
+Everything works together out of the box.
 
 ⸻
 
-👨‍💻 Author
+Author
 
 Ajay Swami
-
-⸻
-
-if you want, i can also provide:
-
-• example project structure
-• repository layer template
-• BaseViewModel for Flow<Resource>
-• form builder using eazyCmp components
-• multi-module architecture diagram
