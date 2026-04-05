@@ -2,6 +2,10 @@ package com.aj.shared.picker
 
 import androidx.compose.runtime.Composable
 import org.bytedeco.javacpp.BytePointer
+import org.bytedeco.opencv.global.opencv_highgui.destroyAllWindows
+import org.bytedeco.opencv.global.opencv_highgui.imshow
+import org.bytedeco.opencv.global.opencv_highgui.namedWindow
+import org.bytedeco.opencv.global.opencv_highgui.waitKey
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -137,54 +141,109 @@ fun captureFromCamera(
     onResult: (PickedFile?) -> Unit
 ) {
 
-    try {
+    val cameraIndex = findLaptopCamera()
 
-        val camera = VideoCapture(0)
+    val camera = VideoCapture(cameraIndex)
 
-        if (!camera.isOpened) {
+    if (!camera.isOpened) {
 
-            println("camera not available")
-
-            onResult(null)
-
-            return
-
-        }
-
-        val frame = Mat()
-
-        camera.read(frame)
-
-        val buffer = BytePointer()
-
-        imencode(".jpg", frame, buffer)
-
-        val bytes = ByteArray(buffer.limit().toInt())
-
-        buffer.get(bytes)
-
-        camera.release()
-
-        onResult(
-
-            PickedFile(
-
-                bytes = bytes,
-
-                fileName = "camera_${System.currentTimeMillis()}.jpg",
-
-                mimeType = "image/jpeg"
-
-            )
-
-        )
-
-    } catch (e: Exception) {
-
-        e.printStackTrace()
+        println("camera not found")
 
         onResult(null)
 
+        return
+
     }
+
+    val frame = Mat()
+
+    namedWindow("Capture Photo")
+
+    println("Press SPACE to capture")
+
+    while (true) {
+
+        camera.read(frame)
+
+        imshow("Capture Photo", frame)
+
+        val key = waitKey(30)
+
+        if (key == 32) { // space key
+
+            val buffer = BytePointer()
+
+            imencode(".jpg", frame, buffer)
+
+            val bytes =
+                ByteArray(buffer.limit().toInt())
+
+            buffer.get(bytes)
+
+            camera.release()
+
+            destroyAllWindows()
+
+            onResult(
+
+                PickedFile(
+
+                    bytes = bytes,
+
+                    fileName = "capture_${System.currentTimeMillis()}.jpg",
+
+                    mimeType = "image/jpeg"
+
+                )
+
+            )
+
+            break
+
+        }
+
+        if (key == 27) { // ESC cancel
+
+            camera.release()
+
+            destroyAllWindows()
+
+            onResult(null)
+
+            break
+
+        }
+
+    }
+
+}
+
+fun findLaptopCamera(): Int {
+
+    for (i in 0..5) {
+
+        val cam = VideoCapture(i)
+
+        if (cam.isOpened) {
+
+            val frame = Mat()
+
+            cam.read(frame)
+
+            cam.release()
+
+            if (!frame.empty()) {
+
+                println("camera index = $i")
+
+                return i
+
+            }
+
+        }
+
+    }
+
+    return 0
 
 }
