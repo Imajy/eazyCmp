@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.bottomSheetHeaderBackGround
 import com.aj.shared.theme.rejectedRedColor
@@ -83,7 +85,11 @@ fun GenericBottomSheet(
                     ) {
                         Text(
                             text = it,
-                            style = titleStyle
+                            style = titleStyle,
+                            modifier = Modifier.fillMaxWidth(.9f),
+                            textAlign = TextAlign.Start,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                         CustomImage(
                             model = closeIcon,
