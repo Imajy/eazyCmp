@@ -19,7 +19,6 @@ kotlin {
         }
     }
 
-    // JVM Target for Desktop
     jvm()
 
     iosX64()
@@ -71,9 +70,9 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.cio)
-            implementation("org.bytedeco:javacv:1.5.10")
-
-            implementation("org.bytedeco:opencv:4.9.0-1.5.10")
+            implementation(libs.javacv)
+            implementation(libs.pdfbox)
+            implementation(libs.opencv)
         }
     }
 }
@@ -82,13 +81,9 @@ compose.resources {
     publicResClass = true
 }
 
-// Library module mein iski zaroorat nahi hoti, par error na de isliye rehne diya hai
 compose.desktop {
     application {}
 }
 
 group = "com.github.Imajy"
-version = "1.0.03-alpha-10" // 🚀 Naya version try karo
-
-// JitPack build fail na ho isliye ye clean rakha hai
-// Resolution strategy ki ab zaroorat nahi padni chahiye
+version = "1.0.03-alpha-10"

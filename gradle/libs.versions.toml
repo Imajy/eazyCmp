@@ -2,6 +2,7 @@
 agp = "8.11.2"
 composeMultiplatform = "1.10.3"
 foundation = "1.10.3"
+javacv = "1.5.13"
 kotlin = "2.3.20"
 kotlinStdlib = "2.3.20"
 kotlinxCoroutinesCoreVersion = "1.10.2"
@@ -15,6 +16,8 @@ ktorClientOkhttp = "3.4.2"
 ktorSerializationKotlinxJson = "3.4.2"
 material3 = "1.10.0-alpha05"
 materialIconsCore = "1.7.3"
+opencv = "4.13.0-1.5.13"
+pdfbox = "3.0.7"
 runtime = "1.10.3"
 kotlinxDatetime = "0.7.1"
 koin = "4.2.0"
@@ -30,10 +33,13 @@ webcamCapture = "0.3.12"
 
 [libraries]
 foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "foundation" }
+javacv = { module = "org.bytedeco:javacv", version.ref = "javacv" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "materialIconsCore" }
 material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+opencv = { module = "org.bytedeco:opencv", version.ref = "opencv" }
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "runtime" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }

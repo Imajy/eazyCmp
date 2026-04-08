@@ -303,12 +303,21 @@ fun CustomImage(
             LOTTIE JSON URL
             ----------------
             */
-            if (isJson && isUrl) {
-                LottiePlaceholder(
-                    Placeholder.LottieUrl(cleanPath),
-                    modifier,
-                    contentScale
-                )
+//            if (isJson && isUrl) {
+//                LottiePlaceholder(
+//                    Placeholder.LottieUrl(cleanPath),
+//                    modifier,
+//                    contentScale
+//                )
+//                return
+//            }
+            if (isJson) {
+                if (isUrl) {
+                    LottiePlaceholder(Placeholder.LottieUrl(cleanPath), modifier, contentScale)
+                } else {
+                    // 🔥 NAYA LOGIC: Agar local .json path hai toh Placeholder.LottieJson banke call hoga
+                    LottiePlaceholder(Placeholder.LottieJson(cleanPath), modifier, contentScale)
+                }
                 return
             }
 
