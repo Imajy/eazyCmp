@@ -423,7 +423,16 @@ fun LottiePlaceholder(
         value = try {
             when (placeholder) {
                 is Placeholder.LottieUrl -> HttpClient().get(placeholder.url).bodyAsText()
-                is Placeholder.LottieJson -> placeholder.json
+                is Placeholder.LottieJson -> {
+                    val pathOrJson = placeholder.json
+                    // 🔥 NAYA LOGIC: Agar file name hai toh resolve karo, warna as it is raw JSON return kardo
+                    if (pathOrJson.endsWith(".json", ignoreCase = true)) {
+                        val bytes = CustomImageResourceResolver.resolveBytes?.invoke(pathOrJson)
+                        bytes?.decodeToString() ?: "{}"
+                    } else {
+                        pathOrJson
+                    }
+                }
                 is Placeholder.LottieBytes -> placeholder.bytes.decodeToString()
                 else -> null
             }
