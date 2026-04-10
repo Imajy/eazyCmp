@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aj.shared.theme.grayColor
 import com.aj.shared.theme.transparentColor
 import com.aj.shared.theme.whiteColor
 
@@ -39,6 +40,8 @@ fun GenericTabs(
     unselectedBrush : Brush = Brush.horizontalGradient(
         listOf(transparentColor, transparentColor)
     ),
+    selectedTextColor : Color = whiteColor,
+    unSelectedTextColor : Color = grayColor,
     onTabSelected: (String) -> Unit = {}
 ) {
     Card(
@@ -53,7 +56,7 @@ fun GenericTabs(
             list.forEach { type ->
 
                 val isSelected = selected == type
-                val textColor = if (isSelected) whiteColor else Color.Black
+                val textColor = if (isSelected) selectedTextColor else unSelectedTextColor
 
                 Box(
                     modifier = Modifier
