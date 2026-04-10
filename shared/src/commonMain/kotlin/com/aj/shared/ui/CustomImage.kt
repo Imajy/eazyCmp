@@ -276,7 +276,8 @@ fun CustomImage(
                 imageLoader = imageLoader,
                 contentDescription = contentDescription,
                 modifier = modifier,
-                contentScale = contentScale
+                contentScale = contentScale,
+                colorFilter = colorFilter
             ) {
 
                 val state by painter.state.collectAsState()
@@ -342,7 +343,8 @@ fun CustomImage(
                     imageLoader = imageLoader,
                     contentDescription = contentDescription,
                     modifier = modifier,
-                    contentScale = contentScale
+                    contentScale = contentScale,
+                    colorFilter = colorFilter
                 ) {
                     val state by painter.state.collectAsState()
                     if (state is AsyncImagePainter.State.Success) SubcomposeAsyncImageContent()
@@ -384,7 +386,8 @@ fun CustomImage(
                         imageLoader = imageLoader,
                         contentDescription = contentDescription,
                         modifier = modifier,
-                        contentScale = contentScale
+                        contentScale = contentScale,
+                        colorFilter = colorFilter
                     )
                     return
                 }
