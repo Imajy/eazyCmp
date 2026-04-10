@@ -81,7 +81,7 @@ fun GenericTabs(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "type",
+                        text = type,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = textColor,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
