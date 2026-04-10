@@ -42,10 +42,12 @@ fun GenericTabs(
     ),
     selectedTextColor : Color = whiteColor,
     unSelectedTextColor : Color = grayColor,
+    cardRadius : Int = 50,
+    tabRadius : Int = 50,
     onTabSelected: (String) -> Unit = {}
 ) {
     Card(
-        shape = RoundedCornerShape(50.dp),
+        shape = RoundedCornerShape(cardRadius.dp),
         elevation = CardDefaults.cardElevation(2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -62,7 +64,7 @@ fun GenericTabs(
                     modifier = Modifier
                         .weight(1f)
                         .height(40.dp)
-                        .clip(RoundedCornerShape(50.dp))
+                        .clip(RoundedCornerShape(tabRadius.dp))
                         .background(
                             if (isSelected) {
                                 selectedBrush
