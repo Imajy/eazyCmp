@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
@@ -20,6 +22,19 @@ kotlin {
     }
 
     jvm()
+
+    js(IR) {
+        outputModuleName.set("shared")
+        browser {
+            // Library mode me executable() ki zaroorat nahi hoti,
+            // par compiler errors bachane ke liye binaries.library() use hota hai
+            commonWebpackConfig {
+                cssSupport {
+                    enabled = true
+                }
+            }
+        }
+    }
 
     iosX64()
     iosArm64()
@@ -74,6 +89,9 @@ kotlin {
             implementation(libs.pdfbox)
             implementation(libs.opencv)
         }
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
+        }
     }
 }
 
@@ -85,5 +103,8 @@ compose.desktop {
     application {}
 }
 
+tasks.withType<Copy>().configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 group = "com.github.Imajy"
 version = "1.0.03-alpha-10"

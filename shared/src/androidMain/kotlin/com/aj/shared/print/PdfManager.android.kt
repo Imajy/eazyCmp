@@ -113,7 +113,6 @@ fun sharePdfFile(context: Context, file: File) {
     context.startActivity(Intent.createChooser(intent, "Share Comparison Plan"))
 }
 
-
 fun captureFullComposeView(
     context: Context,
     compositionContext: CompositionContext,
