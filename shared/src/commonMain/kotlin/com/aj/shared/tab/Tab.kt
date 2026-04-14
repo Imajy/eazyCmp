@@ -42,6 +42,7 @@ fun GenericTabs(
     ),
     selectedTextColor : Color = whiteColor,
     unSelectedTextColor : Color = grayColor,
+    cardBackGround : Color = whiteColor,
     cardRadius : Int = 50,
     tabRadius : Int = 50,
     onTabSelected: (String) -> Unit = {}
@@ -52,7 +53,7 @@ fun GenericTabs(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.background(whiteColor)
+            modifier = Modifier.background(cardBackGround)
                 .padding(4.dp)
         ) {
             list.forEach { type ->
