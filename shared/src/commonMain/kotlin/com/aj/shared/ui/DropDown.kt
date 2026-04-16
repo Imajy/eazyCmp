@@ -66,7 +66,8 @@ fun <T> CommonDropDown(
     trailingIconTint: Color = blackColor,
     error: String? = null,
     showFullList: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    dropDownBackGround : Color = whiteColor
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
@@ -116,7 +117,7 @@ fun <T> CommonDropDown(
                 placeHolderColor = blackColor,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(whiteColor, RoundedCornerShape(6.dp)),
+                    .background(dropDownBackGround, RoundedCornerShape(6.dp)),
                 trailingIcon = trailingIcon ?: DropdownArrowIcon,
                 trailingIconTine = trailingIconTint,
                 trailingImage = trailingImage,
