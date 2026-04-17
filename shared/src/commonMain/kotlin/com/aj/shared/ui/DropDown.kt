@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.aj.shared.extension.toTitleCase
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.borderBGColor
 import com.aj.shared.theme.grayColor
@@ -249,7 +250,7 @@ fun <T> CommonDropDown(
                                         }
 
                                         Text(
-                                            text = itemLabel?.invoke(item) ?: item.toString(),
+                                            text = (itemLabel?.invoke(item) ?: item.toString()).toTitleCase(),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Black
                                         )
