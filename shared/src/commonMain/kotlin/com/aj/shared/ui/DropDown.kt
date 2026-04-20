@@ -59,7 +59,7 @@ fun <T> CommonDropDown(
     selectedItems: List<T> = emptyList(),
     isMultiSelect: Boolean = false,
     itemLabel: ((T) -> String)? = null,
-    onItemSelected: (T) -> Unit = {},
+    onItemSelected: (T?) -> Unit = {},
     onItemsSelected: (List<T>) -> Unit = {},
     onClick: () -> Unit = {},
     trailingIcon: ImageVector? = null,
@@ -282,6 +282,8 @@ fun <T> CommonDropDown(
                                                     tempSelectedItems - tempSelectedItems
                                                     onItemsSelected(emptyList())
 
+                                                }else {
+                                                    onItemSelected(null)
                                                 }
                                                 showDialog = false
                                             }

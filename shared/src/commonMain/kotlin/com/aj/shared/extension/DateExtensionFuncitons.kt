@@ -1,41 +1,25 @@
 package com.aj.shared.extension
 
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format
+import io.ktor.util.date.getTimeMillis
+import kotlinx.datetime.*
+import kotlinx.datetime.format.*
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
-import kotlinx.datetime.number
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
-import kotlin.time.Instant
+import kotlin.jvm.JvmOverloads
 
-fun Any?.toDdMmmYyyy(
-    format: String = "dd MMM yyyy"
-) = formatDateCMP(this, format)
+// --- Extensions ---
 
-fun Any?.toYyyyMmDd(
-    format: String = "yyyy/MM/dd"
-) = formatDateCMP(this, format)
+fun Any?.toDdMmmYyyy(format: String = "dd MMM yyyy") = formatDateCMP(this, format)
 
-fun Any?.toServerDate(
-    format: String = "yyyy-MM-dd"
-) = formatDateCMP(this, format)
+fun Any?.toYyyyMmDd(format: String = "yyyy/MM/dd") = formatDateCMP(this, format)
 
+fun Any?.toServerDate(format: String = "yyyy-MM-dd") = formatDateCMP(this, format)
 
-fun Any?.toDateTimeSeconds(): String =
-    formatDateCMP(
-        input = this,
-        outputFormat = "dd MMM yyyy hh:mm:ss a"
-    )
+fun Any?.toDateTimeSeconds(): String = formatDateCMP(this, "dd MMM yyyy hh:mm:ss a")
 
-fun Any?.toDateTime(): String =
-    formatDateCMP(
-        input = this,
-        outputFormat = "dd MMM yyyy hh:mm a"
-    )
+fun Any?.toDateTime(): String = formatDateCMP(this, "dd MMM yyyy hh:mm a")
 
+// --- Core Formatter Function ---
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 fun formatDateCMP(
@@ -43,132 +27,107 @@ fun formatDateCMP(
     outputFormat: String = "dd MMM yyyy",
 ): String {
     if (input == null) return ""
-    val outputFormatter = LocalDateTime.Format { byUnicodePattern(outputFormat) }
+
+    // Output formatter setup
+    val outputFormatter = try {
+        LocalDateTime.Format { byUnicodePattern(outputFormat) }
+    } catch (e: Exception) {
+        // Fallback agar pattern invalid ho
+        LocalDateTime.Format { byUnicodePattern("dd-MM-yyyy") }
+    }
+
+    val tz = TimeZone.currentSystemDefault()
 
     try {
+        // 1. Agar Long (Timestamp) hai
         if (input is Long) {
-            val dateTime = kotlin.time.Instant.fromEpochMilliseconds(input).toLocalDateTime(TimeZone.currentSystemDefault())
+            val dateTime = Instant.fromEpochMilliseconds(input).toLocalDateTime(tz)
             return dateTime.format(outputFormatter)
         }
 
-        val text = input.toString()
+        val text = input.toString().trim()
+        if (text.isEmpty()) return ""
 
+        // 2. Try parsing from possible string formats
         val possibleFormats = listOf(
-            "yyyy-MM-dd",
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd'T'HH:mm:ss",
             "yyyy-MM-dd'T'HH:mm:ss.SSS",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd",
             "dd-MM-yyyy",
             "dd/MM/yyyy",
             "yyyy/MM/dd",
             "yyyyMMdd"
         )
-        possibleFormats.forEach { pattern ->
+
+        for (pattern in possibleFormats) {
             try {
+                // Try as LocalDateTime
                 val formatter = LocalDateTime.Format { byUnicodePattern(pattern) }
                 val parsed = LocalDateTime.parse(text, formatter)
                 return parsed.format(outputFormatter)
             } catch (_: Exception) {
                 try {
-                    val parsedDate = LocalDate.parse(text, LocalDate.Format { byUnicodePattern(pattern) })
+                    // Try as LocalDate (if time is missing)
+                    val dateLine = if (text.contains("T")) text.split("T")[0] else text
+                    val formatter = LocalDate.Format { byUnicodePattern(pattern) }
+                    val parsedDate = LocalDate.parse(dateLine, formatter)
 
-                    return parsedDate.format(LocalDate.Format { byUnicodePattern(outputFormat) })
+                    // Format output using LocalDate formatter to avoid LocalDateTime crash
+                    val outDateFormatter = LocalDate.Format { byUnicodePattern(outputFormat.split(" ")[0]) }
+                    return parsedDate.format(outDateFormatter)
                 } catch (_: Exception) { }
             }
         }
 
+        // 3. Agar String ke andar Milliseconds chhupe ho "1713598000000"
         text.toLongOrNull()?.let { millis ->
-            val dateTime = Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault())
-            return dateTime.format(outputFormatter)
+            return Instant.fromEpochMilliseconds(millis).toLocalDateTime(tz).format(outputFormatter)
         }
 
         return text
-    } catch (_: Exception) {
+    } catch (e: Exception) {
         return input.toString()
     }
 }
 
+// --- Object Utils ---
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 object DateUtils {
 
-    private val tz =
-        TimeZone.currentSystemDefault()
-
-
     private fun now(): LocalDateTime {
-
-        val instant = Clock.System.now()
-
-        return instant.toLocalDateTime(
-            TimeZone.currentSystemDefault()
+        val instant = Instant.fromEpochMilliseconds(
+            getTimeMillis()
         )
+        return instant.toLocalDateTime(TimeZone.currentSystemDefault())
     }
 
-
-    fun currentDate(
-        format: String = "dd MMM yyyy"
-    ): String {
-
-        val formatter =
-            LocalDateTime.Format {
-                byUnicodePattern(format)
-            }
-
+    fun currentDate(format: String = "dd MMM yyyy"): String {
+        val formatter = LocalDateTime.Format { byUnicodePattern(format) }
         return now().format(formatter)
     }
 
-
-    fun currentDateTime(
-        format: String = "dd MMM yyyy hh:mm a"
-    ): String {
-
-        val formatter =
-            LocalDateTime.Format {
-                byUnicodePattern(format)
-            }
-
+    fun currentDateTime(format: String = "dd MMM yyyy hh:mm a"): String {
+        val formatter = LocalDateTime.Format { byUnicodePattern(format) }
         return now().format(formatter)
     }
 
+    fun currentYear(): String = now().year.toString()
 
-    fun currentYear(): String =
-        now().year.toString()
+    fun currentMonthNumber(): String = now().monthNumber.toString().padStart(2, '0')
 
+    fun currentMonthName(): String = now().month.name.lowercase()
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
-    fun currentMonthNumber(): String =
-        now().month.number
-            .toString()
-            .padStart(2, '0')
-
-
-    fun currentMonthName(): String =
-        now().month.name
-            .lowercase()
-            .replaceFirstChar { it.uppercase() }
-
-
-    fun currentDay(): String =
-        now().day
-            .toString()
-            .padStart(2, '0')
-
+    fun currentDay(): String = now().dayOfMonth.toString().padStart(2, '0')
 }
 
-fun currentDate() =
-    DateUtils.currentDate()
+// --- Global Helper Functions ---
 
-fun currentDateTime() =
-    DateUtils.currentDateTime()
-
-fun currentYear() =
-    DateUtils.currentYear()
-
-fun currentMonthNumber() =
-    DateUtils.currentMonthNumber()
-
-fun currentMonthName() =
-    DateUtils.currentMonthName()
-
-fun currentDay() =
-    DateUtils.currentDay()
+fun currentDate() = DateUtils.currentDate()
+fun currentDateTime() = DateUtils.currentDateTime()
+fun currentYear() = DateUtils.currentYear()
+fun currentMonthNumber() = DateUtils.currentMonthNumber()
+fun currentMonthName() = DateUtils.currentMonthName()
+fun currentDay() = DateUtils.currentDay()
