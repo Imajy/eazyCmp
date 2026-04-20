@@ -155,7 +155,6 @@ fun GenericDatePicker(
                         text = "$startDate – $endDate",
 
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         ),
 
