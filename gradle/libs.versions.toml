@@ -69,14 +69,12 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttp" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktorClientDarwin" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCioVersion" }
-ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 multiplatform-settings-core = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatform-settings" }
 
 # lifecycle (for BaseViewModel)
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "lifecycle" }
-webcam-capture = { module = "com.github.sarxos:webcam-capture", version.ref = "webcamCapture" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

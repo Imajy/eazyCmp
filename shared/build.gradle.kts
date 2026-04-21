@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary) // Tera original plugin wapas
     alias(libs.plugins.androidLint)
     alias(libs.plugins.kotlinSerialization)
     id("org.jetbrains.kotlin.plugin.compose")
@@ -23,19 +22,7 @@ kotlin {
 
     jvm()
 
-    js(IR) {
-        outputModuleName.set("shared")
-        browser {
-            // Library mode me executable() ki zaroorat nahi hoti,
-            // par compiler errors bachane ke liye binaries.library() use hota hai
-            commonWebpackConfig {
-                cssSupport {
-                    enabled = true
-                }
-            }
-        }
-    }
-
+    // iOS targets
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -43,7 +30,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlin.stdlib)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.compose.components.resources)
 
             implementation(libs.kotlinx.coroutines.core)
@@ -68,17 +54,7 @@ kotlin {
             api(libs.koin.core)
             api(libs.androidx.lifecycle.viewmodel)
             api(libs.androidx.lifecycle.runtime)
-            api(libs.kotlinx.datetime)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-        }
-
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+            api(libs.kotlinx.datetime) // Force export to other modules
         }
 
         jvmMain.dependencies {
@@ -88,9 +64,17 @@ kotlin {
             implementation(libs.javacv)
             implementation(libs.pdfbox)
             implementation(libs.opencv)
+            // Desktop ko Instant class mil jaye isliye yahan specifically add kiya
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
         }
-        jsMain.dependencies {
-            implementation(libs.ktor.client.js)
+
+        nativeMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
         }
     }
 }
@@ -98,6 +82,8 @@ kotlin {
 compose.resources {
     publicResClass = true
 }
+
+// Baki niche ka Copy task aur metadata waisa hi rehne do
 
 compose.desktop {
     application {}
