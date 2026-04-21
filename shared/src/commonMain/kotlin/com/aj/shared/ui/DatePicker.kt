@@ -183,3 +183,14 @@ private fun createDateFormatter(
         }
     }
 }
+
+fun formatDateMillis(
+    millis: Long?,
+    format: String = "dd MMM yyyy"
+): String {
+    if (millis == null) return ""
+    return formatDateCMP(
+        millis,
+        format
+    )
+}
