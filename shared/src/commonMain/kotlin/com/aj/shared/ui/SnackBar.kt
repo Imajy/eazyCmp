@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.errorBrush
 import com.aj.shared.theme.successBrush
@@ -43,7 +44,6 @@ object AppSnackbarManager {
     private var onSnackbarDataChange: ((AppSnackbar?) -> Unit)? = null
     private var autoDismissJob: Job? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     fun init(
         hostState: SnackbarHostState,
         onSnackbarDataChange: (AppSnackbar?) -> Unit
@@ -170,7 +170,33 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         hostState = snackbarHostState,
         onSnackbarDataChange = { currentSnackbar = it }
     )
-    Box(
+
+    currentSnackbar?.let { snackbar ->
+
+        Dialog(
+            onDismissRequest = {},
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                CustomTopSnackbar(
+                    data = snackbar,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp, vertical = 10.dp)
+                        .pointerInput(Unit) {
+                            detectTapGestures {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            }
+                        }
+                )
+            }
+        }
+    }
+    /*Box(
         modifier = Modifier
             .fillMaxSize()
             .background(brush)
@@ -194,5 +220,5 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
                     )
             )
         }
-    }
+    }*/
 }
