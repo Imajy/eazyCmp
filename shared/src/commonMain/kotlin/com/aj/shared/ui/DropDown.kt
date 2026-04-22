@@ -2,6 +2,7 @@ package com.aj.shared.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,11 +38,13 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.aj.shared.extension.toTitleCase
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.borderBGColor
@@ -152,11 +155,19 @@ fun <T> CommonDropDown(
                     showDialog = false
                     focusManager.clearFocus()
                     keyboardController?.hide()
-                }
+                },
+                properties = DialogProperties(
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true,
+                    usePlatformDefaultWidth = true
+                )
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .pointerInput(Unit) {
+                            detectTapGestures {  }
+                        }
                         .then(
                             if (isLargeList) Modifier.fillMaxHeight()
                             else Modifier.wrapContentHeight()
