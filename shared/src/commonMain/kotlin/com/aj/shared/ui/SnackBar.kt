@@ -158,7 +158,7 @@ val screenGradientColor = Brush.verticalGradient(
 )
 
 @Composable
-fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -> Unit){
+fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -> Unit) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     var currentSnackbar by remember { mutableStateOf<AppSnackbar?>(null) }
@@ -173,52 +173,34 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
 
     currentSnackbar?.let { snackbar ->
 
-        Dialog(
-            onDismissRequest = {},
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(brush)
+                .pointerInput(Unit) {
+                    detectTapGestures {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                    }
+                }
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                CustomTopSnackbar(
-                    data = snackbar,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .statusBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 10.dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures {
-                                focusManager.clearFocus()
-                                keyboardController?.hide()
-                            }
-                        }
-                )
+            content()
+            currentSnackbar?.let { snackbar ->
+                Dialog(
+                    onDismissRequest = {},
+                ) {
+                    CustomTopSnackbar(
+                        data = snackbar,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .statusBarsPadding()
+                            .padding(
+                                horizontal = 16.dp,
+                                vertical = 10.dp
+                            )
+                    )
+                }
             }
         }
     }
-    /*Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(brush)
-            .pointerInput(Unit) {
-                detectTapGestures {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                }
-            }
-    ) {
-        content()
-        currentSnackbar?.let { snackbar ->
-            CustomTopSnackbar(
-                data = snackbar,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .statusBarsPadding()
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 10.dp
-                    )
-            )
-        }
-    }*/
 }
