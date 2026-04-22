@@ -114,7 +114,7 @@ fun <T> CommonDropDown(
             modifier = Modifier.fillMaxWidth()
         ) {
             OutLinedSimpleTextField(
-                value = displayText,
+                value = displayText.toTitleCase(),
                 label = label,
                 onValueChange = {},
                 placeholderText = placeholder,
@@ -261,7 +261,7 @@ fun <T> CommonDropDown(
                                         }
 
                                         Text(
-                                            text = (itemLabel?.invoke(item) ?: item.toString()).toTitleCase(),
+                                            text = (itemLabel?.invoke(item) ?: item.toString()).customToTitleCase(),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Black
                                         )
@@ -376,4 +376,11 @@ val DropdownArrowIcon: ImageVector
         return _dropdownArrowIcon!!
     }
 
+fun String.customToTitleCase(): String {
+    return this.lowercase()
+        .split(" ")
+        .joinToString(" ") { word ->
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        }
+}
 private var _dropdownArrowIcon: ImageVector? = null
