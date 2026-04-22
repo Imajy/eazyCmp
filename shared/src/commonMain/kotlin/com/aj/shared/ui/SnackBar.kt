@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.errorBrush
 import com.aj.shared.theme.successBrush
@@ -171,7 +172,6 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         onSnackbarDataChange = { currentSnackbar = it }
     )
 
-    currentSnackbar?.let { snackbar ->
 
         Box(
             modifier = Modifier
@@ -183,25 +183,30 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
                         keyboardController?.hide()
                     }
                 },
-            contentAlignment = Alignment.TopCenter
         ) {
             content()
             currentSnackbar?.let { snackbar ->
                 Dialog(
                     onDismissRequest = {},
-
-                ) {
-                    CustomTopSnackbar(
-                        data = snackbar,
-                        modifier = Modifier
-                            .statusBarsPadding()
-                            .padding(
-                                horizontal = 16.dp,
-                                vertical = 10.dp
-                            )
+                    properties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        dismissOnClickOutside = false,
+                        dismissOnBackPress = false
                     )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        CustomTopSnackbar(
+                            data = snackbar,
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .statusBarsPadding()
+                                .padding(horizontal = 16.dp, vertical = 10.dp)
+                        )
+                    }
                 }
             }
-        }
     }
 }
