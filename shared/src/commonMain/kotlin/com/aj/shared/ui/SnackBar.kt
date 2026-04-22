@@ -182,17 +182,18 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
                         focusManager.clearFocus()
                         keyboardController?.hide()
                     }
-                }
+                },
+            contentAlignment = Alignment.TopCenter
         ) {
             content()
             currentSnackbar?.let { snackbar ->
                 Dialog(
                     onDismissRequest = {},
+
                 ) {
                     CustomTopSnackbar(
                         data = snackbar,
                         modifier = Modifier
-                            .align(Alignment.TopCenter)
                             .statusBarsPadding()
                             .padding(
                                 horizontal = 16.dp,
