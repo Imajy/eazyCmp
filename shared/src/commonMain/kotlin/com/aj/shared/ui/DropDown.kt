@@ -114,7 +114,7 @@ fun <T> CommonDropDown(
             modifier = Modifier.fillMaxWidth()
         ) {
             OutLinedSimpleTextField(
-                value = displayText.toTitleCase().replace("_", " "),
+                value = displayText.replace("_", " "),
                 label = label,
                 onValueChange = {},
                 placeholderText = placeholder,
@@ -261,7 +261,7 @@ fun <T> CommonDropDown(
                                         }
 
                                         Text(
-                                            text = (itemLabel?.invoke(item) ?: item.toString()).customToTitleCase().replace("_", " "),
+                                            text = (itemLabel?.invoke(item) ?: item.toString()).replace("_", " "),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Black
                                         )
