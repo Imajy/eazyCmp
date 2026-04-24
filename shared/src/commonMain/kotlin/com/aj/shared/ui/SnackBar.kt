@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -189,14 +190,6 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
     ) {
         content()
         currentSnackbar?.let { snackbar ->
-//            Dialog(
-//                onDismissRequest = {},
-//                properties = DialogProperties(
-//                    usePlatformDefaultWidth = false,
-//                    dismissOnClickOutside = true,
-//                    dismissOnBackPress = true,
-//                ),
-//            ) {
             Popup(
                 alignment = Alignment.TopCenter,
                 properties = PopupProperties(
@@ -207,7 +200,9 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+//                        .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
                     CustomTopSnackbar(
                         data = snackbar,
