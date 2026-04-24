@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,9 +29,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.errorBrush
 import com.aj.shared.theme.successBrush
+import com.aj.shared.theme.transparentColor
 import com.aj.shared.theme.warningBrush
 import com.aj.shared.theme.whiteColor
 import kotlinx.coroutines.CoroutineScope
@@ -113,7 +117,7 @@ fun CustomTopSnackbar(
         SnackbarType.ERROR -> errorBrush
         SnackbarType.WARNING -> warningBrush
     }
-    if(data.message.isNotBlank()) {
+    if (data.message.isNotBlank()) {
         Box(
             modifier = modifier
                 .background(
@@ -172,41 +176,47 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         onSnackbarDataChange = { currentSnackbar = it }
     )
 
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(brush)
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                    }
-                },
-        ) {
-            content()
-            currentSnackbar?.let { snackbar ->
-                Dialog(
-                    onDismissRequest = {},
-                    properties = DialogProperties(
-                        usePlatformDefaultWidth = false,
-                        dismissOnClickOutside = false,
-                        dismissOnBackPress = false
-                    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(brush)
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
+            },
+    ) {
+        content()
+        currentSnackbar?.let { snackbar ->
+//            Dialog(
+//                onDismissRequest = {},
+//                properties = DialogProperties(
+//                    usePlatformDefaultWidth = false,
+//                    dismissOnClickOutside = true,
+//                    dismissOnBackPress = true,
+//                ),
+//            ) {
+            Popup(
+                alignment = Alignment.TopCenter,
+                properties = PopupProperties(
+                    focusable = true, // back press handle करेगा
+                    dismissOnClickOutside = true
+                )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
-                    Box(
+                    CustomTopSnackbar(
+                        data = snackbar,
                         modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        CustomTopSnackbar(
-                            data = snackbar,
-                            modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .statusBarsPadding()
-                                .padding(horizontal = 16.dp, vertical = 10.dp)
-                        )
-                    }
+                            .align(Alignment.TopCenter)
+                            .statusBarsPadding()
+                            .padding(horizontal = 16.dp, vertical = 10.dp)
+                    )
                 }
             }
+        }
     }
 }
