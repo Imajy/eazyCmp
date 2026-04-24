@@ -200,8 +200,9 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
             Popup(
                 alignment = Alignment.TopCenter,
                 properties = PopupProperties(
-                    focusable = true, // back press handle करेगा
-                    dismissOnClickOutside = true
+                    focusable = false, // back press handle करेगा
+                    dismissOnClickOutside = true,
+                    dismissOnBackPress = true
                 )
             ) {
                 Box(
