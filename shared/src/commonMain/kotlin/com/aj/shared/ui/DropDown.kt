@@ -159,14 +159,16 @@ fun <T> CommonDropDown(
                 properties = DialogProperties(
                     dismissOnBackPress = true,
                     dismissOnClickOutside = true,
-                    usePlatformDefaultWidth = true
+                    usePlatformDefaultWidth = false
                 )
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .pointerInput(Unit) {
-                            detectTapGestures {  }
+                            detectTapGestures {
+                                showDialog = false
+                            }
                         }
                         .then(
                             if (isLargeList) Modifier.fillMaxHeight()
