@@ -32,6 +32,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.compose.ui.zIndex
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.errorBrush
 import com.aj.shared.theme.successBrush
@@ -107,43 +108,6 @@ object AppSnackbarManager {
     }
 }
 
-@Composable
-fun CustomTopSnackbar(
-    data: AppSnackbar,
-    modifier: Modifier = Modifier
-) {
-    val radius = 10
-    val brush = when (data.type) {
-        SnackbarType.SUCCESS -> successBrush
-        SnackbarType.ERROR -> errorBrush
-        SnackbarType.WARNING -> warningBrush
-    }
-    if (data.message.isNotBlank()) {
-        Box(
-            modifier = modifier
-                .background(
-                    color = whiteColor,
-                    shape = RoundedCornerShape(radius.dp)
-                )
-                .beamBorder(brush = brush, radius = radius)
-                .padding(horizontal = 10.dp, vertical = 16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = data.message,
-                    color = blackColor,
-                    maxLines = 3,
-                    modifier = Modifier
-                        .weight(1f),
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-    }
-}
-
 enum class SnackbarType {
     SUCCESS,
     ERROR,
@@ -190,28 +154,59 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
     ) {
         content()
         currentSnackbar?.let { snackbar ->
-            Popup(
-                alignment = Alignment.TopCenter,
-                properties = PopupProperties(
-                    focusable = false, // back press handle करेगा
-                    dismissOnClickOutside = true,
-                    dismissOnBackPress = true
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .zIndex(Float.MAX_VALUE)
+                    .align(Alignment.TopCenter)
+                    .pointerInput(Unit) {
+                        detectTapGestures { }
+                    }
             ) {
-                Box(
+                CustomTopSnackbar(
+                    data = snackbar,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-//                        .padding(horizontal = 16.dp, vertical = 10.dp)
-                ) {
-                    CustomTopSnackbar(
-                        data = snackbar,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .statusBarsPadding()
-                            .padding(horizontal = 16.dp, vertical = 10.dp)
-                    )
-                }
+                        .align(Alignment.TopCenter)
+                        .padding(horizontal = 16.dp, vertical = 10.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomTopSnackbar(
+    data: AppSnackbar,
+    modifier: Modifier = Modifier
+) {
+    val radius = 10
+    val brush = when (data.type) {
+        SnackbarType.SUCCESS -> successBrush
+        SnackbarType.ERROR -> errorBrush
+        SnackbarType.WARNING -> warningBrush
+    }
+    if (data.message.isNotBlank()) {
+        Box(
+            modifier = modifier
+                .background(
+                    color = whiteColor,
+                    shape = RoundedCornerShape(radius.dp)
+                )
+                .beamBorder(brush = brush, radius = radius)
+                .padding(horizontal = 10.dp, vertical = 16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = data.message,
+                    color = blackColor,
+                    maxLines = 3,
+                    modifier = Modifier
+                        .weight(1f),
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
