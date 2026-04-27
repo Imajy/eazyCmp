@@ -110,6 +110,14 @@ fun <T> CommonDropDown(
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier = modifier
+            .pointerInput(Unit){
+                detectTapGestures (
+                    onTap = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                    }
+                )
+            }
     ) {
         Box(
             modifier = Modifier.fillMaxWidth()
