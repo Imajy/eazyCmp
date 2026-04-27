@@ -56,7 +56,7 @@ import com.aj.shared.theme.whiteColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> CommonDropDown(
-    label: String = "",
+    label: String ?= null,
     placeholder: String = "",
     items: List<T> = emptyList(),
     selectedItem: T? = null,
@@ -118,7 +118,7 @@ fun <T> CommonDropDown(
                 value = displayText.replace("_", " "),
                 label = label,
                 onValueChange = {},
-                placeholderText = placeholder,
+                placeholderText = placeholder.ifBlank { if(label.isNullOrBlank()) "" else "Select ${label.lowercase()}" },
                 placeHolderColor = blackColor,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -191,7 +191,7 @@ fun <T> CommonDropDown(
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = label.ifBlank { "Select Item" },
+                                text = if(label.isNullOrBlank()) "Select Item"  else "Select $label",
                                 style = MaterialTheme.typography.titleMedium
                             )
 
