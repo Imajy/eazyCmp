@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.grayColor
@@ -40,11 +42,18 @@ fun GenericTabs(
     unselectedBrush : Brush = Brush.horizontalGradient(
         listOf(transparentColor, transparentColor)
     ),
-    selectedTextColor : Color = whiteColor,
-    unSelectedTextColor : Color = grayColor,
     cardBackGround : Color = whiteColor,
     cardRadius : Int = 50,
     tabRadius : Int = 50,
+    selectStyle : TextStyle =MaterialTheme.typography.bodyMedium.copy(
+        color = whiteColor,
+        fontWeight = FontWeight.Bold
+    ),
+    unSelectStyle : TextStyle =MaterialTheme.typography.bodyMedium.copy(
+        color = grayColor,
+        fontWeight = FontWeight.Normal
+    ),
+    textPadding : PaddingValues = PaddingValues(0.dp),
     onTabSelected: (String) -> Unit = {}
 ) {
     Card(
@@ -59,7 +68,6 @@ fun GenericTabs(
             list.forEach { type ->
 
                 val isSelected = selected == type
-                val textColor = if (isSelected) selectedTextColor else unSelectedTextColor
 
                 Box(
                     modifier = Modifier
@@ -83,10 +91,8 @@ fun GenericTabs(
                 ) {
                     Text(
                         text = type,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = textColor,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                        )
+                        style = if(isSelected) selectStyle else unSelectStyle,
+                        modifier = Modifier.padding(textPadding)
                     )
                 }
             }
