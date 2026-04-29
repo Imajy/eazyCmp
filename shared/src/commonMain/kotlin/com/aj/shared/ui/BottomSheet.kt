@@ -46,7 +46,7 @@ import com.aj.shared.theme.whiteColor
 fun GenericBottomSheet(
     show: Boolean,
     title: String? = null,
-    titleStyle : TextStyle = MaterialTheme.typography.titleMedium,
+    titleStyle : TextStyle = MaterialTheme.typography.bodyMedium,
     skipPartiallyExpanded: Boolean = true,
     titleBackGround : Color = bottomSheetHeaderBackGround,
     onDismiss: () -> Unit,
@@ -102,7 +102,7 @@ fun GenericBottomSheet(
                         Text(
                             text = it,
                             style = titleStyle,
-                            modifier = Modifier.fillMaxWidth(.9f),
+                            modifier = Modifier.fillMaxWidth(.8f),
                             textAlign = TextAlign.Start,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
