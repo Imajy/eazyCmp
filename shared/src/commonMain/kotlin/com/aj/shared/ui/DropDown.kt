@@ -69,6 +69,7 @@ fun <T> CommonDropDown(
     trailingIcon: ImageVector? = null,
     trailingImage: Painter? = null,
     trailingIconTint: Color = blackColor,
+    placeholderColor: Color = grayColor,
     error: String? = null,
     showFullList: Boolean = false,
     modifier: Modifier = Modifier,
@@ -127,7 +128,7 @@ fun <T> CommonDropDown(
                 label = label,
                 onValueChange = {},
                 placeholderText = placeholder.ifBlank { if(label.isNullOrBlank()) "" else "Select ${label.lowercase()}" },
-                placeHolderColor = blackColor,
+                placeHolderColor = placeholderColor,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(dropDownBackGround, RoundedCornerShape(6.dp)),
