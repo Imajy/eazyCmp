@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary) // Tera original plugin wapas
@@ -29,32 +28,40 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlin.stdlib)
-            implementation(libs.compose.components.resources)
-
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.runtime)
-            implementation(libs.foundation)
-            api(libs.material3)
-
-            implementation(libs.koin.compose)
-            api(libs.koin.compose.viewmodel)
-            implementation(libs.compose.lottie)
-            api(libs.bundles.coil)
-            implementation(libs.bundles.ktor)
-
-            api(libs.material.icons.core)
+            // Core
+            api(libs.kotlin.stdlib)
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.serialization.json)
+            api(libs.kotlinx.datetime)
+
+            // Compose
+            api(libs.runtime)
+            api(libs.foundation)
+            api(libs.material3)
+            api(libs.compose.components.resources)
+            api(libs.material.icons.core)
+
+            // DI
+            api(libs.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
+
+            // Networking (exported so consumer doesn't need to add)
+            api(libs.ktor.client.core)
+            api(libs.ktor.client.content.negotiation)
+            api(libs.bundles.ktor)
+
+            // Media / UI utils
+            api(libs.compose.lottie)
+            api(libs.bundles.coil)
+
+            // Settings
             api(libs.multiplatform.settings.core)
             api(libs.multiplatform.settings.serialization)
-            api(libs.runtime)
-            api(libs.koin.core)
+
+            // Lifecycle
             api(libs.androidx.lifecycle.viewmodel)
             api(libs.androidx.lifecycle.runtime)
-            api(libs.kotlinx.datetime) // Force export to other modules
         }
 
         jvmMain.dependencies {

@@ -20,15 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aj.shared.theme.whiteColor
-import com.aj.shared.ui.AppSnackbarManager.show
 import io.ktor.util.date.getTimeMillis
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
 
 
 enum class DateRestrictionType {
@@ -371,9 +367,6 @@ fun EasyDatePicker(
         }
     } else {
 
-
-        val zone = TimeZone.currentSystemDefault()
-
         val parsedMillis = remember(selectedDateString) {
             parseDateStringToMillis(selectedDateString)
         }
@@ -394,7 +387,7 @@ fun EasyDatePicker(
         }
 
         val state = rememberDatePickerState(
-            initialSelectedDateMillis = initialSelectedDate, // ✅ FIX
+            initialSelectedDateMillis = initialSelectedDate,
             initialDisplayedMonthMillis = initialSelectedDate ?: (maxDateMillis ?: now),
             selectableDates = selectableDates
         )
@@ -447,17 +440,6 @@ fun EasyDatePicker(
             )
         }
     }
-}
-
-
-
-fun normalizeUtc(millis: Long): Long {
-    val date = Instant
-        .fromEpochMilliseconds(millis)
-        .toLocalDateTime(TimeZone.UTC)
-        .date
-
-    return date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
 }
 
 fun parseDateStringToMillis(
