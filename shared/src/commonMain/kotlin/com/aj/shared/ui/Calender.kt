@@ -368,18 +368,27 @@ fun EasyDatePicker(
             )
         }
     } else {
+
+
         val zone = TimeZone.currentSystemDefault()
 
-        // 👉 Parse string to millis
         val parsedMillis = remember(selectedDateString) {
             parseDateStringToMillis(selectedDateString, zone)
         }
 
-        // 👉 Decide initial selected date
-        val initialSelectedDate = when {
-            parsedMillis != null -> parsedMillis
-            useCurrentDateAsDefault -> now
-            else -> null
+        val initialSelectedDate = remember(
+            parsedMillis,
+            useCurrentDateAsDefault,
+            minDateMillis,
+            maxDateMillis
+        ) {
+            resolveInitialDateMillis(
+                parsedMillis = parsedMillis,
+                useCurrentDateAsDefault = useCurrentDateAsDefault,
+                now = now,
+                minDateMillis = minDateMillis,
+                maxDateMillis = maxDateMillis
+            )
         }
 
         val state = rememberDatePickerState(
@@ -456,5 +465,32 @@ fun parseDateStringToMillis(
             .toEpochMilliseconds()
     } catch (e: Exception) {
         null
+    }
+}
+
+fun resolveInitialDateMillis(
+    parsedMillis: Long?,
+    useCurrentDateAsDefault: Boolean,
+    now: Long,
+    minDateMillis: Long?,
+    maxDateMillis: Long?
+): Long? {
+
+    fun coerceInRange(value: Long): Long {
+        var v = value
+        if (minDateMillis != null && v < minDateMillis) v = minDateMillis
+        if (maxDateMillis != null && v > maxDateMillis) v = maxDateMillis
+        return v
+    }
+
+    return when {
+        // ✅ valid parsed date
+        parsedMillis != null -> coerceInRange(parsedMillis)
+
+        // ✅ fallback to current date
+        useCurrentDateAsDefault -> coerceInRange(now)
+
+        // ❌ no default
+        else -> null
     }
 }
