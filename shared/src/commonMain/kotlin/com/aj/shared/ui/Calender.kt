@@ -23,10 +23,12 @@ import com.aj.shared.theme.whiteColor
 import com.aj.shared.ui.AppSnackbarManager.show
 import io.ktor.util.date.getTimeMillis
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 
 
 enum class DateRestrictionType {
@@ -373,7 +375,7 @@ fun EasyDatePicker(
         val zone = TimeZone.currentSystemDefault()
 
         val parsedMillis = remember(selectedDateString) {
-            parseDateStringToMillis(selectedDateString, zone)
+            parseDateStringToMillis(selectedDateString)
         }
 
         val initialSelectedDate = remember(
@@ -448,21 +450,36 @@ fun EasyDatePicker(
 }
 
 
+
+fun normalizeUtc(millis: Long): Long {
+    val date = Instant
+        .fromEpochMilliseconds(millis)
+        .toLocalDateTime(TimeZone.UTC)
+        .date
+
+    return date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+}
+
 fun parseDateStringToMillis(
     date: String?,
-    timeZone: TimeZone
 ): Long? {
     return try {
         if (date.isNullOrEmpty()) return null
 
         val parts = date.split(" ")
         val day = parts[0].toInt()
-        val month = Month.valueOf(parts[1].uppercase())
+
+        val month = Month.entries.first {
+            it.name.take(3).equals(parts[1], ignoreCase = true)
+        }
+
         val year = parts[2].toInt()
 
+        // ✅ ALWAYS UTC
         LocalDate(year, month, day)
-            .atStartOfDayIn(timeZone)
+            .atStartOfDayIn(TimeZone.UTC)
             .toEpochMilliseconds()
+
     } catch (e: Exception) {
         null
     }
