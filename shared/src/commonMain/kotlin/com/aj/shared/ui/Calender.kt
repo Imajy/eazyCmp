@@ -20,8 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aj.shared.theme.whiteColor
+import com.aj.shared.ui.AppSnackbarManager.show
 import io.ktor.util.date.getTimeMillis
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 
 
 enum class DateRestrictionType {
@@ -235,8 +240,10 @@ fun EasyDatePicker(
     show: Boolean,
     isRangePicker: Boolean = false,
     restrictionType: DateRestrictionType = DateRestrictionType.NONE,
-    minDaysFromToday: Int? = null,   // e.g. -7 = 7 days past
-    maxDaysFromToday: Int? = null,   // e.g. 30 = 30 days future
+    minDaysFromToday: Int? = null,
+    maxDaysFromToday: Int? = null,
+    selectedDateString: String? = null,
+    useCurrentDateAsDefault: Boolean = true,
     onDismiss: () -> Unit,
     onDateSelected: (startDate: Long?, endDate: Long?) -> Unit
 ) {
@@ -361,22 +368,32 @@ fun EasyDatePicker(
             )
         }
     } else {
+        val zone = TimeZone.currentSystemDefault()
+
+        // 👉 Parse string to millis
+        val parsedMillis = remember(selectedDateString) {
+            parseDateStringToMillis(selectedDateString, zone)
+        }
+
+        // 👉 Decide initial selected date
+        val initialSelectedDate = when {
+            parsedMillis != null -> parsedMillis
+            useCurrentDateAsDefault -> now
+            else -> null
+        }
+
         val state = rememberDatePickerState(
-            initialDisplayedMonthMillis = maxDateMillis ?: now,
+            initialSelectedDateMillis = initialSelectedDate, // ✅ FIX
+            initialDisplayedMonthMillis = initialSelectedDate ?: (maxDateMillis ?: now),
             selectableDates = selectableDates
         )
+
         DatePickerDialog(
             onDismissRequest = onDismiss,
             confirmButton = {
-
                 TextButton(
                     onClick = {
-
-                        onDateSelected(
-                            state.selectedDateMillis,
-                            null
-                        )
-
+                        onDateSelected(state.selectedDateMillis, null)
                         onDismiss()
                     }
                 ) {
@@ -395,17 +412,16 @@ fun EasyDatePicker(
                     containerColor = whiteColor
                 ),
                 headline = {
-
-                    val date = state.selectedDateMillis?.let { millis -> formatDateMillis(millis) } ?: "Select Date"
+                    val date = state.selectedDateMillis
+                        ?.let { millis -> formatDateMillis(millis) }
+                        ?: "Select Date"
 
                     Text(
                         text = date,
-
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         ),
-
                         modifier = Modifier.padding(16.dp)
                     )
                 },
@@ -419,5 +435,26 @@ fun EasyDatePicker(
                 showModeToggle = false
             )
         }
+    }
+}
+
+
+fun parseDateStringToMillis(
+    date: String?,
+    timeZone: TimeZone
+): Long? {
+    return try {
+        if (date.isNullOrEmpty()) return null
+
+        val parts = date.split(" ")
+        val day = parts[0].toInt()
+        val month = Month.valueOf(parts[1].uppercase())
+        val year = parts[2].toInt()
+
+        LocalDate(year, month, day)
+            .atStartOfDayIn(timeZone)
+            .toEpochMilliseconds()
+    } catch (e: Exception) {
+        null
     }
 }
