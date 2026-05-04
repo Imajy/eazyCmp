@@ -243,7 +243,7 @@ fun EasyDatePicker(
     minDaysFromToday: Int? = null,
     maxDaysFromToday: Int? = null,
     selectedDateString: String? = null,
-    useCurrentDateAsDefault: Boolean = true,
+    useCurrentDateAsDefault: Boolean = false,
     onDismiss: () -> Unit,
     onDateSelected: (startDate: Long?, endDate: Long?) -> Unit
 ) {

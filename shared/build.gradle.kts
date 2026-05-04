@@ -37,15 +37,15 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.runtime)
             implementation(libs.foundation)
-            implementation(libs.material3)
+            api(libs.material3)
 
             implementation(libs.koin.compose)
             api(libs.koin.compose.viewmodel)
             implementation(libs.compose.lottie)
-            implementation(libs.bundles.coil)
-            implementation(libs.material.icons.core)
+            api(libs.bundles.coil)
             implementation(libs.bundles.ktor)
 
+            api(libs.material.icons.core)
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.serialization.json)
             api(libs.multiplatform.settings.core)
