@@ -15,7 +15,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.whiteColor
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -44,6 +49,15 @@ fun CommonButton(
     radius: Int = 8,
     isIconStart: Boolean = true
 ) {
+
+    var isClicked by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit){
+        if(!isClicked){
+            delay(1000)
+            isClicked = true
+        }
+    }
     Row(
         modifier = modifier
             .background(color, RoundedCornerShape(radius.dp))
@@ -51,7 +65,8 @@ fun CommonButton(
                 enabled = enabled,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onClick
+                onClick = {
+                    if(isClicked){onClick()} }
             )
             .padding(padding),
         horizontalArrangement = Arrangement.Center,
