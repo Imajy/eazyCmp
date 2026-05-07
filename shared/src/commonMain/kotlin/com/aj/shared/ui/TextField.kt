@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aj.shared.theme.blackColor
@@ -135,7 +136,9 @@ fun OutLinedSimpleTextField(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
-                        modifier = Modifier.padding(end = endPadding),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = endPadding),
                         horizontalArrangement = Arrangement.spacedBy(5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -209,12 +212,16 @@ fun OutLinedSimpleTextField(
                             }
                         }
                         Box(
-                            modifier = Modifier.padding(start = startPadding),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = startPadding),
                             contentAlignment = if (isTextAlignEnd) Alignment.CenterEnd else if (isTextAlignCenter) Alignment.Center else Alignment.CenterStart
                         ) {
                             if (value.isEmpty()) {
                                 Text(
                                     text = placeholderText,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
                                     style = TextStyle(
                                         color = placeHolderColor,
                                         fontSize = fontSize.sp,
@@ -223,7 +230,9 @@ fun OutLinedSimpleTextField(
                                     )
                                 )
                             }
-                            innerTextField()
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                innerTextField()
+                            }
                         }
                     }
 
