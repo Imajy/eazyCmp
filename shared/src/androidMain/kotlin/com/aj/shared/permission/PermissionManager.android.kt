@@ -14,16 +14,16 @@ actual class PermissionManager actual constructor() {
     actual fun RegisterPermissionLauncher() {
         launcher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-            ) { result ->
-                val list = result.map {
-                        PermissionResult(
-                            permission = it.key.toPermissionEnum(),
-                            status = if (it.value) PermissionStatus.GRANTED
-                                else PermissionStatus.DENIED
-                        )
-                    }
-                callback?.onResult(list)
+        ) { result ->
+            val list = result.map {
+                PermissionResult(
+                    permission = it.key.toPermissionEnum(),
+                    status = if (it.value) PermissionStatus.GRANTED
+                    else PermissionStatus.DENIED
+                )
             }
+            callback?.onResult(list)
+        }
     }
 
     actual suspend fun requestPermissions(

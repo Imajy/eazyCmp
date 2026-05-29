@@ -57,7 +57,6 @@ data class PickedFile(
     }
 }
 
-
 @OptIn(ExperimentalEncodingApi::class)
 fun PickedFile.toBase64Image(): String {
     return Base64.encode(this.bytes)

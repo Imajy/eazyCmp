@@ -245,8 +245,11 @@ fun EasyDatePicker(
     onDismiss: () -> Unit,
     onDateSelected: (startDate: Long?, endDate: Long?) -> Unit
 ) {
+
     if (!show) return
+
     val now = getTimeMillis()
+
     val minDateMillis = remember(minDaysFromToday) {
         minDaysFromToday?.let {
             now + (it * 24 * 60 * 60 * 1000L)
@@ -265,9 +268,11 @@ fun EasyDatePicker(
         maxDateMillis
     ) {
         object : SelectableDates {
+
             override fun isSelectableDate(
                 utcTimeMillis: Long
             ): Boolean {
+
                 val afterMin = minDateMillis?.let {
                     utcTimeMillis >= it
                 } ?: true
@@ -277,6 +282,7 @@ fun EasyDatePicker(
                 } ?: true
 
                 val restrictionCheck = when (restrictionType) {
+
                     DateRestrictionType.NONE -> true
 
                     DateRestrictionType.PAST_ONLY ->
@@ -295,6 +301,7 @@ fun EasyDatePicker(
     }
 
     if (isRangePicker) {
+
         val state = rememberDateRangePickerState(
             initialDisplayedMonthMillis = maxDateMillis ?: now,
             selectableDates = selectableDates
@@ -336,11 +343,17 @@ fun EasyDatePicker(
                 title = {
                     Text(
                         text = "Select Dates",
-                        modifier = Modifier.padding(top = 15.dp, start = 15.dp),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
+                        modifier = Modifier.padding(
+                            top = 15.dp,
+                            start = 15.dp
+                        ),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Medium
+                        )
                     )
                 },
                 headline = {
+
                     val startDate =
                         state.selectedStartDateMillis?.let { millis ->
                             formatDateMillis(millis)
@@ -353,18 +366,17 @@ fun EasyDatePicker(
 
                     Text(
                         text = "$startDate – $endDate",
-
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         ),
-
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 },
                 showModeToggle = false
             )
         }
+
     } else {
 
         val parsedMillis = remember(selectedDateString) {
@@ -375,20 +387,40 @@ fun EasyDatePicker(
             parsedMillis,
             useCurrentDateAsDefault,
             minDateMillis,
-            maxDateMillis
+            maxDateMillis,
+            restrictionType
         ) {
-            resolveInitialDateMillis(
-                parsedMillis = parsedMillis,
-                useCurrentDateAsDefault = useCurrentDateAsDefault,
-                now = now,
-                minDateMillis = minDateMillis,
-                maxDateMillis = maxDateMillis
-            )
+
+            // ✅ selected date valid ho toh wahi show kro
+            val isValidSelectedDate = parsedMillis?.let {
+                selectableDates.isSelectableDate(it)
+            } == true
+
+            when {
+
+                isValidSelectedDate -> parsedMillis
+
+                // ✅ blank/null ho toh pehli selectable date pr jao
+                restrictionType == DateRestrictionType.FUTURE_ONLY ->
+                    minDateMillis ?: now
+
+                restrictionType == DateRestrictionType.PAST_ONLY ->
+                    maxDateMillis ?: now
+
+                restrictionType == DateRestrictionType.CUSTOM_RANGE ->
+                    minDateMillis ?: now
+
+                useCurrentDateAsDefault ->
+                    now
+
+                else ->
+                    minDateMillis ?: now
+            }
         }
 
         val state = rememberDatePickerState(
             initialSelectedDateMillis = initialSelectedDate,
-            initialDisplayedMonthMillis = initialSelectedDate ?: (maxDateMillis ?: now),
+            initialDisplayedMonthMillis = initialSelectedDate,
             selectableDates = selectableDates
         )
 
@@ -397,27 +429,42 @@ fun EasyDatePicker(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onDateSelected(state.selectedDateMillis, null)
+                        onDateSelected(
+                            state.selectedDateMillis,
+                            null
+                        )
                         onDismiss()
                     }
                 ) {
-                    Text("OK", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        "OK",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             },
             dismissButton = {
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel", style = MaterialTheme.typography.bodyMedium)
+                TextButton(
+                    onClick = onDismiss
+                ) {
+                    Text(
+                        "Cancel",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         ) {
+
             DatePicker(
                 state = state,
                 colors = DatePickerDefaults.colors(
                     containerColor = whiteColor
                 ),
                 headline = {
+
                     val date = state.selectedDateMillis
-                        ?.let { millis -> formatDateMillis(millis) }
+                        ?.let { millis ->
+                            formatDateMillis(millis)
+                        }
                         ?: "Select Date"
 
                     Text(
@@ -432,8 +479,13 @@ fun EasyDatePicker(
                 title = {
                     Text(
                         text = "Select Date",
-                        modifier = Modifier.padding(top = 15.dp, start = 15.dp),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
+                        modifier = Modifier.padding(
+                            top = 15.dp,
+                            start = 15.dp
+                        ),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Medium
+                        )
                     )
                 },
                 showModeToggle = false
@@ -441,7 +493,6 @@ fun EasyDatePicker(
         }
     }
 }
-
 fun parseDateStringToMillis(
     date: String?,
 ): Long? {

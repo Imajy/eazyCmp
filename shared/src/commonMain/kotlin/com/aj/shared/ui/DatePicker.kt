@@ -9,10 +9,6 @@ internal val tz: TimeZone
     get() = TimeZone.currentSystemDefault()
 
 
-// --------------------
-// CORE FORMAT FUNCTION
-// --------------------
-
 @OptIn(FormatStringsInDatetimeFormats::class)
 internal fun formatDateCMP(
     input: Any?,
@@ -86,7 +82,6 @@ private fun parseFromString(
         "yyyyMMdd"
     )
 
-
     patterns.forEach { pattern ->
 
         // try datetime
@@ -125,8 +120,6 @@ private fun parseFromString(
         } catch (_: Exception) {}
     }
 
-
-    // millis inside string
     text.toLongOrNull()?.let {
 
         return Instant
@@ -134,7 +127,6 @@ private fun parseFromString(
             .toLocalDateTime(tz)
             .format(createDateTimeFormatter(outputFormat))
     }
-
 
     return text
 }

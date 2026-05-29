@@ -1,9 +1,11 @@
 package com.aj.shared.picker
 
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
+import androidx.core.content.FileProvider
 import com.aj.shared.api.appContext
 import java.io.File
 
@@ -128,10 +130,10 @@ actual class PlatformMediaPicker actual constructor() {
         }
         try {
             val bytes = context.contentResolver
-                    .openInputStream(uri)
-                    ?.use {
-                        it.readBytes()
-                    }
+                .openInputStream(uri)
+                ?.use {
+                    it.readBytes()
+                }
             val mime = context.contentResolver.getType(uri)
             val name = getFileName(uri)
             callback?.invoke(
@@ -152,7 +154,7 @@ actual class PlatformMediaPicker actual constructor() {
         return context.contentResolver
             .query(uri,null,null,null,null)
             ?.use { cursor ->
-                val index = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 cursor.moveToFirst()
                 cursor.getString(index)
             }
@@ -161,12 +163,12 @@ actual class PlatformMediaPicker actual constructor() {
     private fun createTempUri(): Uri {
 
         val file = File.createTempFile(
-                "camera_",
-                ".jpg",
-                context.cacheDir
-            )
+            "camera_",
+            ".jpg",
+            context.cacheDir
+        )
 
-        return androidx.core.content.FileProvider
+        return FileProvider
             .getUriForFile(context,
                 "${context.packageName}.provider",
                 file

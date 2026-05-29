@@ -91,7 +91,6 @@ fun CommonAttachmentBottomSheet(
     }
 }
 
-
 suspend fun requestPermissionAndPick(
     manager: PermissionManager,
     permission: AppPermission,
@@ -128,10 +127,9 @@ fun AttachmentOptionsUI(
             AttachmentItem(Res.drawable.ic_photos, "Photos", onGallery)
 
         if (showDocument)
-        AttachmentItem(Res.drawable.ic_documents, "Documents", onDocument)
+            AttachmentItem(Res.drawable.ic_documents, "Documents", onDocument)
     }
 }
-
 
 @Composable
 fun AttachmentItem(icon: DrawableResource, label: String, onClick: () -> Unit) {

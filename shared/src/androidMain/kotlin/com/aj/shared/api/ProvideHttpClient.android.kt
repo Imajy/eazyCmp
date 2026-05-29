@@ -23,6 +23,7 @@ actual fun provideHttpClient(): HttpClient {
                 Json {
                     ignoreUnknownKeys = true
                     isLenient = true
+                    encodeDefaults = true
                 }
             )
         }

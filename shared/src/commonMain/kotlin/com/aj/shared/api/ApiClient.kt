@@ -19,13 +19,12 @@ import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
+import kotlin.let
 import kotlin.time.Clock
 
 class ApiClient(val client: HttpClient = HttpClientProvider.client) {
@@ -76,17 +75,17 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         val startTime = Clock.System.now()
         try {
 
-           /* if (!NetworkMonitor.connected.value) {
-                if (options.retryOnConnection) {
-                    NetworkMonitor.connected
-                        .filter { it }
-                        .first()
-                } else {
-                    emit(Resource.Error("No internet"))
-                    return@flow
-                }
-            }
-*/
+            /* if (!NetworkMonitor.connected.value) {
+                 if (options.retryOnConnection) {
+                     NetworkMonitor.connected
+                         .filter { it }
+                         .first()
+                 } else {
+                     emit(Resource.Error("No internet"))
+                     return@flow
+                 }
+             }
+ */
 
             println("============== API REQUEST ==============")
             println("BASE        → $base")
@@ -221,26 +220,36 @@ fun FormBuilder.appendFile(
 
 @PublishedApi
 internal fun FormBuilder.appendFields(obj: Any) {
+
     val json = Json.encodeToString(obj)
+
     Json.parseToJsonElement(json)
         .jsonObject
-        .forEach {
+        .forEach { (key, value) ->
+
             append(
-                it.key,
-                it.value.toString()
+                key,
+                (value as? JsonPrimitive)
+                    ?.content
+                    ?: value.toString()
             )
         }
 }
 
 @PublishedApi
 internal fun ParametersBuilder.appendFields(obj: Any) {
+
     val json = Json.encodeToString(obj)
+
     Json.parseToJsonElement(json)
         .jsonObject
-        .forEach {
+        .forEach { (key, value) ->
+
             append(
-                it.key,
-                it.value.toString()
+                key,
+                (value as? JsonPrimitive)
+                    ?.content
+                    ?: value.toString()
             )
         }
 }

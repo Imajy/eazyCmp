@@ -2,7 +2,6 @@ package com.aj.shared.picker
 
 import androidx.compose.runtime.Composable
 import kotlinx.cinterop.*
-import platform.AVFoundation.*
 import platform.Foundation.*
 import platform.UIKit.*
 import platform.UniformTypeIdentifiers.*

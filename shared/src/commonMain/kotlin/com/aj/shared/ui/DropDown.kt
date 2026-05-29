@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.aj.shared.extension.toTitleCase
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.borderBGColor
 import com.aj.shared.theme.grayColor
@@ -73,7 +72,8 @@ fun <T> CommonDropDown(
     error: String? = null,
     showFullList: Boolean = false,
     modifier: Modifier = Modifier,
-    dropDownBackGround : Color = whiteColor
+    dropDownBackGround : Color = whiteColor,
+    labelColor :Color = blackColor
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
@@ -127,7 +127,7 @@ fun <T> CommonDropDown(
                 value = displayText.replace("_", " "),
                 label = label,
                 onValueChange = {},
-                placeholderText = placeholder.ifBlank { if(label.isNullOrBlank()) "" else "Select ${label.lowercase()}" },
+                placeholderText = placeholder.ifBlank { if (label.isNullOrBlank()) "" else "Select ${label.lowercase()}" },
                 placeHolderColor = placeholderColor,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -138,7 +138,8 @@ fun <T> CommonDropDown(
                 borderColor = if (error != null) rejectedRedColor
                 else borderBGColor,
                 radius = 6,
-                enabled = false
+                enabled = false,
+                labelColor = labelColor
             )
 
             Box(

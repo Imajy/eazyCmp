@@ -24,7 +24,6 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Scale
 import coil3.svg.SvgDecoder
-import com.github.imajy.shared.generated.resources.Res
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
@@ -32,7 +31,6 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
-import org.jetbrains.compose.resources.painterResource
 
 sealed interface Placeholder {
     data class LottieUrl(val url: String) : Placeholder

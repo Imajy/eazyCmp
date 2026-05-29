@@ -80,6 +80,7 @@ fun OutLinedSimpleTextField(
     columnPadding: PaddingValues = PaddingValues(0.dp),
     isTextAlignCenter: Boolean = false,
     columnModifier: Modifier = Modifier,
+    labelColor : Color = blackColor
 ) {
 
     val startPadding = if (leadingImage != null || leadingIcon != null) 10.dp else 0.dp
@@ -93,7 +94,7 @@ fun OutLinedSimpleTextField(
         label?.let { title ->
             Text(
                 text = title,
-                color = blackColor,
+                color = labelColor,
                 style = MaterialTheme.typography.bodySmall.copy(fontSize = fontSize.sp)
             )
         }
