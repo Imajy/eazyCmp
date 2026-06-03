@@ -1,4 +1,7 @@
 jdk:
   - openjdk21
+before_install:
+  - yes | sdkmanager "platforms;android-37" || true
+  - ln -s /opt/android-sdk-linux/platforms/android-37.0 /opt/android-sdk-linux/platforms/android-37 || true
 install:
   - ./gradlew publishToMavenLocal -Pgradle.publish.skip.confirmation=true --no-configuration-cache
