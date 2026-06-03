@@ -11,7 +11,7 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.aj.shared"
-        compileSdk = 37
+        compileSdk = 35
         minSdk = 24
 
         compilerOptions {
