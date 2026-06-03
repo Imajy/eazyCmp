@@ -376,7 +376,7 @@ fun <T> CommonDropDown(
                                                     .clickable {
                                                         displayText = ""
                                                         if (isMultiSelect) {
-                                                            tempSelectedItems - tempSelectedItems
+                                                            tempSelectedItems = emptySet()
                                                             onItemsSelected(emptyList())
 
                                                         } else {

@@ -27,6 +27,7 @@
 3. [Networking Module (`api`)](#3-networking-module-api)
 4. [Storage / State Module (`storage`)](#4-storage--state-module-storage)
 5. [Permissions Module (`permission`)](#5-permissions-module-permission)
+5.5. [Location Module (`location`)](#5.5-location-module-location)
 6. [Media Picker (`picker`)](#6-media-picker-picker)
 7. [PDF Generator (`print`)](#7-pdf-generator-print)
 8. [Compose UI Kit Components](#8-compose-ui-kit-components)
@@ -256,6 +257,40 @@ fun PermissionDemo() {
         }
     }) {
         Text("Request Permissions")
+    }
+}
+```
+
+---
+
+## 5.5 Location Module (`location`)
+
+Retrieve the user's current GPS coordinates (latitude and longitude) natively on Android and iOS.
+
+```kotlin
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import com.aj.shared.location.LocationManager
+import kotlinx.coroutines.launch
+
+@Composable
+fun LocationDemo() {
+    val scope = rememberCoroutineScope()
+    val locationManager = remember { LocationManager() }
+
+    Button(onClick = {
+        scope.launch {
+            // Make sure you have checked/requested AppPermission.LOCATION first
+            locationManager.getCurrentLocation { latLng ->
+                if (latLng != null) {
+                    println("Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}")
+                } else {
+                    println("Failed to fetch location.")
+                }
+            }
+        }
+    }) {
+        Text("Get GPS Coordinates")
     }
 }
 ```
@@ -559,5 +594,98 @@ val title = "hello world".toTitleCase() // "Hello world"
 
 ---
 
+## 11. Pro-Level Enhancements
+
+All managers and utilities are available via a single unified entry point (`EazyCmp`) requiring zero-to-minimal setup.
+
+### 11.1 SDK Initialization (Android specific)
+To bootstrap platform contexts like Android shared preferences, call this in your Android Application class:
+```kotlin
+EazyCmp.init(context = this)
+```
+
+### 11.2 Single-Point Access
+Access all utilities via the unified `EazyCmp` object:
+```kotlin
+import com.aj.shared.EazyCmp
+
+// GPS coordinates
+EazyCmp.location.getCurrentLocation { latLng -> ... }
+
+// Permissions
+EazyCmp.permission.requestPermissions(listOf(AppPermission.CAMERA)) { ... }
+
+// Picker
+EazyCmp.media.launch(PickerType.IMAGE) { pickedFile -> ... }
+```
+
+### 11.3 Network Observer
+Track real-time network changes:
+```kotlin
+import com.aj.shared.EazyCmp
+
+// Get current state
+val online = EazyCmp.network.isOnline
+
+// Observe changes
+lifecycleScope.launch {
+    EazyCmp.network.connectivityFlow.collect { isOnline ->
+        // Handle online/offline state
+    }
+}
+```
+
+### 11.4 Secure Storage
+Store strings, integers, booleans, and longs securely:
+```kotlin
+import com.aj.shared.EazyCmp
+
+// Write
+EazyCmp.storage.putString("auth_token", "jwt_token_123")
+EazyCmp.storage.putBoolean("first_launch", false)
+
+// Read
+val token = EazyCmp.storage.getString("auth_token")
+val isFirst = EazyCmp.storage.getBoolean("first_launch", true)
+```
+
+### 11.5 Continuous Location Tracking
+Observe coordinates in real-time using a Coroutine Flow:
+```kotlin
+import com.aj.shared.EazyCmp
+
+lifecycleScope.launch {
+    EazyCmp.location.observeLocation(intervalMillis = 5000).collect { latLng ->
+        if (latLng != null) {
+            println("New Position: ${latLng.latitude}, ${latLng.longitude}")
+        }
+    }
+}
+```
+
+### 11.6 Custom UI Modifiers
+Premium micro-animations and loaders:
+```kotlin
+import com.aj.shared.ui.bounceClick
+import com.aj.shared.ui.shimmer
+
+// Bounce Click
+Card(
+    modifier = Modifier.bounceClick {
+        // performs premium spring scale click animation!
+    }
+) { ... }
+
+// Shimmer (Skeletal Screens)
+Box(
+    modifier = Modifier
+        .size(100.dp)
+        .shimmer(enabled = isLoading)
+)
+```
+
+---
+
 ## Author
 **Ajay Swami**
+

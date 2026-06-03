@@ -68,11 +68,14 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.cio)
-            implementation(libs.javacv)
+            implementation(libs.webcam.capture)
             implementation(libs.pdfbox)
-            implementation(libs.opencv)
             // Desktop ko Instant class mil jaye isliye yahan specifically add kiya
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+        }
+
+        commonTest.dependencies {
+            implementation("org.jetbrains.kotlin:kotlin-test")
         }
 
         nativeMain.dependencies {
@@ -82,6 +85,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation("androidx.security:security-crypto:1.1.0-alpha06")
         }
     }
 }
@@ -99,3 +103,14 @@ tasks.withType<Copy>().configureEach {
 }
 group = "com.github.Imajy"
 version = "1.0.03-alpha-10"
+
+configurations.configureEach {
+    if (name.contains("jvm", ignoreCase = true)) {
+        attributes {
+            attribute(
+                org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.attribute,
+                org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.jvm
+            )
+        }
+    }
+}
