@@ -19,6 +19,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -129,7 +130,10 @@ fun CustomImage(
 
     val imageLoader = remember {
         ImageLoader.Builder(context)
-            .components { add(SvgDecoder.Factory()) }
+            .components {
+                add(KtorNetworkFetcherFactory())
+                add(SvgDecoder.Factory())
+            }
             .diskCache {
                 DiskCache.Builder()
                     .directory(getCacheDir().toPath())
@@ -293,7 +297,13 @@ fun CustomImage(
                         modifier = modifier,
                         contentScale = contentScale,
                         colorFilter = colorFilter
-                    )
+                    ) {
+                        val state by painter.state.collectAsState()
+                        if (state is AsyncImagePainter.State.Success)
+                            SubcomposeAsyncImageContent()
+                        else
+                            showPlaceholder()
+                    }
                     return
                 }
             }
