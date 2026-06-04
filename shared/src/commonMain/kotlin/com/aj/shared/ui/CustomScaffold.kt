@@ -38,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.blackColor
 import com.aj.shared.theme.transparentColor
 import com.aj.shared.theme.whiteColor
+import androidx.compose.ui.platform.LocalInspectionMode
+import com.aj.shared.EazyCmp
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,25 +59,29 @@ fun CustomScaffold(
     iconSize: Int = 35,
     gradient: Brush = screenGradientColor,
     loading: (@Composable () -> Unit)? = null,
-    loadingLottieUrl : Placeholder = Placeholder.LottieUrl("https://letterhead.ajmonic.com/loading_blue_circle.json"),
+    loadingLottieUrl : Placeholder = EazyCmp.defaultApiLoadingPlaceholder,
     bottomBar: (@Composable () -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit
 ) {
 
-    LocalWindowInfo.current.containerSize.height.dp
-
+    val isPreview = LocalInspectionMode.current
     val density = LocalDensity.current
 
-    val keyboardHeightPx = WindowInsets.ime.getBottom(density)
+    if (!isPreview) {
+        LocalWindowInfo.current.containerSize.height.dp
 
-    val screenHeightPx = LocalWindowInfo.current.containerSize.height
+        val keyboardHeightPx = WindowInsets.ime.getBottom(density)
 
-    with(density) {
+        val screenHeightPx = LocalWindowInfo.current.containerSize.height
 
-        (screenHeightPx - keyboardHeightPx).toDp()
+        with(density) {
 
+            (screenHeightPx - keyboardHeightPx).toDp()
+
+        }
     }
+
 
 
     Scaffold(

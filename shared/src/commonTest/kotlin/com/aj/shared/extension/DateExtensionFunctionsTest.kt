@@ -56,6 +56,6 @@ class DateExtensionFunctionsTest {
         
         // Assert month name is not empty
         val monthName = currentMonthName()
-        assert(monthName.isNotEmpty())
+        kotlin.test.assertTrue(monthName.isNotEmpty())
     }
 }

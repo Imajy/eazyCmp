@@ -10,9 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.aj.shared.EazyCmp
+
 
 @Composable
-fun CustomLoading(loading : Placeholder = Placeholder.LottieUrl("https://letterhead.ajmonic.com/loading.json")) {
+fun CustomLoading(loading : Placeholder = EazyCmp.defaultApiLoadingPlaceholder) {
 
     Dialog(onDismissRequest = { }) {
         Box(

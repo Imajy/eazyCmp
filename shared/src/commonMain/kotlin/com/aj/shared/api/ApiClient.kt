@@ -26,6 +26,10 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
 import kotlin.let
 import kotlin.time.Clock
+import com.aj.shared.EazyCmp
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+
 
 class ApiClient(val client: HttpClient = HttpClientProvider.client) {
     inline fun <reified Req : Any, reified Res> request(
@@ -72,20 +76,33 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
 
         val url = buildUrl(base, endpoint)
 
+        val mockJson = ApiConfig.getMockResponse(endpoint)
+        if (mockJson != null) {
+            kotlinx.coroutines.delay(500)
+            try {
+                val data: Res = json.decodeFromString(mockJson)
+                emit(Resource.Success(data))
+                return@flow
+            } catch (e: Exception) {
+                emit(Resource.Error("Mock deserialization failed: ${e.message}"))
+                return@flow
+            }
+        }
+
         val startTime = Clock.System.now()
         try {
 
-            /* if (!NetworkMonitor.connected.value) {
-                 if (options.retryOnConnection) {
-                     NetworkMonitor.connected
-                         .filter { it }
-                         .first()
-                 } else {
-                     emit(Resource.Error("No internet"))
-                     return@flow
-                 }
-             }
- */
+            if (!EazyCmp.network.isOnline) {
+                if (options.retryOnConnection) {
+                    EazyCmp.network.connectivityFlow
+                        .filter { it }
+                        .first()
+                } else {
+                    emit(Resource.Error("No internet"))
+                    return@flow
+                }
+            }
+
 
             println("============== API REQUEST ==============")
             println("BASE        → $base")
@@ -219,7 +236,7 @@ fun FormBuilder.appendFile(
 }
 
 @PublishedApi
-internal fun FormBuilder.appendFields(obj: Any) {
+internal inline fun <reified T : Any> FormBuilder.appendFields(obj: T) {
 
     val json = Json.encodeToString(obj)
 
@@ -237,7 +254,7 @@ internal fun FormBuilder.appendFields(obj: Any) {
 }
 
 @PublishedApi
-internal fun ParametersBuilder.appendFields(obj: Any) {
+internal inline fun <reified T : Any> ParametersBuilder.appendFields(obj: T) {
 
     val json = Json.encodeToString(obj)
 

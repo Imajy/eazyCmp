@@ -169,6 +169,11 @@ apiClient.request<UploadMetadata, UploadResponse>(
 )
 ```
 
+### Real-Time Network Connectivity Checking
+EazyCmp's `ApiClient` automatically monitors network connection status using `ConnectivityObserver`. If the device is offline:
+- If `options.retryOnConnection = true`, the request flow suspends and automatically retries as soon as internet connectivity is restored.
+- Otherwise, it immediately returns `Resource.Error("No internet")` without executing the HTTP call.
+
 ### BaseViewModel Integration
 EazyCMP's `BaseViewModel` automatically handles loading states, error dialogues, and lifecycle-scoped API collections.
 ```kotlin
@@ -598,10 +603,14 @@ val title = "hello world".toTitleCase() // "Hello world"
 
 All managers and utilities are available via a single unified entry point (`EazyCmp`) requiring zero-to-minimal setup.
 
-### 11.1 SDK Initialization (Android specific)
+### 11.1 SDK Initialization & Loader Customization
 To bootstrap platform contexts like Android shared preferences, call this in your Android Application class:
 ```kotlin
 EazyCmp.init(context = this)
+
+// (Optional) Configure custom placeholders/loaders globally once at startup
+EazyCmp.defaultImagePlaceholder = Placeholder.LottieUrl("https://mycompany.com/image_loading.json")
+EazyCmp.defaultApiLoadingPlaceholder = Placeholder.LottieUrl("https://mycompany.com/api_loading.json")
 ```
 
 ### 11.2 Single-Point Access

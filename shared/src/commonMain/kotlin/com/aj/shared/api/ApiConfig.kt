@@ -17,6 +17,23 @@ data class BaseConfig(
 object ApiConfig {
 
     private val configs: MutableMap<String, BaseConfig> = mutableMapOf()
+    private val mockResponses: MutableMap<String, String> = mutableMapOf()
+
+    fun registerMockResponse(endpoint: String, json: String) {
+        mockResponses[endpoint] = json
+    }
+
+    fun getMockResponse(endpoint: String): String? {
+        return mockResponses[endpoint]
+    }
+
+    fun removeMockResponse(endpoint: String) {
+        mockResponses.remove(endpoint)
+    }
+
+    fun clearMockResponses() {
+        mockResponses.clear()
+    }
 
     fun registerBaseUrl(
 

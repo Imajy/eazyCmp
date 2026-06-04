@@ -31,6 +31,18 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.Text
+import androidx.compose.ui.unit.sp
+import com.aj.shared.EazyCmp
+import com.aj.shared.getCacheDir
+import coil3.disk.DiskCache
+import okio.Path.Companion.toPath
+
+
 
 sealed interface Placeholder {
     data class LottieUrl(val url: String) : Placeholder
@@ -46,16 +58,85 @@ fun CustomImage(
     model: Any?,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    placeholder: Placeholder? = Placeholder.LottieUrl("https://lottie.host/a9be1300-ee73-471a-969d-6ebe32a5fb64/NT7azVsdv1.json"),
+    placeholder: Placeholder? = EazyCmp.defaultImagePlaceholder,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null
 ) {
+    val isPreview = LocalInspectionMode.current
+    if (isPreview) {
+        when (model) {
+            is Painter -> {
+                Image(
+                    painter = model,
+                    contentDescription = contentDescription,
+                    modifier = modifier,
+                    alignment = alignment,
+                    contentScale = contentScale,
+                    alpha = alpha,
+                    colorFilter = colorFilter
+                )
+            }
+            is ImageVector -> {
+                Image(
+                    imageVector = model,
+                    contentDescription = contentDescription,
+                    modifier = modifier,
+                    alignment = alignment,
+                    contentScale = contentScale,
+                    alpha = alpha,
+                    colorFilter = colorFilter
+                )
+            }
+            else -> {
+                when (placeholder) {
+                    is Placeholder.PainterResource -> {
+                        Image(
+                            painter = placeholder.painter,
+                            contentDescription = null,
+                            modifier = modifier,
+                            contentScale = contentScale
+                        )
+                    }
+                    is Placeholder.VectorResource -> {
+                        Image(
+                            imageVector = placeholder.imageVector,
+                            contentDescription = null,
+                            modifier = modifier,
+                            contentScale = contentScale
+                        )
+                    }
+                    else -> {
+                        Box(
+                            modifier = modifier.background(Color.LightGray.copy(alpha = 0.5f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Preview Loading...",
+                                fontSize = 10.sp,
+                                color = Color.DarkGray
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        return
+    }
+
     val context = LocalPlatformContext.current
 
     val imageLoader = remember {
-        ImageLoader.Builder(context).components { add(SvgDecoder.Factory()) }.build()
+        ImageLoader.Builder(context)
+            .components { add(SvgDecoder.Factory()) }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(getCacheDir().toPath())
+                    .maxSizeBytes(50L * 1024L * 1024L) // 50MB
+                    .build()
+            }
+            .build()
     }
 
     val showPlaceholder: @Composable () -> Unit = {
