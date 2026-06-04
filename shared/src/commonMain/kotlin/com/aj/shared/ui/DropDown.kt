@@ -127,7 +127,8 @@ fun <T> CommonDropDown(
                                         text = badge,
                                         style = TextStyle(fontSize = 12.sp)
                                     ).size.width
-                                    val labelBudget = (availableWidthPx - badgeWidth).coerceAtLeast(0f)
+                                    val labelBudget =
+                                        (availableWidthPx - badgeWidth).coerceAtLeast(0f)
                                     val firstLabel = labels.first()
                                     var truncated = firstLabel
                                     while (truncated.isNotEmpty()) {
@@ -180,7 +181,8 @@ fun <T> CommonDropDown(
                 val filtered = if (searchText.isBlank()) items
                 else
                     items.filter { item ->
-                        val label = itemLabel?.invoke(item) ?: item.toString() // Logic yahan bhi same
+                        val label =
+                            itemLabel?.invoke(item) ?: item.toString() // Logic yahan bhi same
                         label.contains(searchText, ignoreCase = true)
                     }
                 if (showFullList) filtered
@@ -191,8 +193,8 @@ fun <T> CommonDropDown(
             verticalArrangement = Arrangement.spacedBy(6.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .pointerInput(Unit){
-                    detectTapGestures (
+                .pointerInput(Unit) {
+                    detectTapGestures(
                         onTap = {
                             focusManager.clearFocus()
                             keyboardController?.hide()
@@ -281,7 +283,7 @@ fun <T> CommonDropDown(
                                     .padding(16.dp)
                             ) {
                                 Text(
-                                    text = if(label.isNullOrBlank()) "Select Item"  else "Select $label",
+                                    text = if (label.isNullOrBlank()) "Select Item" else "Select $label",
                                     style = MaterialTheme.typography.titleMedium
                                 )
 
@@ -442,14 +444,15 @@ fun <T> CommonDropDown(
                     }
                 }
             }
-        }
 
-        if (error != null) {
-            Text(
-                text = error,
-                color = rejectedRedColor,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp)
-            )
+
+            if (error != null) {
+                Text(
+                    text = error,
+                    color = rejectedRedColor,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp)
+                )
+            }
         }
     }
 }
