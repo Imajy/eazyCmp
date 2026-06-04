@@ -91,14 +91,12 @@ fun <T> CommonDropDown(
             }
         }
 
-        val formatSelectedItems = remember(availableWidthPx, itemLabel) {
-            { items: List<T> ->
-                val labels = items.map { (itemLabel?.invoke(it) ?: it.toString()).replace("_", " ") }
-                if (labels.isEmpty()) {
-                    ""
-                } else if (labels.size == 1) {
-                    labels.first()
-                } else {
+        fun formatSelectedItems(items: List<T>): String {
+            val labels = items.map { (itemLabel?.invoke(it) ?: it.toString()).replace("_", " ") }
+            return when {
+                labels.isEmpty() -> ""
+                labels.size == 1 -> labels.first()
+                else -> {
                     val resultText = labels.joinToString(", ")
                     val fullWidth = textMeasurer.measure(
                         text = resultText,
@@ -108,11 +106,11 @@ fun <T> CommonDropDown(
                     if (fullWidth <= availableWidthPx) {
                         resultText
                     } else {
-                        var bestFit = ""
+                        var bestFit = "+${labels.size}" // fallback: show count only
                         for (k in 0 until labels.size) {
-                            val prefix = labels.take(k + 1).joinToString(", ")
-                            val suffix = if (k + 1 < labels.size) " +${labels.size - (k + 1)}" else ""
-                            val candidate = prefix + suffix
+                            val remaining = labels.size - (k + 1)
+                            val suffix = if (remaining > 0) " +$remaining" else ""
+                            val candidate = labels.take(k + 1).joinToString(", ") + suffix
                             val width = textMeasurer.measure(
                                 text = candidate,
                                 style = TextStyle(fontSize = 12.sp)
@@ -121,8 +119,30 @@ fun <T> CommonDropDown(
                             if (width <= availableWidthPx) {
                                 bestFit = candidate
                             } else {
-                                if (k == 0) {
-                                    bestFit = candidate
+                                // Even first label overflows — truncate it and show +N
+                                if (k == 0 && remaining > 0) {
+                                    // Try showing truncated first label + +N
+                                    val badge = " +$remaining"
+                                    val badgeWidth = textMeasurer.measure(
+                                        text = badge,
+                                        style = TextStyle(fontSize = 12.sp)
+                                    ).size.width
+                                    val labelBudget = (availableWidthPx - badgeWidth).coerceAtLeast(0f)
+                                    val firstLabel = labels.first()
+                                    var truncated = firstLabel
+                                    while (truncated.isNotEmpty()) {
+                                        val candidate2 = "$truncated...$badge"
+                                        val w = textMeasurer.measure(
+                                            text = candidate2,
+                                            style = TextStyle(fontSize = 12.sp)
+                                        ).size.width
+                                        if (w <= availableWidthPx) {
+                                            bestFit = candidate2
+                                            break
+                                        }
+                                        truncated = truncated.dropLast(1)
+                                    }
+                                    if (truncated.isEmpty()) bestFit = badge.trim()
                                 }
                                 break
                             }
