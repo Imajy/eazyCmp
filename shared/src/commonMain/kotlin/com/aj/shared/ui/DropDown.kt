@@ -312,7 +312,10 @@ fun <T> CommonDropDown(
             }
 
             if (showDialog) {
-                val isLargeList = filteredItems.size > 15
+                val hasSearch = showSearch || showSearchForcefully
+                val referenceItemCount = items.size.coerceIn(1, 15)
+                val fixedListHeight = (referenceItemCount * 48).dp.coerceAtMost(350.dp)
+                val useFixedDialogSize = hasSearch || items.size > 15
                 Dialog(
                     onDismissRequest = {
                         showDialog = false
@@ -339,7 +342,7 @@ fun <T> CommonDropDown(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f) // iOS par margin dene ke liye 90% width rakho
                                 .then(
-                                    if (isLargeList) Modifier.fillMaxHeight(0.8f) // Screen se thoda chota rakho
+                                    if (useFixedDialogSize) Modifier.fillMaxHeight(0.8f)
                                     else Modifier.wrapContentHeight()
                                 )
                                 .background(whiteColor, RoundedCornerShape(12.dp))
@@ -357,7 +360,7 @@ fun <T> CommonDropDown(
                                     style = MaterialTheme.typography.titleMedium
                                 )
 
-                                if (showSearch|| showSearchForcefully) {
+                                if (hasSearch) {
                                     Spacer(Modifier.height(8.dp))
 
                                     OutLinedSimpleTextField(
@@ -376,8 +379,15 @@ fun <T> CommonDropDown(
 
                                 Column(
                                     modifier = Modifier
-                                        .weight(1f, fill = isLargeList)
-                                        .heightIn(max = 350.dp)
+                                        .then(
+                                            if (hasSearch) {
+                                                Modifier.height(fixedListHeight)
+                                            } else {
+                                                Modifier
+                                                    .weight(1f, fill = useFixedDialogSize)
+                                                    .heightIn(max = 350.dp)
+                                            }
+                                        )
                                         .verticalScroll(rememberScrollState())
                                 ) {
 
