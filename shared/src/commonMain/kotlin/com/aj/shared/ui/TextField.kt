@@ -80,7 +80,8 @@ fun OutLinedSimpleTextField(
     columnPadding: PaddingValues = PaddingValues(0.dp),
     isTextAlignCenter: Boolean = false,
     columnModifier: Modifier = Modifier,
-    labelColor : Color = blackColor
+    labelColor: Color = blackColor,
+    disabledValueContent: (@Composable () -> Unit)? = null
 ) {
 
     val startPadding = if (leadingImage != null || leadingIcon != null) 10.dp else 0.dp
@@ -218,21 +219,45 @@ fun OutLinedSimpleTextField(
                                 .padding(start = startPadding),
                             contentAlignment = if (isTextAlignEnd) Alignment.CenterEnd else if (isTextAlignCenter) Alignment.Center else Alignment.CenterStart
                         ) {
-                            if (value.isEmpty()) {
-                                Text(
-                                    text = placeholderText,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = TextStyle(
-                                        color = placeHolderColor,
-                                        fontSize = fontSize.sp,
-                                        fontWeight = placeHolderFontWeight,
-                                        letterSpacing = 0.05.sp
-                                    )
-                                )
-                            }
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                innerTextField()
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = if (isTextAlignEnd) Alignment.CenterEnd
+                                else if (isTextAlignCenter) Alignment.Center
+                                else Alignment.CenterStart
+                            ) {
+                                when {
+                                    !enabled && disabledValueContent != null -> disabledValueContent()
+                                    value.isEmpty() -> {
+                                        Text(
+                                            text = placeholderText,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            style = TextStyle(
+                                                color = placeHolderColor,
+                                                fontSize = fontSize.sp,
+                                                fontWeight = placeHolderFontWeight,
+                                                letterSpacing = 0.05.sp
+                                            )
+                                        )
+                                    }
+                                    !enabled -> {
+                                        Text(
+                                            text = value,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            style = TextStyle(
+                                                color = blackColor,
+                                                fontSize = fontSize.sp,
+                                                textAlign = if (isTextAlignEnd) TextAlign.End
+                                                else if (isTextAlignCenter) TextAlign.Center
+                                                else TextAlign.Start
+                                            )
+                                        )
+                                    }
+                                    else -> innerTextField()
+                                }
                             }
                         }
                     }

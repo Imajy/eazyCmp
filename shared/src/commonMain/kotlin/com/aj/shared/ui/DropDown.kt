@@ -41,12 +41,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -81,56 +79,32 @@ fun <T> CommonDropDown(
     labelColor :Color = blackColor
 ) {
     BoxWithConstraints(modifier = modifier) {
-        val density = LocalDensity.current
-        val textMeasurer = rememberTextMeasurer()
-        val availableWidthPx = with(density) {
-            if (maxWidth == Dp.Unspecified || maxWidth == Dp.Infinity) {
-                Float.MAX_VALUE
-            } else {
-                (maxWidth - 60.dp).toPx().coerceAtLeast(0f)
-            }
-        }
-
-        val textStyle = TextStyle(fontSize = 12.sp)
-
-        fun measureTextWidth(text: String): Float =
-            textMeasurer.measure(text = text, style = textStyle).size.width.toFloat()
-
-        fun truncateWithEllipsis(text: String, maxWidthPx: Float): String {
-            if (text.isEmpty() || measureTextWidth(text) <= maxWidthPx) return text
-
-            var truncated = text
-            while (truncated.isNotEmpty()) {
-                val candidate = "$truncated..."
-                if (measureTextWidth(candidate) <= maxWidthPx) return candidate
-                truncated = truncated.dropLast(1)
-            }
-            return "..."
-        }
-
         fun formatLabel(text: String): String = text.replace("_", " ")
 
         fun formatSelectedItems(items: List<T>): String {
             val labels = items.map { formatLabel(itemLabel?.invoke(it) ?: it.toString()) }
             return when {
                 labels.isEmpty() -> ""
-                labels.size == 1 -> truncateWithEllipsis(labels.first(), availableWidthPx)
+                labels.size == 1 -> labels.first()
                 else -> {
                     val remaining = labels.size - 1
-                    val badge = " +$remaining"
-                    val badgeWidth = measureTextWidth(badge)
-                    val firstLabelBudget = (availableWidthPx - badgeWidth).coerceAtLeast(0f)
-                    val firstLabel = truncateWithEllipsis(labels.first(), firstLabelBudget)
-                    when {
-                        firstLabel.isEmpty() || firstLabel == "..." -> "+$remaining"
-                        else -> firstLabel + badge
-                    }
+                    "${labels.first()} +$remaining"
                 }
             }
         }
 
         fun formatSingleItem(item: T): String =
-            truncateWithEllipsis(formatLabel(itemLabel?.invoke(item) ?: item.toString()), availableWidthPx)
+            formatLabel(itemLabel?.invoke(item) ?: item.toString())
+
+        val selectedLabels = remember(selectedItems, selectedItem, itemLabel, isMultiSelect) {
+            if (isMultiSelect) {
+                selectedItems.map { formatLabel(itemLabel?.invoke(it) ?: it.toString()) }
+            } else {
+                selectedItem?.let { listOf(formatSingleItem(it)) } ?: emptyList()
+            }
+        }
+        val showMultiBadge = isMultiSelect && selectedLabels.size > 1
+        val valueTextStyle = TextStyle(fontSize = 12.sp, color = blackColor)
 
         var showDialog by remember { mutableStateOf(false) }
         var searchText by remember { mutableStateOf("") }
@@ -139,7 +113,7 @@ fun <T> CommonDropDown(
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
 
-        LaunchedEffect(selectedItem, selectedItems, availableWidthPx) {
+        LaunchedEffect(selectedItem, selectedItems) {
             displayText = if (isMultiSelect) {
                 formatSelectedItems(selectedItems)
             } else {
@@ -184,7 +158,7 @@ fun <T> CommonDropDown(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutLinedSimpleTextField(
-                    value = displayText,
+                    value = if (showMultiBadge) "" else displayText,
                     label = label,
                     onValueChange = {},
                     placeholderText = placeholder.ifBlank { if (label.isNullOrBlank()) "" else "Select ${label.lowercase()}" },
@@ -199,7 +173,28 @@ fun <T> CommonDropDown(
                     else borderBGColor,
                     radius = 6,
                     enabled = false,
-                    labelColor = labelColor
+                    labelColor = labelColor,
+                    disabledValueContent = if (showMultiBadge) {
+                        {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = selectedLabels.first(),
+                                    modifier = Modifier.weight(1f),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = valueTextStyle
+                                )
+                                Text(
+                                    text = " +${selectedLabels.size - 1}",
+                                    maxLines = 1,
+                                    style = valueTextStyle
+                                )
+                            }
+                        }
+                    } else null
                 )
 
                 Box(
