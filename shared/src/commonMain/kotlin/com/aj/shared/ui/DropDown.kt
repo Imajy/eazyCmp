@@ -41,10 +41,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -79,17 +82,83 @@ fun <T> CommonDropDown(
     labelColor :Color = blackColor
 ) {
     BoxWithConstraints(modifier = modifier) {
+        val density = LocalDensity.current
+        val textMeasurer = rememberTextMeasurer()
+        val availableWidthPx = with(density) {
+            if (maxWidth == Dp.Unspecified || maxWidth == Dp.Infinity) {
+                Float.MAX_VALUE
+            } else {
+                (maxWidth - 52.dp).toPx().coerceAtLeast(0f)
+            }
+        }
+
+        val valueTextStyle = TextStyle(fontSize = 12.sp, color = blackColor)
+
+        fun measureTextWidth(text: String): Float =
+            textMeasurer.measure(text = text, style = valueTextStyle).size.width.toFloat()
+
+        fun truncateWithEllipsis(text: String, maxWidthPx: Float): String {
+            if (text.isEmpty() || measureTextWidth(text) <= maxWidthPx) return text
+
+            var truncated = text
+            while (truncated.isNotEmpty()) {
+                val candidate = "$truncated..."
+                if (measureTextWidth(candidate) <= maxWidthPx) return candidate
+                truncated = truncated.dropLast(1)
+            }
+            return "..."
+        }
+
         fun formatLabel(text: String): String = text.replace("_", " ")
+
+        data class MultiSelectDisplay(val prefix: String, val badge: String)
+
+        fun computeMultiSelectDisplay(labels: List<String>): MultiSelectDisplay {
+            if (labels.isEmpty()) return MultiSelectDisplay("", "")
+            if (labels.size == 1) return MultiSelectDisplay(labels.first(), "")
+
+            val allJoined = labels.joinToString(", ")
+            if (measureTextWidth(allJoined) <= availableWidthPx) {
+                return MultiSelectDisplay(allJoined, "")
+            }
+
+            for (visibleCount in labels.size - 1 downTo 1) {
+                val hiddenCount = labels.size - visibleCount
+                val badge = "+$hiddenCount"
+                val badgeWidth = measureTextWidth(badge)
+                val prefixBudget = (availableWidthPx - badgeWidth).coerceAtLeast(0f)
+                val joinedPrefix = labels.take(visibleCount).joinToString(", ")
+
+                val displayPrefix = if (measureTextWidth(joinedPrefix) <= prefixBudget) {
+                    joinedPrefix
+                } else {
+                    truncateWithEllipsis(joinedPrefix, prefixBudget)
+                }
+
+                if (displayPrefix.isNotEmpty() && displayPrefix != "...") {
+                    return MultiSelectDisplay(displayPrefix, badge)
+                }
+            }
+
+            val badge = "+${labels.size - 1}"
+            val badgeWidth = measureTextWidth(badge)
+            val prefixBudget = (availableWidthPx - badgeWidth).coerceAtLeast(0f)
+            val firstLabel = truncateWithEllipsis(labels.first(), prefixBudget)
+            return if (firstLabel.isNotEmpty() && firstLabel != "...") {
+                MultiSelectDisplay(firstLabel, badge)
+            } else {
+                MultiSelectDisplay("", badge)
+            }
+        }
 
         fun formatSelectedItems(items: List<T>): String {
             val labels = items.map { formatLabel(itemLabel?.invoke(it) ?: it.toString()) }
+            val display = computeMultiSelectDisplay(labels)
             return when {
                 labels.isEmpty() -> ""
                 labels.size == 1 -> labels.first()
-                else -> {
-                    val remaining = labels.size - 1
-                    "${labels.first()} +$remaining"
-                }
+                display.badge.isEmpty() -> display.prefix
+                else -> "${display.prefix}${display.badge}"
             }
         }
 
@@ -103,8 +172,12 @@ fun <T> CommonDropDown(
                 selectedItem?.let { listOf(formatSingleItem(it)) } ?: emptyList()
             }
         }
+
+        val multiSelectDisplay = remember(selectedLabels, availableWidthPx) {
+            computeMultiSelectDisplay(selectedLabels)
+        }
+
         val showMultiBadge = isMultiSelect && selectedLabels.size > 1
-        val valueTextStyle = TextStyle(fontSize = 12.sp, color = blackColor)
 
         var showDialog by remember { mutableStateOf(false) }
         var searchText by remember { mutableStateOf("") }
@@ -180,18 +253,24 @@ fun <T> CommonDropDown(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = selectedLabels.first(),
-                                    modifier = Modifier.weight(1f),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = valueTextStyle
-                                )
-                                Text(
-                                    text = " +${selectedLabels.size - 1}",
-                                    maxLines = 1,
-                                    style = valueTextStyle
-                                )
+                                if (multiSelectDisplay.prefix.isNotEmpty()) {
+                                    Text(
+                                        text = multiSelectDisplay.prefix,
+                                        modifier = Modifier.weight(1f, fill = false),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Clip,
+                                        style = valueTextStyle
+                                    )
+                                } else {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                                if (multiSelectDisplay.badge.isNotEmpty()) {
+                                    Text(
+                                        text = multiSelectDisplay.badge,
+                                        maxLines = 1,
+                                        style = valueTextStyle
+                                    )
+                                }
                             }
                         }
                     } else null
