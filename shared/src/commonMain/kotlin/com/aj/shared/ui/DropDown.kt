@@ -77,6 +77,7 @@ fun <T> CommonDropDown(
     trailingIconTint: Color = blackColor,
     placeholderColor: Color = grayColor,
     error: String? = null,
+    showSearchForcefully: Boolean = false,
     showFullList: Boolean = false,
     modifier: Modifier = Modifier,
     dropDownBackGround : Color = whiteColor,
@@ -356,7 +357,7 @@ fun <T> CommonDropDown(
                                     style = MaterialTheme.typography.titleMedium
                                 )
 
-                                if (showSearch) {
+                                if (showSearch|| showSearchForcefully) {
                                     Spacer(Modifier.height(8.dp))
 
                                     OutLinedSimpleTextField(
