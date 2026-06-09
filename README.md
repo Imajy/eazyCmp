@@ -65,12 +65,28 @@ dependencyResolutionManagement {
 
 EazyCMP uses **Koin** internally for Dependency Injection and **Multiplatform Settings** for local storage.
 
-### Initialize Storage Name
-Before launching dependency injection, configure your local settings file name:
+### Android: Initialize Context First (Required)
+On Android, call `EazyCmp.init()` **before** `startKoin()`:
 ```kotlin
-import com.aj.shared.api.initSettingsName
+import com.aj.shared.EazyCmp
+import com.aj.shared.api.eazyModule
+import org.koin.core.context.startKoin
 
-initSettingsName("my_custom_app_pref")
+class MyApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        EazyCmp.init(context = this, settingsName = "my_custom_app_pref")
+        startKoin { modules(eazyModule()) }
+    }
+}
+```
+
+### iOS / Desktop: Initialize Settings Name
+On iOS and JVM, configure the settings name before Koin:
+```kotlin
+import com.aj.shared.EazyCmp
+
+EazyCmp.init(settingsName = "my_custom_app_pref")
 ```
 
 ### Configure Koin
@@ -200,7 +216,11 @@ class ProfileViewModel(private val api: ApiClient) : BaseViewModel() {
 
 ## 4. Storage / State Module (`storage`)
 
-EazyCMP includes `SharedViewModel` to securely store strings and serialized objects natively.
+EazyCMP provides two storage options:
+- **`SharedViewModel`** (via Koin): plain preferences for app settings and non-sensitive data.
+- **`EazyCmp.storage`** (`SecureStorage`): encrypted storage for tokens and sensitive values.
+
+`SharedViewModel` stores strings and serialized objects in platform preferences:
 
 ```kotlin
 import com.aj.shared.api.SharedViewModel
@@ -299,6 +319,29 @@ fun LocationDemo() {
     }
 }
 ```
+
+### Geocoder & Location Picker UI
+Search addresses and pick locations with `Geocoder` and `LocationPickerBottomSheet`:
+```kotlin
+import com.aj.shared.location.Geocoder
+import com.aj.shared.location.GeocoderResult
+import com.aj.shared.location.LocationPickerBottomSheet
+
+// Search places (returns Result type)
+when (val result = Geocoder.search("Connaught Place Delhi")) {
+    is GeocoderResult.Success -> println(result.data)
+    is GeocoderResult.Error -> println(result.message)
+}
+
+// Bottom sheet picker
+LocationPickerBottomSheet(
+    show = showPicker,
+    onDismiss = { showPicker = false },
+    onLocationPicked = { place -> println(place.displayName) }
+)
+```
+
+> **Note:** Geocoder uses OpenStreetMap Nominatim. Respect their [usage policy](https://operations.osmfoundation.org/policies/nominatim/) and configure `Geocoder.baseUrl` for production.
 
 ---
 
@@ -604,13 +647,24 @@ val title = "hello world".toTitleCase() // "Hello world"
 All managers and utilities are available via a single unified entry point (`EazyCmp`) requiring zero-to-minimal setup.
 
 ### 11.1 SDK Initialization & Loader Customization
-To bootstrap platform contexts like Android shared preferences, call this in your Android Application class:
 ```kotlin
-EazyCmp.init(context = this)
+// Android Application.onCreate — before startKoin()
+EazyCmp.init(context = this, settingsName = "my_app_prefs")
+
+// Enable API debug logs (disabled by default)
+EazyCmp.isDebugEnabled = BuildConfig.DEBUG
 
 // (Optional) Configure custom placeholders/loaders globally once at startup
 EazyCmp.defaultImagePlaceholder = Placeholder.LottieUrl("https://mycompany.com/image_loading.json")
 EazyCmp.defaultApiLoadingPlaceholder = Placeholder.LottieUrl("https://mycompany.com/api_loading.json")
+```
+
+### 11.1.1 Snackbar Setup for BaseViewModel
+Wrap your app root with `SnackBarBoxApp` so `BaseViewModel.setError()` can show errors:
+```kotlin
+SnackBarBoxApp {
+    AppNavigation()
+}
 ```
 
 ### 11.2 Single-Point Access

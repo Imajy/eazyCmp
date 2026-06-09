@@ -20,6 +20,10 @@ class SharedViewModel(
         key: String,
         value: T?
     ) {
+        if (value == null) {
+            settings.remove(key)
+            return
+        }
         val jsonString = json.encodeToString(value)
         settings.putString(key, jsonString)
     }

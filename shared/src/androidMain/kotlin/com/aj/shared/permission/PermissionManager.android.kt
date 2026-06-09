@@ -1,6 +1,7 @@
 package com.aj.shared.permission
 
 import android.Manifest
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,13 +45,21 @@ fun AppPermission.toAndroidPermission(): String {
 
         AppPermission.CAMERA -> Manifest.permission.CAMERA
 
-        AppPermission.GALLERY -> Manifest.permission.READ_MEDIA_IMAGES
+        AppPermission.GALLERY -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
 
         AppPermission.LOCATION -> Manifest.permission.ACCESS_FINE_LOCATION
 
         AppPermission.MICROPHONE -> Manifest.permission.RECORD_AUDIO
 
-        AppPermission.STORAGE -> Manifest.permission.READ_EXTERNAL_STORAGE
+        AppPermission.STORAGE -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
 
         AppPermission.NOTIFICATION -> Manifest.permission.POST_NOTIFICATIONS
 

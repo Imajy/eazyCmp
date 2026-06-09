@@ -60,15 +60,15 @@ fun GenericBottomSheet(
     val focusManager = LocalFocusManager.current
 
     ModalBottomSheet(
-        onDismissRequest = {},
+        onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = whiteColor,
         dragHandle = null,
-        sheetGesturesEnabled = false,
+        sheetGesturesEnabled = true,
         shape = RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp),
         properties = ModalBottomSheetProperties(
-            shouldDismissOnBackPress = false,
-            shouldDismissOnClickOutside = false
+            shouldDismissOnBackPress = true,
+            shouldDismissOnClickOutside = true
         ),
         scrimColor = BottomSheetDefaults.ScrimColor
     ) {

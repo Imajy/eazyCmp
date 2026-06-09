@@ -11,21 +11,19 @@ Library version ready
 
 ## Step 1 - group id
 
-Example:
+Published via JitPack:
 
-com.aj
+group: `com.github.Imajy`
 
-artifact:
-
-eazycmp
+artifact: `eazyCmp`
 
 ---
 
 ## Step 2 - gradle config
 
-group = "com.aj"
+group = "com.github.Imajy"
 
-version = "1.0.0"
+version = "1.0.03-alpha-10"
 
 ---
 

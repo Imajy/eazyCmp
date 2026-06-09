@@ -28,11 +28,8 @@ actual fun provideHttpClient(): HttpClient {
             )
         }
         install(Logging) {
-
             logger = Logger.DEFAULT
-
-            level = LogLevel.ALL
-
+            level = if (EazyLogger.isDebugEnabled) LogLevel.INFO else LogLevel.NONE
         }
     }
 }
@@ -44,7 +41,10 @@ fun initEazyCmp(context: Context, name : String) {
 }
 
 
-actual fun provideSettings() : Settings {
+actual fun provideSettings(): Settings {
+    if (!::appContext.isInitialized) {
+        error("Call EazyCmp.init(context) in Application.onCreate() before starting Koin on Android.")
+    }
 
     val pref = appContext.getSharedPreferences(
         SETTINGS_NAME,

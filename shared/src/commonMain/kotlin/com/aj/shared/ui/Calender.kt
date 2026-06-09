@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aj.shared.theme.whiteColor
-import io.ktor.util.date.getTimeMillis
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
@@ -50,7 +50,7 @@ fun GenericDatePicker(
 
     if (!show) return
 
-    val now = getTimeMillis()
+    val now = Clock.System.now().toEpochMilliseconds()
 
     val pastMin = pastLimitDays?.let { now - (it * 24 * 60 * 60 * 1000L) }
     val futureMax = futureLimitDays?.let { now + (it * 24 * 60 * 60 * 1000L) }
@@ -248,7 +248,7 @@ fun EasyDatePicker(
 
     if (!show) return
 
-    val now = getTimeMillis()
+    val now = Clock.System.now().toEpochMilliseconds()
 
     val minDateMillis = remember(minDaysFromToday) {
         minDaysFromToday?.let {

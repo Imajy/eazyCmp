@@ -1,7 +1,9 @@
 package com.aj.shared
 
+import com.aj.shared.api.SETTINGS_NAME
+
 internal actual fun platformInit(context: Any?, settingsName: String) {
-    // No context initialization required for iOS
+    SETTINGS_NAME = settingsName
 }
 
 internal actual fun getCacheDir(): String {

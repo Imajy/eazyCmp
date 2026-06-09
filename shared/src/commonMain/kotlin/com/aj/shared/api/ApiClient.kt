@@ -2,7 +2,6 @@ package com.aj.shared.api
 
 import com.aj.shared.picker.PickedFile
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.forms.FormBuilder
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -104,60 +103,47 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
             }
 
 
-            println("============== API REQUEST ==============")
-            println("BASE        → $base")
-            println("URL         → $url")
-            println("METHOD      → $method")
-            println("QUERY       → $query")
-            println("BODY TYPE   → $bodyType")
-            println("BODY        → $body")
-            println("FILES       → ${files.size}")
-            println("TOKEN       → ${config.token != null}")
-            println("HEADERS     → ${config.defaultHeaders}")
-            println("=========================================")
+            val mergedBody = mergeRequestBody<Req>(base, body)
+
+            EazyLogger.logApiRequest(
+                base = base,
+                url = url,
+                method = method.value,
+                query = query,
+                bodyType = bodyType,
+                hasBody = mergedBody != null,
+                fileCount = files.size,
+                hasToken = config.token != null
+            )
 
             val response = client.request(buildUrl(base, endpoint)) {
-                println("STEP 2 → inside ktor")
                 this.method = method
                 applyDefaults(base)
-
-                /**
-                 * query params
-                 */
                 query.forEach { parameter(it.key, it.value) }
-                println("STEP 3 → defaults applied")
-                /**
-                 * multipart
-                 */
+
                 if (files.isNotEmpty()) {
                     setBody(
                         MultiPartFormDataContent(
                             formData {
-                                body?.let { appendFields(it) }
+                                mergedBody?.let { appendFields(it) }
                                 files.forEach { part ->
                                     part.file?.let { file -> appendFile(part.name, file) }
                                 }
                             }
                         )
                     )
-                }
-
-                /**
-                 * normal body
-                 */
-                else if (body != null) {
-
+                } else if (mergedBody != null) {
                     when (bodyType) {
                         BodyType.JSON -> {
                             contentType(ContentType.Application.Json)
-                            setBody(body)
+                            setBody(mergedBody)
                         }
 
                         BodyType.FORM_URLENCODED -> {
                             setBody(
                                 FormDataContent(
                                     Parameters.build {
-                                        appendFields(body)
+                                        appendFields(mergedBody)
                                     }
                                 )
                             )
@@ -166,7 +152,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                             setBody(
                                 MultiPartFormDataContent(
                                     formData {
-                                        appendFields(body)
+                                        appendFields(mergedBody)
                                     }
                                 )
                             )
@@ -176,23 +162,23 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
             }
 
             val duration = Clock.System.now() - startTime
-
-            println("============== API RESPONSE =============")
-            val data: Res = response.body()
             val rawResponse = response.bodyAsText()
+            val data: Res = json.decodeFromString(rawResponse)
 
-            println("RAW RESPONSE ↓↓↓")
-            println("$url => $duration=> ${rawResponse}")
-            println("RAW RESPONSE ↑↑↑")
+            EazyLogger.logApiResponse(
+                url = url,
+                durationMs = duration.inWholeMilliseconds,
+                rawResponse = rawResponse
+            )
             emit(Resource.Success(data))
         } catch (e: Exception) {
             val duration = Clock.System.now() - startTime
 
-            println("============== API ERROR ================")
-            println("URL         → $url")
-            println("TIME        → ${duration}ms")
-            println("ERROR       → ${e.message}")
-            println("=========================================")
+            EazyLogger.logApiError(
+                url = url,
+                durationMs = duration.inWholeMilliseconds,
+                error = e.message
+            )
             emit(Resource.Error(e.message ?: "unknown error"))
         }
     }

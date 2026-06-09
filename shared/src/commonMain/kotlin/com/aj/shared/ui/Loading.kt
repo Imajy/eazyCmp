@@ -14,9 +14,12 @@ import com.aj.shared.EazyCmp
 
 
 @Composable
-fun CustomLoading(loading : Placeholder = EazyCmp.defaultApiLoadingPlaceholder) {
-
-    Dialog(onDismissRequest = { }) {
+fun CustomLoading(
+    loading: Placeholder = EazyCmp.defaultApiLoadingPlaceholder,
+    dismissOnBackPress: Boolean = false,
+    onDismiss: () -> Unit = {}
+) {
+    Dialog(onDismissRequest = { if (dismissOnBackPress) onDismiss() }) {
         Box(
             modifier = Modifier
                 .size(100.dp)

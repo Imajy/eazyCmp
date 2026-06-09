@@ -58,6 +58,7 @@ class AndroidPdfManager(
             context = context,
             compositionContext = compositionContext,
             rootView = rootView,
+            fileName = fileName,
             content = content,
             onComplete = { file ->
                 sharePdfFile(context, file)
@@ -78,6 +79,7 @@ class AndroidPdfManager(
             context = context,
             compositionContext = compositionContext,
             rootView = rootView,
+            fileName = fileName,
             content = content,
             onComplete = { file ->
                 openPdfFile(context, file)
@@ -117,6 +119,7 @@ fun captureFullComposeView(
     context: Context,
     compositionContext: CompositionContext,
     rootView: View,
+    fileName: String,
     onComplete: (File) -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -178,9 +181,12 @@ fun captureFullComposeView(
             page.canvas.drawBitmap(bitmap, 0f, 0f, null)
             pdfDocument.finishPage(page)
 
+            val safeFileName = fileName.ifBlank { "document.pdf" }
+                .substringAfterLast('/')
+                .let { if (it.endsWith(".pdf", ignoreCase = true)) it else "$it.pdf" }
             val file = File(
                 context.getExternalFilesDir(null),
-                "ComparisonDetails.pdf"
+                safeFileName
             )
 
             pdfDocument.writeTo(FileOutputStream(file))

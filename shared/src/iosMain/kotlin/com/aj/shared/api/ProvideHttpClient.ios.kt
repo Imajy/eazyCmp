@@ -27,15 +27,13 @@ actual fun provideHttpClient(): HttpClient {
         }
 
         install(Logging) {
-
-            level = LogLevel.ALL
-
+            level = if (EazyLogger.isDebugEnabled) LogLevel.INFO else LogLevel.NONE
         }
 
     }
 }
 
-actual fun provideSettings() : Settings {
-    val delegate = NSUserDefaults.standardUserDefaults
+actual fun provideSettings(): Settings {
+    val delegate = NSUserDefaults(suiteName = SETTINGS_NAME) ?: NSUserDefaults.standardUserDefaults
     return NSUserDefaultsSettings(delegate)
 }

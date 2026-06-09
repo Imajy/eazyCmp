@@ -27,18 +27,12 @@ actual fun provideHttpClient(): HttpClient {
         }
 
         install(Logging) {
-
-            level = LogLevel.ALL
-
+            level = if (EazyLogger.isDebugEnabled) LogLevel.INFO else LogLevel.NONE
             logger = object : Logger {
-
                 override fun log(message: String) {
-
-                    println("KTOR → $message")
-
+                    EazyLogger.d("KTOR → $message")
                 }
             }
-
         }
     }
 

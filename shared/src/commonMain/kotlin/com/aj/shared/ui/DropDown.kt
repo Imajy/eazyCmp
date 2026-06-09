@@ -91,68 +91,46 @@ fun <T> CommonDropDown(
             }
         }
 
+        val textStyle = TextStyle(fontSize = 12.sp)
+
+        fun measureTextWidth(text: String): Float =
+            textMeasurer.measure(text = text, style = textStyle).size.width.toFloat()
+
+        fun truncateWithEllipsis(text: String, maxWidthPx: Float): String {
+            if (text.isEmpty() || measureTextWidth(text) <= maxWidthPx) return text
+
+            var truncated = text
+            while (truncated.isNotEmpty()) {
+                val candidate = "$truncated..."
+                if (measureTextWidth(candidate) <= maxWidthPx) return candidate
+                truncated = truncated.dropLast(1)
+            }
+            return "..."
+        }
+
+        fun formatLabel(text: String): String = text.replace("_", " ")
+
         fun formatSelectedItems(items: List<T>): String {
-            val labels = items.map { (itemLabel?.invoke(it) ?: it.toString()).replace("_", " ") }
+            val labels = items.map { formatLabel(itemLabel?.invoke(it) ?: it.toString()) }
             return when {
                 labels.isEmpty() -> ""
-                labels.size == 1 -> labels.first()
+                labels.size == 1 -> truncateWithEllipsis(labels.first(), availableWidthPx)
                 else -> {
-                    val resultText = labels.joinToString(", ")
-                    val fullWidth = textMeasurer.measure(
-                        text = resultText,
-                        style = TextStyle(fontSize = 12.sp)
-                    ).size.width
-
-                    if (fullWidth <= availableWidthPx) {
-                        resultText
-                    } else {
-                        var bestFit = "+${labels.size}" // fallback: show count only
-                        for (k in 0 until labels.size) {
-                            val remaining = labels.size - (k + 1)
-                            val suffix = if (remaining > 0) " +$remaining" else ""
-                            val candidate = labels.take(k + 1).joinToString(", ") + suffix
-                            val width = textMeasurer.measure(
-                                text = candidate,
-                                style = TextStyle(fontSize = 12.sp)
-                            ).size.width
-
-                            if (width <= availableWidthPx) {
-                                bestFit = candidate
-                            } else {
-                                // Even first label overflows — truncate it and show +N
-                                if (k == 0 && remaining > 0) {
-                                    // Try showing truncated first label + +N
-                                    val badge = " +$remaining"
-                                    val badgeWidth = textMeasurer.measure(
-                                        text = badge,
-                                        style = TextStyle(fontSize = 12.sp)
-                                    ).size.width
-                                    val labelBudget =
-                                        (availableWidthPx - badgeWidth).coerceAtLeast(0f)
-                                    val firstLabel = labels.first()
-                                    var truncated = firstLabel
-                                    while (truncated.isNotEmpty()) {
-                                        val candidate2 = "$truncated...$badge"
-                                        val w = textMeasurer.measure(
-                                            text = candidate2,
-                                            style = TextStyle(fontSize = 12.sp)
-                                        ).size.width
-                                        if (w <= availableWidthPx) {
-                                            bestFit = candidate2
-                                            break
-                                        }
-                                        truncated = truncated.dropLast(1)
-                                    }
-                                    if (truncated.isEmpty()) bestFit = badge.trim()
-                                }
-                                break
-                            }
-                        }
-                        bestFit
+                    val remaining = labels.size - 1
+                    val badge = " +$remaining"
+                    val badgeWidth = measureTextWidth(badge)
+                    val firstLabelBudget = (availableWidthPx - badgeWidth).coerceAtLeast(0f)
+                    val firstLabel = truncateWithEllipsis(labels.first(), firstLabelBudget)
+                    when {
+                        firstLabel.isEmpty() || firstLabel == "..." -> "+$remaining"
+                        else -> firstLabel + badge
                     }
                 }
             }
         }
+
+        fun formatSingleItem(item: T): String =
+            truncateWithEllipsis(formatLabel(itemLabel?.invoke(item) ?: item.toString()), availableWidthPx)
 
         var showDialog by remember { mutableStateOf(false) }
         var searchText by remember { mutableStateOf("") }
@@ -165,7 +143,7 @@ fun <T> CommonDropDown(
             displayText = if (isMultiSelect) {
                 formatSelectedItems(selectedItems)
             } else {
-                selectedItem?.let { item -> itemLabel?.invoke(item) ?: item.toString() } ?: ""
+                selectedItem?.let { formatSingleItem(it) } ?: ""
             }
         }
         LaunchedEffect(showDialog) {
@@ -206,7 +184,7 @@ fun <T> CommonDropDown(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutLinedSimpleTextField(
-                    value = displayText.replace("_", " "),
+                    value = displayText,
                     label = label,
                     onValueChange = {},
                     placeholderText = placeholder.ifBlank { if (label.isNullOrBlank()) "" else "Select ${label.lowercase()}" },
@@ -343,8 +321,7 @@ fun <T> CommonDropDown(
                                                                 }
                                                         } else {
                                                             onItemSelected(item)
-                                                            displayText = itemLabel?.invoke(item)
-                                                                ?: item.toString()
+                                                            displayText = formatSingleItem(item)
 
                                                             showDialog = false
                                                         }

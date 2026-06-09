@@ -1,6 +1,8 @@
 package com.aj.shared
 
+import com.aj.shared.api.EazyLogger
 import com.aj.shared.location.LocationManager
+import com.aj.shared.location.Geocoder
 import com.aj.shared.permission.PermissionManager
 import com.aj.shared.picker.PlatformMediaPicker
 import com.aj.shared.network.ConnectivityObserver
@@ -17,9 +19,14 @@ object EazyCmp {
     val storage: SecureStorage by lazy { SecureStorage() }
     val haptics: HapticManager by lazy { HapticManager() }
     val share: ShareManager by lazy { ShareManager() }
+    val geocoder: Geocoder = Geocoder
 
     var defaultImagePlaceholder: Placeholder = Placeholder.LottieUrl("https://lottie.host/a9be1300-ee73-471a-969d-6ebe32a5fb64/NT7azVsdv1.json")
     var defaultApiLoadingPlaceholder: Placeholder = Placeholder.LottieUrl("https://letterhead.ajmonic.com/loading.json")
+
+    var isDebugEnabled: Boolean
+        get() = EazyLogger.isDebugEnabled
+        set(value) { EazyLogger.isDebugEnabled = value }
 
     fun init(context: Any? = null, settingsName: String = "eazy_cmp_prefs") {
         platformInit(context, settingsName)

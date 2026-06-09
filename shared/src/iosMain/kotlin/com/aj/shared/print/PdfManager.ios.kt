@@ -56,9 +56,7 @@ class IosPdfManager : PdfManager {
     ) {
         onStart()
 
-        val window = UIApplication.sharedApplication.keyWindow
-            ?: UIApplication.sharedApplication.windows.firstOrNull() as? UIWindow
-        val rootVC = window?.rootViewController ?: return
+        val rootVC = com.aj.shared.util.topViewController() ?: return
 
         val controller = ComposeUIViewController {
 
@@ -144,9 +142,7 @@ class IosPdfManager : PdfManager {
     ) {
         onStart()
 
-        val window = UIApplication.sharedApplication.keyWindow
-            ?: UIApplication.sharedApplication.windows.firstOrNull() as? UIWindow
-        val rootVC = window?.rootViewController ?: return
+        val rootVC = com.aj.shared.util.topViewController() ?: return
 
         val controller = ComposeUIViewController {
             Surface(color = Color.White) {

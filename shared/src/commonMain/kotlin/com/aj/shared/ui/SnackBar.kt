@@ -60,6 +60,8 @@ object AppSnackbarManager {
         autoDismissMillis: Long = 4000,
         onAction: (() -> Unit)? = null
     ) {
+        if (!::hostState.isInitialized || onSnackbarDataChange == null) return
+
         dismiss()
 
         val data = AppSnackbar(

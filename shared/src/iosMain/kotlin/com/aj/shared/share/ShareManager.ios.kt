@@ -16,15 +16,15 @@ import kotlinx.cinterop.usePinned
 actual class ShareManager actual constructor() {
 
     actual fun shareText(text: String) {
-        val rootViewController = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return
+        val rootViewController = com.aj.shared.util.topViewController() ?: return
         val activityController = UIActivityViewController(listOf(text), null)
         rootViewController.presentViewController(activityController, true, null)
     }
 
     @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
     actual fun shareFile(bytes: ByteArray, fileName: String, mimeType: String) {
-        val rootViewController = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return
-        
+        val rootViewController = com.aj.shared.util.topViewController() ?: return
+
         val nsData = bytes.usePinned { pinned ->
             NSData.create(
                 bytes = pinned.addressOf(0),

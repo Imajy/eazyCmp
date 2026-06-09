@@ -11,7 +11,7 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.aj.shared"
-        compileSdk = 35
+        compileSdk = 36
         minSdk = 24
 
         compilerOptions {
@@ -21,8 +21,7 @@ kotlin {
 
     jvm()
 
-    // iOS targets
-    iosX64()
+    // iOS targets (iosX64 removed — deprecated in CMP 1.11+)
     iosArm64()
     iosSimulatorArm64()
 
@@ -59,9 +58,9 @@ kotlin {
             api(libs.multiplatform.settings.core)
             api(libs.multiplatform.settings.serialization)
 
-            // Lifecycle
-            api(libs.androidx.lifecycle.viewmodel)
-            api(libs.androidx.lifecycle.runtime)
+            // Lifecycle (JetBrains KMP wrappers)
+            api(libs.jetbrains.lifecycle.viewmodel)
+            api(libs.jetbrains.lifecycle.runtime)
         }
 
         jvmMain.dependencies {
@@ -70,8 +69,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.webcam.capture)
             implementation(libs.pdfbox)
-            // Desktop ko Instant class mil jaye isliye yahan specifically add kiya
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+            implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {
@@ -85,17 +83,13 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
-            implementation("androidx.security:security-crypto:1.1.0-alpha06")
+            implementation(libs.security.crypto)
         }
     }
 }
 
 compose.resources {
     publicResClass = true
-}
-
-compose.desktop {
-    application {}
 }
 
 tasks.withType<Copy>().configureEach {
@@ -105,7 +99,7 @@ group = "com.github.Imajy"
 version = "1.0.03-alpha-10"
 
 configurations.configureEach {
-    if (name.contains("jvm", ignoreCase = true)) {
+    if (name.contains("jvm", ignoreCase = true) && (isCanBeResolved || isCanBeConsumed)) {
         attributes {
             attribute(
                 org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.attribute,

@@ -23,7 +23,7 @@ actual class PlatformMediaPicker actual constructor() {
         onResult: (PickedFile?) -> Unit
     ) {
         callback = onResult
-        val controller = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return
+        val controller = com.aj.shared.util.topViewController() ?: return
 
         when(type) {
             PickerType.CAMERA -> openImagePicker(

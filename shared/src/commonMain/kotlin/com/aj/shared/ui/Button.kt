@@ -15,9 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,8 +28,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aj.shared.theme.whiteColor
-import kotlinx.coroutines.delay
 
+private const val CLICK_DEBOUNCE_MS = 500L
 
 @Composable
 fun CommonButton(
@@ -50,14 +49,8 @@ fun CommonButton(
     isIconStart: Boolean = true
 ) {
 
-    var isClicked by remember { mutableStateOf(false) }
+    var lastClickTime by remember { mutableLongStateOf(0L) }
 
-    LaunchedEffect(Unit){
-        if(!isClicked){
-            delay(1000)
-            isClicked = true
-        }
-    }
     Row(
         modifier = modifier
             .background(color, RoundedCornerShape(radius.dp))
@@ -66,7 +59,12 @@ fun CommonButton(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = {
-                    if(isClicked){onClick()} }
+                    val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
+                    if (now - lastClickTime >= CLICK_DEBOUNCE_MS) {
+                        lastClickTime = now
+                        onClick()
+                    }
+                }
             )
             .padding(padding),
         horizontalArrangement = Arrangement.Center,
