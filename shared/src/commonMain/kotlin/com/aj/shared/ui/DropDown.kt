@@ -69,6 +69,7 @@ fun <T> CommonDropDown(
     isMultiSelect: Boolean = false,
     itemLabel: ((T) -> String)? = null,
     onItemSelected: (T?) -> Unit = {},
+    onType: (String) -> Unit = {},
     onItemsSelected: (List<T>) -> Unit = {},
     onClick: () -> Unit = {},
     trailingIcon: ImageVector? = null,
@@ -360,7 +361,10 @@ fun <T> CommonDropDown(
 
                                     OutLinedSimpleTextField(
                                         value = searchText,
-                                        onValueChange = { searchText = it },
+                                        onValueChange = {
+                                            searchText = it
+                                            onType(searchText)
+                                                        },
                                         placeholderText = "Search...",
                                         modifier = Modifier.fillMaxWidth(),
                                         radius = 6
