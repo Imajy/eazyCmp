@@ -24,12 +24,6 @@ import platform.CoreLocation.kCLAuthorizationStatusAuthorizedWhenInUse
 import platform.CoreLocation.kCLAuthorizationStatusDenied
 import platform.CoreLocation.kCLAuthorizationStatusNotDetermined
 import platform.CoreLocation.kCLAuthorizationStatusRestricted
-import platform.Photos.PHAuthorizationStatusAuthorized
-import platform.Photos.PHAuthorizationStatusDenied
-import platform.Photos.PHAuthorizationStatusLimited
-import platform.Photos.PHAuthorizationStatusNotDetermined
-import platform.Photos.PHAuthorizationStatusRestricted
-import platform.Photos.PHPhotoLibrary
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
@@ -54,9 +48,9 @@ actual class PermissionManager actual constructor() {
 
     private suspend fun requestPermission(permission: AppPermission): PermissionResult {
         val status = when (permission) {
+            AppPermission.GALLERY, AppPermission.STORAGE -> PermissionStatus.GRANTED
             AppPermission.CAMERA -> requestAvPermission(AVMediaTypeVideo ?: "vide")
             AppPermission.MICROPHONE -> requestAvPermission(AVMediaTypeAudio ?: "soun")
-            AppPermission.GALLERY, AppPermission.STORAGE -> requestGalleryPermission()
             AppPermission.LOCATION -> locationRequester.request()
             AppPermission.NOTIFICATION -> requestNotificationPermission()
             AppPermission.CONTACTS -> requestContactsPermission()
@@ -73,26 +67,6 @@ actual class PermissionManager actual constructor() {
                 AVCaptureDevice.requestAccessForMediaType(mediaType) { granted ->
                     cont.resume(
                         if (granted) PermissionStatus.GRANTED else PermissionStatus.DENIED
-                    )
-                }
-            }
-            else -> PermissionStatus.DENIED
-        }
-    }
-
-    private suspend fun requestGalleryPermission(): PermissionStatus {
-        return when (val status = PHPhotoLibrary.authorizationStatus()) {
-            PHAuthorizationStatusAuthorized, PHAuthorizationStatusLimited -> PermissionStatus.GRANTED
-            PHAuthorizationStatusDenied -> PermissionStatus.PERMANENTLY_DENIED
-            PHAuthorizationStatusRestricted -> PermissionStatus.DENIED
-            PHAuthorizationStatusNotDetermined -> suspendCancellableCoroutine { cont ->
-                PHPhotoLibrary.requestAuthorization { newStatus ->
-                    cont.resume(
-                        when (newStatus) {
-                            PHAuthorizationStatusAuthorized, PHAuthorizationStatusLimited -> PermissionStatus.GRANTED
-                            PHAuthorizationStatusDenied -> PermissionStatus.PERMANENTLY_DENIED
-                            else -> PermissionStatus.DENIED
-                        }
                     )
                 }
             }

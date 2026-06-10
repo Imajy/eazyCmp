@@ -7,7 +7,11 @@ enum class AppPermission {
     MICROPHONE,
     STORAGE,
     NOTIFICATION,
-    CONTACTS
+    CONTACTS;
+
+    /** Permissions satisfied by a system picker — no runtime prompt on Android/iOS. */
+    val isPickerOnly: Boolean
+        get() = this == GALLERY || this == STORAGE
 }
 
 data class PermissionResult(

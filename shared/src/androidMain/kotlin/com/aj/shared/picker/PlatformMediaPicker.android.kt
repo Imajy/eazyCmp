@@ -3,6 +3,7 @@ package com.aj.shared.picker
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.core.content.FileProvider
@@ -24,43 +25,29 @@ actual class PlatformMediaPicker actual constructor() {
     @Composable
     actual fun RegisterLaunchers() {
 
-        val galleryLauncher =
+        val imagePickerLauncher =
             rememberLauncherForActivityResult(
-
-                ActivityResultContracts.OpenDocument()
-
-            ) {
-
-                handleUri(it)
-
+                ActivityResultContracts.PickVisualMedia()
+            ) { uri ->
+                handleUri(uri)
             }
 
         val docLauncher =
             rememberLauncherForActivityResult(
-
                 ActivityResultContracts.OpenDocument()
-
-            ) {
-
-                handleUri(it)
-
+            ) { uri ->
+                handleUri(uri)
             }
 
         val cameraLauncher =
             rememberLauncherForActivityResult(
-
                 ActivityResultContracts.TakePicture()
-
             ) { success ->
-
-                if (success)
-
+                if (success) {
                     handleUri(tempCameraUri)
-
-                else
-
+                } else {
                     callback?.invoke(null)
-
+                }
             }
 
 
@@ -70,44 +57,27 @@ actual class PlatformMediaPicker actual constructor() {
 
                 callback = result
 
-                when(type) {
+                when (type) {
 
                     PickerType.IMAGE ->
-
-                        galleryLauncher.launch(
-
-                            arrayOf("image/*")
-
+                        imagePickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
 
                     PickerType.DOCUMENT ->
-
                         docLauncher.launch(
-
                             config?.mimeTypes
                                 ?.toTypedArray()
                                 ?: arrayOf("*/*")
-
                         )
 
                     PickerType.CAMERA -> {
-
                         tempCameraUri = createTempUri()
-
-                        cameraLauncher.launch(
-
-                            tempCameraUri!!
-
-                        )
-
+                        cameraLauncher.launch(tempCameraUri!!)
                     }
-
                 }
-
             }
-
         }
-
     }
 
 
@@ -152,7 +122,7 @@ actual class PlatformMediaPicker actual constructor() {
 
     private fun getFileName(uri: Uri): String? {
         return context.contentResolver
-            .query(uri,null,null,null,null)
+            .query(uri, null, null, null, null)
             ?.use { cursor ->
                 val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 cursor.moveToFirst()
@@ -161,17 +131,16 @@ actual class PlatformMediaPicker actual constructor() {
     }
 
     private fun createTempUri(): Uri {
-
         val file = File.createTempFile(
             "camera_",
             ".jpg",
             context.cacheDir
         )
 
-        return FileProvider
-            .getUriForFile(context,
-                "${context.packageName}.provider",
-                file
-            )
+        return FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            file
+        )
     }
 }

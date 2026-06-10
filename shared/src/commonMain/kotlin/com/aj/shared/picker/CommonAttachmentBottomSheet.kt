@@ -60,32 +60,18 @@ fun CommonAttachmentBottomSheet(
                 }
             },
             onGallery = {
-                scope.launch {
-                    requestPermissionAndPick(
-                        permissionManager,
-                        AppPermission.GALLERY
-                    ) {
-                        picker.launch(PickerType.IMAGE) { onFilePicked(it) }
-                    }
-                }
+                picker.launch(PickerType.IMAGE) { onFilePicked(it) }
             },
             onDocument = {
-                scope.launch {
-                    requestPermissionAndPick(
-                        permissionManager,
-                        AppPermission.STORAGE
-                    ) {
-                        picker.launch(
-                            PickerType.DOCUMENT,
-                            DocumentConfig(
-                                mimeTypes = listOf(
-                                    "application/pdf",
-                                    "image/*"
-                                )
-                            )
-                        ) { onFilePicked(it) }
-                    }
-                }
+                picker.launch(
+                    PickerType.DOCUMENT,
+                    DocumentConfig(
+                        mimeTypes = listOf(
+                            "application/pdf",
+                            "image/*"
+                        )
+                    )
+                ) { onFilePicked(it) }
             }
         )
     }

@@ -31,62 +31,57 @@ actual class PermissionManager actual constructor() {
         permissions: List<AppPermission>,
         callback: PermissionCallback
     ) {
-        this.callback = callback
+        val autoGranted = permissions
+            .filter { it.isGrantedWithoutPrompt() }
+            .map { PermissionResult(it, PermissionStatus.GRANTED) }
+
+        val runtimePermissions = permissions.filter { !it.isGrantedWithoutPrompt() }
+
+        if (runtimePermissions.isEmpty()) {
+            callback.onResult(autoGranted)
+            return
+        }
+
+        this.callback = { runtimeResults ->
+            callback.onResult(autoGranted + runtimeResults)
+        }
         launcher?.launch(
-            permissions.map { it.toAndroidPermission()
-            }.toTypedArray()
+            runtimePermissions.map { it.toAndroidPermission() }.toTypedArray()
         )
     }
 }
 
 fun AppPermission.toAndroidPermission(): String {
-
-    return when(this) {
-
+    return when (this) {
         AppPermission.CAMERA -> Manifest.permission.CAMERA
-
-        AppPermission.GALLERY -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-
+        AppPermission.GALLERY, AppPermission.STORAGE -> error(
+            "$this uses the system picker and does not require a runtime permission"
+        )
         AppPermission.LOCATION -> Manifest.permission.ACCESS_FINE_LOCATION
-
         AppPermission.MICROPHONE -> Manifest.permission.RECORD_AUDIO
-
-        AppPermission.STORAGE -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
+        AppPermission.NOTIFICATION -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Manifest.permission.POST_NOTIFICATIONS
+            } else {
+                error("POST_NOTIFICATIONS is not required below Android 13")
+            }
         }
-
-        AppPermission.NOTIFICATION -> Manifest.permission.POST_NOTIFICATIONS
-
         AppPermission.CONTACTS -> Manifest.permission.READ_CONTACTS
     }
 }
 
 fun String.toPermissionEnum(): AppPermission {
-
-    return when(this) {
-
+    return when (this) {
         Manifest.permission.CAMERA -> AppPermission.CAMERA
-
-        Manifest.permission.READ_MEDIA_IMAGES -> AppPermission.GALLERY
-
         Manifest.permission.ACCESS_FINE_LOCATION -> AppPermission.LOCATION
-
         Manifest.permission.RECORD_AUDIO -> AppPermission.MICROPHONE
-
-        Manifest.permission.READ_EXTERNAL_STORAGE -> AppPermission.STORAGE
-
         Manifest.permission.POST_NOTIFICATIONS -> AppPermission.NOTIFICATION
-
         Manifest.permission.READ_CONTACTS -> AppPermission.CONTACTS
-
         else -> AppPermission.STORAGE
-
     }
+}
 
+private fun AppPermission.isGrantedWithoutPrompt(): Boolean {
+    return isPickerOnly ||
+        (this == AppPermission.NOTIFICATION && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
 }
