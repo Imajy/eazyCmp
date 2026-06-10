@@ -340,35 +340,36 @@ fun <T> CommonDropDown(
                     ) {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.9f) // iOS par margin dene ke liye 90% width rakho
-                                .then(
-                                    if (useFixedDialogSize) Modifier.fillMaxHeight(0.8f)
-                                    else Modifier.wrapContentHeight()
-                                )
+                                .fillMaxWidth(0.9f)
+                                .heightIn(min = 250.dp, max = 600.dp)
                                 .background(whiteColor, RoundedCornerShape(12.dp))
-                                .pointerInput(Unit) {
-                                    detectTapGestures { /* Do nothing, just consume clicks on dialog */ }
-                                }
+                                .pointerInput(Unit) { detectTapGestures { } }
                         ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
                             ) {
+
                                 Text(
-                                    text = if (label.isNullOrBlank()) "Select Item" else "Select $label",
+                                    text = if (label.isNullOrBlank()) {
+                                        "Select Item"
+                                    } else {
+                                        "Select $label"
+                                    },
                                     style = MaterialTheme.typography.titleMedium
                                 )
 
                                 if (hasSearch) {
+
                                     Spacer(Modifier.height(8.dp))
 
                                     OutLinedSimpleTextField(
                                         value = searchText,
                                         onValueChange = {
                                             searchText = it
-                                            onType(searchText)
-                                                        },
+                                            onType(it)
+                                        },
                                         placeholderText = "Search...",
                                         modifier = Modifier.fillMaxWidth(),
                                         radius = 6
@@ -377,135 +378,172 @@ fun <T> CommonDropDown(
 
                                 Spacer(Modifier.height(8.dp))
 
-                                Column(
+                                Box(
                                     modifier = Modifier
-                                        .then(
-                                            if (hasSearch) {
-                                                Modifier.height(fixedListHeight)
-                                            } else {
-                                                Modifier
-                                                    .weight(1f, fill = useFixedDialogSize)
-                                                    .heightIn(max = 350.dp)
-                                            }
-                                        )
-                                        .verticalScroll(rememberScrollState())
+                                        .weight(1f)
+                                        .fillMaxWidth()
                                 ) {
 
-                                    if (filteredItems.isEmpty()) {
-                                        Text(
-                                            text = "No match found",
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(12.dp),
-                                            color = grayColor,
-                                            fontSize = 12.sp
-                                        )
-                                    } else {
-                                        filteredItems.forEachIndexed { index, item ->
-                                            val isSelected =
-                                                if (isMultiSelect) tempSelectedItems.contains(item)
-                                                else item == selectedItem
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .verticalScroll(rememberScrollState())
+                                    ) {
 
-                                            Row(
+                                        if (filteredItems.isEmpty()) {
+
+                                            Text(
+                                                text = "No match found",
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .background(
-                                                        if (isSelected) MaterialTheme.colorScheme.primary.copy(
-                                                            alpha = 0.1f
-                                                        )
-                                                        else Color.Transparent
-                                                    )
-                                                    .clickable {
+                                                    .padding(12.dp),
+                                                color = grayColor,
+                                                fontSize = 12.sp
+                                            )
 
-                                                        if (isMultiSelect) {
-                                                            tempSelectedItems =
-                                                                if (tempSelectedItems.contains(item)) {
-                                                                    tempSelectedItems - item // Remove
-                                                                } else {
-                                                                    tempSelectedItems + item // Add
-                                                                }
-                                                        } else {
-                                                            onItemSelected(item)
-                                                            displayText = formatSingleItem(item)
+                                        } else {
 
-                                                            showDialog = false
-                                                        }
+                                            filteredItems.forEachIndexed { index, item ->
+
+                                                val isSelected =
+                                                    if (isMultiSelect) {
+                                                        tempSelectedItems.contains(item)
+                                                    } else {
+                                                        item == selectedItem
                                                     }
-                                                    .padding(14.dp),
-                                                verticalAlignment = Alignment.CenterVertically
 
-                                            ) {
-                                                if (isMultiSelect) {
-                                                    CustomCheckbox(
-                                                        checked = isSelected,
-                                                        onCheckedChange = {
-                                                            tempSelectedItems = if (it) {
-                                                                tempSelectedItems + item // Add
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .background(
+                                                            if (isSelected) {
+                                                                MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                                                             } else {
-                                                                tempSelectedItems - item // Remove
+                                                                Color.Transparent
+                                                            }
+                                                        )
+                                                        .clickable {
+
+                                                            if (isMultiSelect) {
+
+                                                                tempSelectedItems =
+                                                                    if (tempSelectedItems.contains(item)) {
+                                                                        tempSelectedItems - item
+                                                                    } else {
+                                                                        tempSelectedItems + item
+                                                                    }
+
+                                                            } else {
+
+                                                                onItemSelected(item)
+                                                                displayText = formatSingleItem(item)
+                                                                showDialog = false
                                                             }
                                                         }
+                                                        .padding(14.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+
+                                                    if (isMultiSelect) {
+
+                                                        CustomCheckbox(
+                                                            checked = isSelected,
+                                                            onCheckedChange = {
+                                                                tempSelectedItems =
+                                                                    if (it) {
+                                                                        tempSelectedItems + item
+                                                                    } else {
+                                                                        tempSelectedItems - item
+                                                                    }
+                                                            }
+                                                        )
+
+                                                        Spacer(Modifier.width(8.dp))
+                                                    }
+
+                                                    Text(
+                                                        text = (itemLabel?.invoke(item)
+                                                            ?: item.toString()).replace("_", " "),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        color = if (isSelected) {
+                                                            MaterialTheme.colorScheme.primary
+                                                        } else {
+                                                            Color.Black
+                                                        }
                                                     )
-                                                    Spacer(Modifier.width(8.dp))
                                                 }
 
-                                                Text(
-                                                    text = (itemLabel?.invoke(item)
-                                                        ?: item.toString()).replace("_", " "),
-                                                    style = MaterialTheme.typography.bodyMedium,
-                                                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Black
-                                                )
+                                                if (index < filteredItems.lastIndex) {
+                                                    HorizontalDivider()
+                                                }
                                             }
-
-                                            if (index < filteredItems.lastIndex)
-                                                HorizontalDivider()
                                         }
                                     }
                                 }
 
                                 Spacer(Modifier.height(12.dp))
+
                                 HorizontalDivider()
+
                                 Spacer(Modifier.height(8.dp))
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    if ((isMultiSelect && tempSelectedItems.isNotEmpty()) || (!isMultiSelect && selectedItem != null)) {
+
+                                    if (
+                                        (isMultiSelect && tempSelectedItems.isNotEmpty()) ||
+                                        (!isMultiSelect && selectedItem != null)
+                                    ) {
+
                                         Text(
                                             text = "Reset",
                                             color = MaterialTheme.colorScheme.primary,
-                                            modifier =
-                                                Modifier
-                                                    .clickable {
-                                                        displayText = ""
-                                                        if (isMultiSelect) {
-                                                            tempSelectedItems = emptySet()
-                                                            onItemsSelected(emptyList())
+                                            modifier = Modifier
+                                                .clickable {
 
-                                                        } else {
-                                                            onItemSelected(null)
-                                                        }
-                                                        showDialog = false
+                                                    displayText = ""
+
+                                                    if (isMultiSelect) {
+
+                                                        tempSelectedItems = emptySet()
+                                                        onItemsSelected(emptyList())
+
+                                                    } else {
+
+                                                        onItemSelected(null)
                                                     }
-                                                    .padding(8.dp)
+
+                                                    showDialog = false
+                                                }
+                                                .padding(8.dp)
                                         )
+
                                     } else {
+
                                         Spacer(Modifier)
                                     }
 
                                     Row {
+
                                         if (isMultiSelect) {
+
                                             Text(
                                                 text = "Done",
                                                 color = MaterialTheme.colorScheme.primary,
                                                 modifier = Modifier
                                                     .clickable {
-                                                        val result = tempSelectedItems.toList()
+
+                                                        val result =
+                                                            tempSelectedItems.toList()
 
                                                         onItemsSelected(result)
 
-                                                        displayText = formatSelectedItems(result)
+                                                        displayText =
+                                                            formatSelectedItems(result)
+
                                                         showDialog = false
                                                     }
                                                     .padding(8.dp)
@@ -516,7 +554,9 @@ fun <T> CommonDropDown(
                                             text = "Cancel",
                                             color = Color.Gray,
                                             modifier = Modifier
-                                                .clickable { showDialog = false }
+                                                .clickable {
+                                                    showDialog = false
+                                                }
                                                 .padding(8.dp)
                                         )
                                     }
