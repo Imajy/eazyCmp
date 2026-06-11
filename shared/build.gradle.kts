@@ -91,9 +91,12 @@ kotlin {
             implementation("org.jetbrains.kotlin:kotlin-test")
         }
 
-        nativeMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+        if (!skipIosTargets) {
+            nativeMain.dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
         }
+
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.activity.compose)
