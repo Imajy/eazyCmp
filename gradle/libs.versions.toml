@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.0"
+agp = "9.0.1"
 composeMultiplatform = "1.11.1"
 foundation = "1.11.1"
 webcamCapture = "0.3.12"
