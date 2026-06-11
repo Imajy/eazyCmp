@@ -133,6 +133,11 @@ configurations.configureEach {
 }
 
 publishing {
+    repositories {
+        maven {
+            url = uri("${rootProject.projectDir}/maven-repo")
+        }
+    }
     publications.withType<MavenPublication> {
         pom {
             name.set("EazyCmp")
