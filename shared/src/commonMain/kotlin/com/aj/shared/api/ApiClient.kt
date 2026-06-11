@@ -20,6 +20,7 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
@@ -186,13 +187,13 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
     internal fun <T> priorityWrapper(
         upstream: Flow<Resource<T>>,
         priority: ApiPriority
-    ): Flow<Resource<T>> = flow {
+    ): Flow<Resource<T>> = channelFlow {
 
         ApiDispatcher.dispatch(priority) {
 
             upstream.collect {
 
-                emit(it)
+                send(it)
 
             }
 

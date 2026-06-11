@@ -118,8 +118,8 @@ compose.resources {
 tasks.withType<Copy>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-group = "com.github.imajy"
-version = "1.0.03-alpha-11"
+group = "com.github.Imajy.eazyCmp"
+version = "1.0.04-alpha-074"
 
 configurations.configureEach {
     if (name.contains("jvm", ignoreCase = true) && (isCanBeResolved || isCanBeConsumed)) {
