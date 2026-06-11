@@ -1,0 +1,56 @@
+package com.aj.shared.theme
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
+import com.aj.shared.EazyCmp
+
+@Composable
+fun EazyCmpTheme(
+    themeManager: ThemeManager = EazyCmp.theme,
+    colors: EazyColors = LocalEazyColors.current,
+    typography: EazyTypography = LocalEazyTypography.current,
+    content: @Composable () -> Unit,
+) {
+    val mode = themeManager.mode
+    val useDark = when (mode) {
+        AppThemeMode.SYSTEM -> isSystemInDarkTheme()
+        AppThemeMode.LIGHT -> false
+        AppThemeMode.DARK, AppThemeMode.AMOLED -> true
+    }
+
+    val colorScheme = when {
+        mode == AppThemeMode.AMOLED -> darkColorScheme(
+            primary = colors.primary,
+            background = Color.Black,
+            surface = Color.Black,
+            surfaceVariant = Color(0xFF121212),
+            onBackground = Color.White,
+            onSurface = Color.White,
+            error = colors.error,
+        )
+        useDark -> darkColorScheme(
+            primary = colors.primary,
+            error = colors.error,
+        )
+        else -> lightColorScheme(
+            primary = colors.primary,
+            error = colors.error,
+        )
+    }
+
+    CompositionLocalProvider(
+        LocalEazyColors provides colors,
+        LocalEazyTypography provides typography,
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = typography.toMaterialTypography(),
+            content = content,
+        )
+    }
+}

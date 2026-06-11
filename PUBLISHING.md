@@ -23,7 +23,7 @@ artifact: `eazyCmp`
 
 group = "com.github.Imajy"
 
-version = "1.0.03-alpha-10"
+version = "1.0.03-alpha-11"
 
 ---
 

@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/Compose-Multiplatform-green" alt="Compose" />
   <img src="https://img.shields.io/badge/Ktor-Client-orange" alt="Ktor" />
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License" />
-  <img src="https://img.shields.io/badge/version-1.0.03--alpha--10-purple" alt="Version" />
+  <img src="https://img.shields.io/badge/version-1.0.03--alpha--11-purple" alt="Version" />
   <img src="https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Desktop-blue" alt="Platform" />
 </div>
 
@@ -23,16 +23,23 @@
 
 ## Table of Contents
 1. [Installation](#1-installation)
-2. [Setup & Dependency Injection](#2-setup--dependency-injection)
-3. [Networking Module (`api`)](#3-networking-module-api)
-4. [Storage / State Module (`storage`)](#4-storage--state-module-storage)
-5. [Permissions Module (`permission`)](#5-permissions-module-permission)
-5.5. [Location Module (`location`)](#5.5-location-module-location)
-6. [Media Picker (`picker`)](#6-media-picker-picker)
-7. [PDF Generator (`print`)](#7-pdf-generator-print)
-8. [Compose UI Kit Components](#8-compose-ui-kit-components)
-9. [Custom Modifiers](#9-custom-modifiers)
-10. [Extensions](#10-extensions)
+2. [JitPack Fast Build](#2-jitpack-fast-build)
+3. [Setup & Dependency Injection](#3-setup--dependency-injection)
+4. [EazyCmp Facade — All Services](#4-eazycmp-facade--all-services)
+5. [Networking (`api`)](#5-networking-module-api)
+6. [Upload — Compress & Fast Upload](#6-upload--compress--fast-upload)
+7. [Validation & Forms](#7-validation--forms)
+8. [Storage & Cache](#8-storage--cache)
+9. [Permissions & Store Compliance](#9-permissions--store-compliance)
+10. [Location & Geocoder](#10-location--geocoder)
+11. [Media Picker](#11-media-picker)
+12. [Security & Privacy](#12-security--privacy)
+13. [Theme, Display & UI Kit](#13-theme-display--ui-kit)
+14. [Navigation & Deep Links](#14-navigation--deep-links)
+15. [Indian / Insurance Domain](#15-indian--insurance-domain)
+16. [Auth, State & Notifications](#16-auth-state--notifications)
+17. [Platform Utilities](#17-platform-utilities)
+18. [PDF, Modifiers & Extensions](#18-pdf-modifiers--extensions)
 
 ---
 
@@ -44,7 +51,7 @@ Add the dependency to your shared module's `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("com.github.Imajy:eazyCmp:1.0.03-alpha-10")
+            implementation("com.github.Imajy:eazyCmp:1.0.03-alpha-11")
         }
     }
 }
@@ -61,7 +68,46 @@ dependencyResolutionManagement {
 
 ---
 
-## 2. Setup & Dependency Injection
+## 2. JitPack Fast Build
+
+JitPack builds are optimized to finish in **~3–6 minutes** (was 15–25+ min before).
+
+| Optimization | What it does |
+|--------------|--------------|
+| Skip iOS on JitPack Linux VM | iOS native compile removed from CI (biggest speedup) |
+| `-x test -x lint` | Skips tests & lint on publish |
+| `--parallel --build-cache` | Parallel tasks + Gradle cache |
+| `kotlin.native.cacheKind=static` | Faster local/KMP native rebuilds |
+
+### Android / Desktop — use JitPack normally
+```kotlin
+implementation("com.github.Imajy:eazyCmp:1.0.03-alpha-11")
+```
+
+### iOS — JitPack publishes common + metadata; iOS binary builds on your Mac
+Add the same JitPack dependency in `shared/build.gradle.kts`. Xcode builds the iOS target locally when you compile the app — no extra step for most KMP apps.
+
+For **full iOS klib from source** (no JitPack), use composite build:
+```kotlin
+// settings.gradle.kts
+includeBuild("../eazyCmp") // local clone
+```
+
+### Trigger a new JitPack build
+```bash
+git tag 1.0.03-alpha-11
+git push origin 1.0.03-alpha-11
+# Build: https://jitpack.io/#Imajy/eazyCmp
+```
+
+### Local publish (test before tag)
+```bash
+./gradlew :shared:publishToMavenLocal -x test --parallel --build-cache
+```
+
+---
+
+## 3. Setup & Dependency Injection
 
 EazyCMP uses **Koin** internally for Dependency Injection and **Multiplatform Settings** for local storage.
 
@@ -104,7 +150,74 @@ startKoin {
 
 ---
 
-## 3. Networking Module (`api`)
+## 4. EazyCmp Facade — All Services
+
+Single entry point for every feature:
+
+```kotlin
+import com.aj.shared.EazyCmp
+
+// Core
+EazyCmp.location          // GPS
+EazyCmp.permission        // Runtime permissions
+EazyCmp.media             // Camera / gallery / docs picker
+EazyCmp.network           // Online/offline observer
+EazyCmp.storage           // Encrypted secure storage
+EazyCmp.haptics           // Haptic feedback
+EazyCmp.share             // Native share
+EazyCmp.geocoder          // Address search
+
+// Display & theme
+EazyCmp.display           // Fixed font scale
+EazyCmp.theme             // Light / dark / AMOLED
+
+// Security
+EazyCmp.appLock           // PIN + biometric lock
+EazyCmp.sessionTimeout    // Auto-lock on idle
+EazyCmp.backgroundLock    // Lock when app backgrounds
+EazyCmp.consent             // GDPR / DPDP consent
+
+// Storage & cache
+EazyCmp.formDrafts        // Crash-safe form drafts
+EazyCmp.preferences       // Non-sensitive settings
+EazyCmp.apiCache          // File-based GET cache
+EazyCmp.localStore        // Local JSON store + migrations
+EazyCmp.responseCache     // TTL response cache
+
+// Network advanced
+EazyCmp.offlineQueue      // Offline API queue
+EazyCmp.requestDeduplicator
+
+// Upload
+EazyCmp.upload            // Compress + multipart upload
+EazyCmp.uploadQueue       // Priority upload queue
+
+// Navigation
+EazyCmp.deepLinks         // Deep link handler
+
+// Platform
+EazyCmp.clipboard
+EazyCmp.deviceInfo
+EazyCmp.qrGenerator
+EazyCmp.qrScanner
+EazyCmp.updates           // In-app update check
+
+// Auth & accounts
+EazyCmp.googleAuth
+EazyCmp.appleAuth
+EazyCmp.accounts          // Multi POS account switch
+EazyCmp.guestMode
+
+// Notifications & analytics
+EazyCmp.pushToken
+EazyCmp.notifications
+EazyCmp.analytics         // Plug Firebase / Mixpanel
+EazyCmp.crashReporter     // Plug Sentry / Crashlytics
+```
+
+---
+
+## 5. Networking Module (`api`)
 
 EazyCMP simplifies Ktor network requests with base URL configuration, default parameter merging, custom file uploading, and priority dispatch queues.
 
@@ -214,138 +327,156 @@ class ProfileViewModel(private val api: ApiClient) : BaseViewModel() {
 
 ---
 
-## 4. Storage / State Module (`storage`)
-
-EazyCMP provides two storage options:
-- **`SharedViewModel`** (via Koin): plain preferences for app settings and non-sensitive data.
-- **`EazyCmp.storage`** (`SecureStorage`): encrypted storage for tokens and sensitive values.
-
-`SharedViewModel` stores strings and serialized objects in platform preferences:
+## 6. Upload — Compress & Fast Upload
 
 ```kotlin
-import com.aj.shared.api.SharedViewModel
-import kotlinx.serialization.Serializable
+import com.aj.shared.EazyCmp
+import com.aj.shared.api.Resource
+import com.aj.shared.upload.CompressionConfig
 
-@Serializable
-data class UserSession(val token: String, val username: String)
+// Pick → compress → upload (one call)
+EazyCmp.upload.pickCompressUpload(
+    base = "main_server",
+    endpoint = "upload/doc",
+    file = pickedFile,
+    compression = CompressionConfig(maxWidth = 1280, quality = 0.8f),
+    onProgress = { progress -> println("${progress.percent}%") },
+).collect { result ->
+    when (result) {
+        is Resource.Success -> println("Uploaded")
+        is Resource.Error -> println(result.message)
+        is Resource.Loading -> showLoader()
+    }
+}
 
-val sharedViewModel: SharedViewModel = get() // Inject via Koin
+// Upload queue (multiple files, priority)
+val id = EazyCmp.uploadQueue.enqueue("main_server", "upload", file, priority = UploadPriority.HIGH)
+EazyCmp.uploadQueue.processAll().collect { /* ... */ }
 
-// Save data
-sharedViewModel.setString("user_role", "admin")
-sharedViewModel.setObject("session_data", UserSession("tok_99", "Ajay"))
-
-// Retrieve data
-val role = sharedViewModel.getString("user_role") // returns "" if empty
-val session = sharedViewModel.getObject<UserSession>("session_data") // returns null if empty
-
-// Clear preferences
-sharedViewModel.clear()
+// Pre-signed S3/GCS URL (direct upload)
+EazyCmp.upload.uploadPreSigned(preSignedUrl, pickedFile).collect { /* ... */ }
 ```
 
 ---
 
-## 5. Permissions Module (`permission`)
-
-Handle OS runtime permissions uniformly across Android & iOS inside your Composable views.
+## 7. Validation & Forms
 
 ```kotlin
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import com.aj.shared.permission.PermissionManager
-import com.aj.shared.permission.AppPermission
-import com.aj.shared.permission.PermissionStatus
-import kotlinx.coroutines.launch
+import com.aj.shared.validation.*
+import com.aj.shared.validation.FormState
+import com.aj.shared.ui.kit.OtpInput
+import com.aj.shared.ui.kit.PasswordStrengthMeter
+
+// Indian validators
+isValidPan("ABCDE1234F")
+isValidAadhaar("234567890123")
+isValidGstin("27AABCU9603R1ZM")
+isValidIndianPhone("9876543210")
+
+// Input masks
+val phone = maskPhone("9876543210")   // +91 98765 43210
+val pan = maskPan("abcde1234f")       // ABCDE1234F
+
+// Form state tracker
+val form = FormState()
+form.validate("pan", isValidPan(panInput), "Invalid PAN")
+form.submit { api.submit() }
+
+// UI components
+OtpInput(otpLength = 6, onOtpComplete = { otp -> verifyOtp(otp) })
+PasswordStrengthMeter(password = password)
+```
+
+---
+
+## 8. Storage & Cache
+
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.storage.SchemaMigrationHelper
+import com.aj.shared.storage.StorageReporter
+
+// Secure storage (tokens)
+EazyCmp.storage.putString("auth_token", jwt)
+val token = EazyCmp.storage.getString("auth_token")
+
+// Preferences (non-sensitive)
+EazyCmp.preferences.putBoolean("dark_mode", true)
+
+// Form drafts (survives crash)
+EazyCmp.formDrafts.save("kyc_form", draftJson)
+val saved = EazyCmp.formDrafts.load("kyc_form")
+
+// Local store + schema migration
+SchemaMigrationHelper(EazyCmp.localStore)
+    .fromTo(1, 2) { store -> /* migrate data */ }
+    .migrateTo(2)
+
+// Cache management
+StorageReporter.report()       // bytes used
+StorageReporter.clearAllCaches()
+```
+
+---
+
+## 9. Permissions & Store Compliance
+
+```kotlin
+import androidx.compose.runtime.*
+import com.aj.shared.permission.*
 
 @Composable
-fun PermissionDemo() {
-    val scope = rememberCoroutineScope()
+fun MyScreen() {
     val permissionManager = remember { PermissionManager() }
-    
-    // 1. Mandatory Launcher Registration (must be done in Composable scope)
-    permissionManager.RegisterPermissionLauncher()
+    permissionManager.RegisterPermissionLauncher() // required in Composable
 
-    Button(onClick = {
-        scope.launch {
-            // 2. Request permissions programmatically
-            permissionManager.requestPermissions(
-                permissions = listOf(AppPermission.CAMERA, AppPermission.LOCATION)
-            ) { results ->
-                results.forEach { result ->
-                    when (result.status) {
-                        PermissionStatus.GRANTED -> println("${result.permission} granted!")
-                        PermissionStatus.DENIED -> println("${result.permission} denied.")
-                        PermissionStatus.PERMANENTLY_DENIED -> println("Permanently denied.")
-                    }
-                }
-            }
+    // GALLERY / STORAGE = system picker, no runtime prompt
+    LaunchedEffect(Unit) {
+        permissionManager.requestPermissions(listOf(AppPermission.CAMERA)) { results ->
+            /* handle */
         }
-    }) {
-        Text("Request Permissions")
     }
 }
+
+// 3. Generate manifest / Info.plist entries for YOUR app
+PermissionManifest.androidPermissionsFor(setOf(AppPermission.CAMERA, AppPermission.LOCATION))
+PermissionManifest.iosUsageStringsFor(setOf(AppPermission.CAMERA))
 ```
+
+> **Store policy:** Library does NOT merge sensitive permissions. See [docs/STORE_COMPLIANCE.md](docs/STORE_COMPLIANCE.md).
 
 ---
 
-## 5.5 Location Module (`location`)
-
-Retrieve the user's current GPS coordinates (latitude and longitude) natively on Android and iOS.
+## 10. Location & Geocoder
 
 ```kotlin
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import com.aj.shared.location.LocationManager
-import kotlinx.coroutines.launch
-
-@Composable
-fun LocationDemo() {
-    val scope = rememberCoroutineScope()
-    val locationManager = remember { LocationManager() }
-
-    Button(onClick = {
-        scope.launch {
-            // Make sure you have checked/requested AppPermission.LOCATION first
-            locationManager.getCurrentLocation { latLng ->
-                if (latLng != null) {
-                    println("Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}")
-                } else {
-                    println("Failed to fetch location.")
-                }
-            }
-        }
-    }) {
-        Text("Get GPS Coordinates")
-    }
-}
-```
-
-### Geocoder & Location Picker UI
-Search addresses and pick locations with `Geocoder` and `LocationPickerBottomSheet`:
-```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.location.LocationPolicy
 import com.aj.shared.location.Geocoder
-import com.aj.shared.location.GeocoderResult
 import com.aj.shared.location.LocationPickerBottomSheet
 
-// Search places (returns Result type)
-when (val result = Geocoder.search("Connaught Place Delhi")) {
-    is GeocoderResult.Success -> println(result.data)
-    is GeocoderResult.Error -> println(result.message)
+// Foreground policy (required for Play Store)
+LocationPolicy.isInForeground = true  // onResume
+LocationPolicy.isInForeground = false // onPause
+
+// Single GPS fix
+EazyCmp.location.getCurrentLocation { latLng ->
+    println("${latLng?.latitude}, ${latLng?.longitude}")
 }
 
-// Bottom sheet picker
-LocationPickerBottomSheet(
-    show = showPicker,
-    onDismiss = { showPicker = false },
-    onLocationPicked = { place -> println(place.displayName) }
-)
-```
+// Continuous (foreground only)
+EazyCmp.location.observeLocation(5000).collect { latLng -> /* ... */ }
 
-> **Note:** Geocoder uses OpenStreetMap Nominatim. Respect their [usage policy](https://operations.osmfoundation.org/policies/nominatim/) and configure `Geocoder.baseUrl` for production.
+// Address search
+Geocoder.search("Connaught Place Delhi")
+
+// UI picker bottom sheet
+LocationPickerBottomSheet(show = true, onDismiss = {}, onLocationPicked = {})
+```
 
 ---
 
-## 6. Media Picker (`picker`)
+## 11. Media Picker (`picker`)
 
 Pick files and images without requesting system permissions or writing platform-specific code.
 
@@ -411,7 +542,203 @@ fun DocumentUploadScreen() {
 
 ---
 
-## 7. PDF Generator (`print`)
+## 12. Security & Privacy
+
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.security.*
+import com.aj.shared.ui.AppLockGate
+
+// App lock (PIN + biometric)
+EazyCmp.appLock.setPin("1234")
+AppLockGate { MainContent() }  // wraps app root
+
+// Session timeout (5/15/30 min idle)
+EazyCmp.sessionTimeout.touch()  // call on user interaction
+EazyCmp.sessionTimeout.checkTimeout()
+
+// Screenshot block on sensitive screens
+setScreenshotBlocking(true)
+
+// PII display masks
+maskPan("ABCDE1234F")    // ABCDE****F
+maskPhone("9876543210")   // 98****3210
+
+// Consent (GDPR / DPDP)
+EazyCmp.consent.recordConsent("marketing", version = "1.0")
+EazyCmp.consent.hasConsent("marketing", "1.0")
+
+// Data export
+val json = exportUserData(listOf("theme", "language"))
+
+// Root/jailbreak warning (warn only — don't hard-block for Play policy)
+if (isDeviceCompromised()) showSecurityWarning()
+```
+
+---
+
+## 13. Theme, Display & UI Kit
+
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.theme.*
+import com.aj.shared.display.EazyCmpDisplayHost
+import com.aj.shared.ui.kit.*
+
+// Theme
+EazyCmpTheme(mode = AppThemeMode.DARK) {
+    EazyCmpProviders(colors = EazyColors(primary = BrandBlue)) {
+        AppContent()
+    }
+}
+
+// Fixed font scale (same UI on all devices)
+EazyCmpDisplayHost {
+    EazyCmp.display.setLockFontScale(true)
+    AppNavigation()
+}
+
+// New UI kit components
+StatusChip("Approved", StatusChipVariant.SUCCESS)
+Timeline(steps = listOf("KYC", "Payment", "Policy"))
+EmptyStateView(title = "No policies", onAction = { refresh() })
+ErrorRetryView(message = "Failed", onRetry = { retry() })
+EazyPullToRefresh(isRefreshing, onRefresh = { refresh() }) { ListContent() }
+SwipeToDeleteItem(onDelete = { delete(id) }) { ListRow() }
+SearchBar(query, onQueryChange = { query = it })
+AmountTextField(value, onValueChange = { value = it })
+RatingBar(rating = 4f, onRatingChange = {})
+CountdownTimer(targetEpochMs = expiryTime)
+InfoBanner("Offer ends today", variant = InfoBannerVariant.WARNING)
+WhatsNewScreen(changelogItems, onDismiss = {})
+```
+
+---
+
+## 14. Navigation & Deep Links
+
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.navigation.*
+import com.aj.shared.deeplink.DeepLinkHandler
+import androidx.navigation.NavController
+
+// Register routes
+EazyCmp.deepLinks.route("policy/{id}") { match ->
+    navigate("policy/${match.pathParams["id"]}")
+}
+
+// Cold start deep link (Android: call from Activity intent)
+setPlatformDeepLink(intent?.data?.toString())
+readPlatformDeepLink()?.let { EazyCmp.deepLinks.handle(it) }
+
+// Nav helpers
+navController.navigateOnce("home")  // debounced
+navController.popUpToRoute("login", inclusive = true)
+
+// Push notification → screen
+PushNotificationRouter().handleTap(PushPayload(route = "/renewals")) { navController.navigate(it) }
+
+// Return result from screen
+navController.setNavResult("selected_policy", policyId)
+navController.rememberNavResult<String>("selected_policy") { id -> loadPolicy(id) }
+```
+
+---
+
+## 15. Indian / Insurance Domain
+
+```kotlin
+import com.aj.shared.domain.*
+import com.aj.shared.domain.PremiumBreakdownCard
+
+rupeeInWords(125000)           // "One Lakh Twenty Five Thousand Rupees Only"
+upiDeepLink("merchant@upi", amount = 1500.0)
+ncbPercent(claimFreeYears = 3) // 35
+gstAmount(premiumExGst = 10000.0)
+emiAmount(principal = 12000.0, annualRatePercent = 12.0, tenureMonths = 6)
+formatPolicyNumber("POL123456789")
+
+// Compose UI
+PremiumBreakdownCard(PremiumBreakdown(ownDamage = 5000.0, thirdParty = 2000.0))
+KycChecklist(documents = listOf(KycDocument("PAN", true), KycDocument("Aadhaar", false)))
+CommissionCard(premium = 10000.0, commissionPercent = 15.0)
+```
+
+---
+
+## 16. Auth, State & Notifications
+
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.auth.*
+import com.aj.shared.state.*
+import com.aj.shared.api.TokenRefreshConfig
+import com.aj.shared.api.HttpClientProvider
+
+// Google / Apple sign-in (wire host SDK in androidMain/iosMain)
+val result = EazyCmp.googleAuth.signIn()  // suspend
+val apple = EazyCmp.appleAuth.signIn()    // suspend
+
+// Role guard
+RoleGuard(allowedRoles = setOf(UserRole.AGENT), currentRole = role) {
+    AgentDashboard()
+}
+
+// Multi-account POS switch
+EazyCmp.accounts.setAccounts(accounts, activeId = "pos_1")
+EazyCmp.accounts.switchTo("pos_2")
+
+// Guest mode
+EazyCmp.guestMode.enableGuest()
+EazyCmp.guestMode.requireLogin(onRequireLogin = { showLogin() }) { browse() }
+
+// MVI / state
+val state = UiState.Success(data)
+Event.ShowSnackbar("Saved").consume { /* one-shot */ }
+pollUntil(predicate = { it.isReady }) { api.checkStatus() }
+
+// Token auto-refresh on 401
+HttpClientProvider.installTokenRefresh(TokenRefreshConfig(
+    baseName = "main_server",
+    handler = TokenRefreshHandler { base -> refreshToken(base) },
+))
+
+// Notifications
+EazyCmp.pushToken.register()
+EazyCmp.notifications.push(
+    InAppNotification(id = "1", title = "Renewed", message = "Policy renewed")
+)
+```
+
+---
+
+## 17. Platform Utilities
+
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.platform.*
+
+EazyCmp.clipboard.copy("Policy number")
+val text = EazyCmp.clipboard.paste()
+
+val info = EazyCmp.deviceInfo.snapshot()  // model, OS, app version
+
+EazyCmp.qrGenerator.generate("https://pay.example.com", size = 256)
+
+openMaps("Connaught Place Delhi")
+openDialer("9876543210")
+openWhatsApp("9876543210", "Hi, I need help with my policy")
+openEmail("support@example.com", subject = "Claim query")
+
+requestInAppReview()  // Play Store / App Store review dialog
+```
+
+---
+
+## 18. PDF, Modifiers & Extensions
+
+### PDF Generator (`print`)
 
 Generate, view, download, or share PDFs dynamically from any Compose Multiplatform layout hierarchy using `PdfManager`.
 
@@ -442,310 +769,44 @@ fun ReceiptScreen() {
 }
 ```
 
----
+### Core UI Components (also available)
 
-## 8. Compose UI Kit Components
+| Component | Package | Use for |
+|-----------|---------|---------|
+| `CustomScaffold` | `ui` | Screen with back, loading, gradient |
+| `CommonDropDown` | `ui` | Single/multi select dropdown |
+| `EasyDatePicker` | `ui` | Date / range picker |
+| `GenericBottomSheet` | `ui` | Modal bottom sheet |
+| `OutLinedSimpleTextField` | `ui` | Text field with errors |
+| `CommonButton` | `ui` | Debounced button |
+| `GenericTabs` | `tab` | Tab selector |
+| `CustomImage` | `ui` | Coil + SVG + Lottie |
+| `SnackBarBoxApp` | `ui` | Global snackbar host |
 
-EazyCMP provides a suite of ready-to-use, polished components built with Modern Design Guidelines.
-
-### `CustomScaffold`
-A wrapper around Material3 Scaffold with built-in loading states, background gradients, custom top-bars, back buttons, and actions.
+### Custom Modifiers
 ```kotlin
-import com.aj.shared.ui.CustomScaffold
-
-CustomScaffold(
-    title = "Dashboard",
-    showBack = true,
-    onBackClick = { /* Go Back */ },
-    isLoading = viewModel.baseState.value.isLoading, // Shows custom loading dialog overlay
-    gradient = myCustomBrushBackground, // Screen background gradient
-    action1Img = myVectorOrPainter,
-    action1Click = { /* Action clicked */ }
-) { padding ->
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Main screen content goes here")
-    }
-}
+Modifier.beamBorder(radius = 10.dp, brush = successBrush)
+Modifier.dashedBorder(color = Color.Gray, strokeWidth = 2.dp)
+Modifier.bounceClick { onClick() }
+Modifier.shimmer(enabled = isLoading)
 ```
 
-### `CommonDropDown` (with Smart Truncation)
-Allows both single and multi-select values. In multi-select mode, it dynamically calculates its actual width: it displays as many selected items as can fit, appending `+N` for the remaining items (e.g., `"Apple, Orange +2"`).
+### Extensions
 ```kotlin
-import com.aj.shared.ui.CommonDropDown
-
-CommonDropDown(
-    label = "Fruits",
-    placeholder = "Select Fruits",
-    items = listOf("Apple", "Orange", "Banana", "Cherry", "Grapes"),
-    selectedItems = mySelectedFruitsList,
-    isMultiSelect = true,
-    itemLabel = { it }, // Custom mapping label function
-    onItemsSelected = { selectedList ->
-        mySelectedFruitsList = selectedList
-    }
-)
+"2026-06-03".toDdMmmYyyy()
+125000.toIndianCurrency()      // ₹1,25,000.00
+"9876543210".toIndianPhone()   // +91 98765 43210
+"hello world".toTitleCase()
 ```
 
-### `EasyDatePicker` / `GenericDatePicker`
-Material3 dialog supporting date restrictions (past only, future only, min/max range) and date-range pickers.
+### App root setup
 ```kotlin
-import com.aj.shared.ui.EasyDatePicker
-import com.aj.shared.ui.DateRestrictionType
-
-EasyDatePicker(
-    show = showDatePicker,
-    isRangePicker = false,
-    restrictionType = DateRestrictionType.FUTURE_ONLY, // Restricts user to select future dates only
-    onDismiss = { showDatePicker = false },
-    onDateSelected = { startDateMillis, _ ->
-        println("Selected date: $startDateMillis")
-    }
-)
-```
-
-### `GenericBottomSheet`
-Slide-up modal bottom sheet that consumes focus clears keyboard, and handles dismiss actions.
-```kotlin
-import com.aj.shared.ui.GenericBottomSheet
-
-GenericBottomSheet(
-    show = showSheet,
-    title = "Filters",
-    onDismiss = { showSheet = false }
-) {
-    Column {
-        Text("Filter options go here")
-    }
-}
-```
-
-### `OutLinedSimpleTextField`
-Polished text field with validation, error messages, leading/trailing icons, and focus-handling support.
-```kotlin
-import com.aj.shared.ui.OutLinedSimpleTextField
-
-OutLinedSimpleTextField(
-    value = textVal,
-    onValueChange = { textVal = it },
-    placeholderText = "Enter full name",
-    label = "Full Name",
-    error = if (textVal.isEmpty()) "Field cannot be empty" else null,
-    modifier = Modifier.fillMaxWidth()
-)
-```
-
-### `CommonButton`
-A clickable button containing start/end icons, custom typography, and built-in click debouncing (prevents double clicking).
-```kotlin
-import com.aj.shared.ui.CommonButton
-
-CommonButton(
-    label = "Save Changes",
-    icon = Icons.Default.Done,
-    onClick = { saveAction() }
-)
-```
-
-### `GenericTabs`
-A card-shaped tab selector displaying horizontal options with smooth gradient selection transitions.
-```kotlin
-import com.aj.shared.tab.GenericTabs
-
-GenericTabs(
-    selected = activeTab,
-    list = listOf("Home", "Payments", "Settings"),
-    onTabSelected = { activeTab = it }
-)
-```
-
-### `CustomImage` (Coil3 + SVG + Lottie)
-A highly advanced image wrapper. It automatically parses content types and supports:
-- Loading standard network URLs or Local Resource Bytes.
-- SVG vectors natively.
-- Interactive online or local Lottie Animations (using a simple URL or JSON string).
-- Beautiful customized `Placeholder` overlays.
-```kotlin
-import com.aj.shared.ui.CustomImage
-import com.aj.shared.ui.Placeholder
-
-// Network Image
-CustomImage(model = "https://example.com/photo.png")
-
-// Animated Lottie URL Loader
-CustomImage(
-    model = "https://example.com/loading_animation.json",
-    placeholder = Placeholder.LottieUrl("https://example.com/fallback.json")
-)
-```
-
----
-
-## 9. Custom Modifiers
-
-EazyCMP provides beautiful, custom canvas modifiers to upgrade the design aesthetics of your layouts.
-
-### Animated `beamBorder`
-Applies a premium, infinitely running border light effect to any composable box layout. Excellent for notifications, success states, or highlighted cards.
-```kotlin
-import com.aj.shared.ui.beamBorder
-import com.aj.shared.theme.successBrush
-
-Box(
-    modifier = Modifier
-        .size(200.dp, 80.dp)
-        .beamBorder(radius = 10, brush = successBrush)
-) {
-    Text("Highlighted Premium Card")
-}
-```
-
-### `dashedBorder`
-Applies custom dashed path bounds around widgets.
-```kotlin
-import com.aj.shared.ui.dashedBorder
-
-Box(
-    modifier = Modifier
-        .size(100.dp)
-        .dashedBorder(color = Color.Gray, strokeWidth = 2.dp, cornerRadius = 8.dp)
-)
-```
-
----
-
-## 10. Extensions
-
-Handy utility extensions to format types quickly.
-
-### Date Formatting Extensions
-Format date outputs safely using Kotlin Serialization time instances:
-```kotlin
-import com.aj.shared.extension.toDdMmmYyyy
-import com.aj.shared.extension.toServerDate
-import com.aj.shared.extension.currentDate
-
-// String / Long timestamp formatting
-val formattedDate = "2026-06-03T12:00:00".toDdMmmYyyy() // "03 Jun 2026"
-val apiFormat = System.currentTimeMillis().toServerDate() // "2026-06-03"
-
-// Date utilities
-val today = currentDate() // "03 Jun 2026"
-val currentYear = currentYear() // "2026"
-```
-
-### String Formatting Extensions
-```kotlin
-import com.aj.shared.extension.toTitleCase
-
-val title = "hello world".toTitleCase() // "Hello world"
-```
-
----
-
-## 11. Pro-Level Enhancements
-
-All managers and utilities are available via a single unified entry point (`EazyCmp`) requiring zero-to-minimal setup.
-
-### 11.1 SDK Initialization & Loader Customization
-```kotlin
-// Android Application.onCreate — before startKoin()
-EazyCmp.init(context = this, settingsName = "my_app_prefs")
-
-// Enable API debug logs (disabled by default)
+EazyCmp.init(context = this)
 EazyCmp.isDebugEnabled = BuildConfig.DEBUG
-
-// (Optional) Configure custom placeholders/loaders globally once at startup
-EazyCmp.defaultImagePlaceholder = Placeholder.LottieUrl("https://mycompany.com/image_loading.json")
-EazyCmp.defaultApiLoadingPlaceholder = Placeholder.LottieUrl("https://mycompany.com/api_loading.json")
+SnackBarBoxApp { EazyCmpDisplayHost { EazyCmpTheme { AppNavigation() } } }
 ```
 
-### 11.1.1 Snackbar Setup for BaseViewModel
-Wrap your app root with `SnackBarBoxApp` so `BaseViewModel.setError()` can show errors:
-```kotlin
-SnackBarBoxApp {
-    AppNavigation()
-}
-```
-
-### 11.2 Single-Point Access
-Access all utilities via the unified `EazyCmp` object:
-```kotlin
-import com.aj.shared.EazyCmp
-
-// GPS coordinates
-EazyCmp.location.getCurrentLocation { latLng -> ... }
-
-// Permissions
-EazyCmp.permission.requestPermissions(listOf(AppPermission.CAMERA)) { ... }
-
-// Picker
-EazyCmp.media.launch(PickerType.IMAGE) { pickedFile -> ... }
-```
-
-### 11.3 Network Observer
-Track real-time network changes:
-```kotlin
-import com.aj.shared.EazyCmp
-
-// Get current state
-val online = EazyCmp.network.isOnline
-
-// Observe changes
-lifecycleScope.launch {
-    EazyCmp.network.connectivityFlow.collect { isOnline ->
-        // Handle online/offline state
-    }
-}
-```
-
-### 11.4 Secure Storage
-Store strings, integers, booleans, and longs securely:
-```kotlin
-import com.aj.shared.EazyCmp
-
-// Write
-EazyCmp.storage.putString("auth_token", "jwt_token_123")
-EazyCmp.storage.putBoolean("first_launch", false)
-
-// Read
-val token = EazyCmp.storage.getString("auth_token")
-val isFirst = EazyCmp.storage.getBoolean("first_launch", true)
-```
-
-### 11.5 Continuous Location Tracking
-Observe coordinates in real-time using a Coroutine Flow:
-```kotlin
-import com.aj.shared.EazyCmp
-
-lifecycleScope.launch {
-    EazyCmp.location.observeLocation(intervalMillis = 5000).collect { latLng ->
-        if (latLng != null) {
-            println("New Position: ${latLng.latitude}, ${latLng.longitude}")
-        }
-    }
-}
-```
-
-### 11.6 Custom UI Modifiers
-Premium micro-animations and loaders:
-```kotlin
-import com.aj.shared.ui.bounceClick
-import com.aj.shared.ui.shimmer
-
-// Bounce Click
-Card(
-    modifier = Modifier.bounceClick {
-        // performs premium spring scale click animation!
-    }
-) { ... }
-
-// Shimmer (Skeletal Screens)
-Box(
-    modifier = Modifier
-        .size(100.dp)
-        .shimmer(enabled = isLoading)
-)
-```
+> **Full feature list (317):** [docs/EazyCmp-Feature-Catalog.md](docs/EazyCmp-Feature-Catalog.md)
 
 ---
 

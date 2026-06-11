@@ -1,5 +1,7 @@
 package com.aj.shared.api
 
+import com.aj.shared.security.redactPiiFromLog
+
 object EazyLogger {
     var isDebugEnabled: Boolean = false
 
@@ -35,7 +37,7 @@ object EazyLogger {
         println("============== API RESPONSE =============")
         println("$url => ${durationMs}ms")
         val preview = if (rawResponse.length > 500) rawResponse.take(500) + "..." else rawResponse
-        println(preview)
+        println(redactPiiFromLog(preview))
         println("=========================================")
     }
 

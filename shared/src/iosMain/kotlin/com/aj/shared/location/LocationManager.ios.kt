@@ -52,6 +52,11 @@ actual class LocationManager actual constructor() {
 
     @OptIn(ExperimentalForeignApi::class)
     actual fun observeLocation(intervalMillis: Long): Flow<LatLng?> = callbackFlow {
+        if (!LocationPolicy.requireForegroundForContinuousUpdates()) {
+            trySend(null)
+            close()
+            return@callbackFlow
+        }
         val manager = CLLocationManager()
         observeManager = manager
         val delegate = object : NSObject(), CLLocationManagerDelegateProtocol {

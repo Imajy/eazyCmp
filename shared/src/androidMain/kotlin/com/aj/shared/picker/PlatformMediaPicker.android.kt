@@ -139,7 +139,7 @@ actual class PlatformMediaPicker actual constructor() {
 
         return FileProvider.getUriForFile(
             context,
-            "${context.packageName}.provider",
+            "${context.packageName}.eazycmp.camera",
             file
         )
     }

@@ -8,6 +8,13 @@ plugins {
     id("maven-publish")
 }
 
+// JitPack runs on Linux — skip slow iOS native compile for fast publishes (~3-6 min).
+// iOS host apps still compile iOS code locally via Kotlin/Native in their own project.
+val skipIosTargets =
+    project.findProperty("eazycmp.skip.ios") == "true" ||
+        System.getenv("EAZYCMP_SKIP_IOS") == "true" ||
+        System.getenv("JITPACK") == "true"
+
 kotlin {
     androidLibrary {
         namespace = "com.aj.shared"
@@ -17,13 +24,18 @@ kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
+
+        androidResources {
+            enable = true
+        }
     }
 
     jvm()
 
-    // iOS targets (iosX64 removed — deprecated in CMP 1.11+)
-    iosArm64()
-    iosSimulatorArm64()
+    if (!skipIosTargets) {
+        iosArm64()
+        iosSimulatorArm64()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -61,6 +73,9 @@ kotlin {
             // Lifecycle (JetBrains KMP wrappers)
             api(libs.jetbrains.lifecycle.viewmodel)
             api(libs.jetbrains.lifecycle.runtime)
+
+            // Navigation (JetBrains KMP wrappers)
+            api(libs.navigation.compose)
         }
 
         jvmMain.dependencies {
@@ -84,6 +99,10 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.security.crypto)
+            implementation(libs.androidx.biometric)
+            implementation(libs.play.app.update)
+            implementation(libs.play.review)
+            implementation(libs.zxing.core)
         }
     }
 }
@@ -97,7 +116,7 @@ tasks.withType<Copy>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 group = "com.github.imajy"
-version = "1.0.03-alpha-10"
+version = "1.0.03-alpha-11"
 
 configurations.configureEach {
     if (name.contains("jvm", ignoreCase = true) && (isCanBeResolved || isCanBeConsumed)) {
@@ -107,5 +126,28 @@ configurations.configureEach {
                 org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.jvm
             )
         }
+    }
+}
+
+publishing {
+    publications.withType<MavenPublication> {
+        pom {
+            name.set("EazyCmp")
+            description.set("Kotlin Multiplatform toolkit — API, UI, permissions, upload, security")
+            url.set("https://github.com/Imajy/eazyCmp")
+            licenses {
+                license {
+                    name.set("MIT")
+                    url.set("https://opensource.org/licenses/MIT")
+                }
+            }
+        }
+    }
+}
+
+// Skip Android Lint on CI/JitPack — saves 1-2 minutes per build
+if (skipIosTargets) {
+    tasks.matching { it.name.contains("lint", ignoreCase = true) }.configureEach {
+        enabled = false
     }
 }

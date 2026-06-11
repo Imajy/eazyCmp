@@ -65,6 +65,11 @@ actual class LocationManager actual constructor() {
 
     @SuppressLint("MissingPermission")
     actual fun observeLocation(intervalMillis: Long): Flow<LatLng?> = callbackFlow {
+        if (!LocationPolicy.requireForegroundForContinuousUpdates()) {
+            trySend(null)
+            close()
+            return@callbackFlow
+        }
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 trySend(LatLng(location.latitude, location.longitude))
