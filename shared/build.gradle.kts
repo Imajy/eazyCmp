@@ -148,9 +148,15 @@ publishing {
     }
 }
 
-// Skip Android Lint on CI/JitPack — saves 1-2 minutes per build
+// Skip Android Lint on JitPack only — use exact task names (never match *Metadata* tasks).
 if (skipIosTargets) {
-    tasks.matching { it.name.contains("lint", ignoreCase = true) }.configureEach {
+    val jitPackLintTasks = setOf(
+        "lint",
+        "lintAnalyzeAndroidMain",
+        "lintReportAndroidMain",
+        "prepareLintJarForPublish",
+    )
+    tasks.matching { it.project == project && it.name in jitPackLintTasks }.configureEach {
         enabled = false
     }
 }
