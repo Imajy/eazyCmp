@@ -90,12 +90,13 @@ kotlin {
 
 compose.resources {
     publicResClass = true
+    packageOfResClass = "com.github.imajy.shared.generated.resources"
 }
 
 tasks.withType<Copy>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-group = "com.github.Imajy"
+group = "com.github.imajy"
 version = "1.0.03-alpha-10"
 
 configurations.configureEach {
