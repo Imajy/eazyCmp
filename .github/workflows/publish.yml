@@ -1,0 +1,47 @@
+name: Publish Multiplatform Artifacts
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'maven-repo/**' # Avoid workflow loops by ignoring changes under maven-repo/
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Publish to local Maven Repo
+        run: |
+          chmod +x gradlew
+          ./gradlew publishAllPublicationsToMavenRepository --no-daemon
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add maven-repo/
+          if git diff --cached --quiet; then
+            echo "No changes in maven-repo to commit"
+          else
+            git commit -m "Automated publish of multiplatform artifacts [skip ci]"
+            git push origin HEAD:main
+          fi
