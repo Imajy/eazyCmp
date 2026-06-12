@@ -119,7 +119,7 @@ tasks.withType<Copy>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 group = "com.github.Imajy.eazyCmp"
-version = "1.0.04-alpha-077"
+version = "1.0.04-alpha-078"
 
 configurations.configureEach {
     if (name.contains("jvm", ignoreCase = true) && (isCanBeResolved || isCanBeConsumed)) {
