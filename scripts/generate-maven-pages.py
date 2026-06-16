@@ -89,6 +89,7 @@ def main() -> None:
     latest = data.get("latest") or (releases[0]["version"] if releases else "")
     updated_at = format_when(data.get("updatedAt", ""))
     version_rows = render_rows(releases, latest)
+    setup_snippet = f'implementation("{GROUP_ID}:{ARTIFACT_ID}:{latest or "VERSION"}")'
 
     index_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -145,7 +146,7 @@ def main() -> None:
 }}
 
 commonMain.dependencies {{
-    implementation("{GROUP_ID}:{ARTIFACT_ID}:{latest or "VERSION"})
+    {setup_snippet}
 }}</pre>
 
   <h2>All published versions</h2>

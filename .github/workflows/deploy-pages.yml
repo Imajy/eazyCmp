@@ -9,20 +9,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy-pages:
+  deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout master
         uses: actions/checkout@v4
@@ -35,12 +30,13 @@ jobs:
           ls -la maven-repo/ | head -20
           test -f maven-repo/index.html || (echo "ERROR: maven-repo/index.html missing" && exit 1)
           test -f maven-repo/versions.json || (echo "ERROR: maven-repo/versions.json missing" && exit 1)
+          test -f maven-repo/.nojekyll || touch maven-repo/.nojekyll
 
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy catalog to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: maven-repo
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          folder: maven-repo
+          branch: gh-pages
+          clean: true
+          single-commit: true
+          commit-message: Deploy Maven catalog (${{ github.sha }})
