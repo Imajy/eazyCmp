@@ -106,7 +106,7 @@ jobs:
             CURRENT=$(python3 scripts/version.py current)
             if [[ "$CURRENT" == "$VERSION" ]]; then
               python3 scripts/version.py bump
-              git add version.properties
+              git add version.properties shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt
             fi
           fi
 

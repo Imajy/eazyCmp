@@ -38,27 +38,6 @@ fun readEazyCmpVersion(): String {
 
 version = readEazyCmpVersion()
 
-val eazyCmpVersionDir = layout.buildDirectory.dir("generated/eazycmp/kotlin")
-
-val generateEazyCmpVersion by tasks.registering {
-    val libraryVersion = version.toString()
-    outputs.dir(eazyCmpVersionDir)
-    doLast {
-        val outFile = eazyCmpVersionDir.get().asFile
-            .resolve("com/aj/shared/internal/EazyCmpBuildInfo.kt")
-        outFile.parentFile.mkdirs()
-        outFile.writeText(
-            """
-            package com.aj.shared.internal
-
-            internal object EazyCmpBuildInfo {
-                const val VERSION: String = "$libraryVersion"
-            }
-            """.trimIndent(),
-        )
-    }
-}
-
 kotlin {
     androidLibrary {
         namespace = "com.aj.shared"
@@ -152,10 +131,6 @@ kotlin {
             implementation(libs.zxing.core)
         }
     }
-
-    sourceSets.named("commonMain") {
-        kotlin.srcDir(eazyCmpVersionDir)
-    }
 }
 
 compose.resources {
@@ -165,13 +140,6 @@ compose.resources {
 
 tasks.withType<Copy>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.matching {
-    it.name.contains("compile", ignoreCase = true) &&
-        it.name.contains("Kotlin", ignoreCase = true)
-}.configureEach {
-    dependsOn(generateEazyCmpVersion)
 }
 
 configurations.configureEach {
