@@ -11,7 +11,8 @@ from pathlib import Path
 
 GROUP_ID = "com.github.Imajy.eazyCmp"
 ARTIFACT_ID = "shared"
-REPO_URL = "https://imajy.github.io/eazyCmp/"
+SITE_URL = "https://imajy.github.io/eazyCmp/"
+MAVEN_REPO_URL = "https://imajy.github.io/eazyCmp/maven-repo/"
 GITHUB_REPO = "https://github.com/Imajy/eazyCmp"
 
 
@@ -141,7 +142,7 @@ def main() -> None:
     repositories {{
         google()
         mavenCentral()
-        maven {{ url = uri("{REPO_URL}") }}
+        maven {{ url = uri("{MAVEN_REPO_URL}") }}
     }}
 }}
 

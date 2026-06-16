@@ -30,13 +30,18 @@ jobs:
           ls -la maven-repo/ | head -20
           test -f maven-repo/index.html || (echo "ERROR: maven-repo/index.html missing" && exit 1)
           test -f maven-repo/versions.json || (echo "ERROR: maven-repo/versions.json missing" && exit 1)
-          test -f maven-repo/.nojekyll || touch maven-repo/.nojekyll
 
-      - name: Deploy catalog to gh-pages branch
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: maven-repo
-          branch: gh-pages
-          clean: true
-          single-commit: true
-          commit-message: Deploy Maven catalog (${{ github.sha }})
+      - name: Sync catalog to repo root
+        run: chmod +x scripts/sync-pages-root.sh && ./scripts/sync-pages-root.sh
+
+      - name: Commit Pages site to master root
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html versions.json .nojekyll
+          if git diff --cached --quiet; then
+            echo "Pages root already up to date"
+          else
+            git commit -m "Sync Pages catalog to repo root"
+            git push origin master
+          fi

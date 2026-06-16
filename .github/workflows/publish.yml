@@ -73,6 +73,8 @@ jobs:
             --message "$RELEASE_MESSAGE" \
             --published-at "$PUBLISHED_AT" \
             --commit "$RELEASE_COMMIT"
+          chmod +x scripts/sync-pages-root.sh
+          ./scripts/sync-pages-root.sh
 
       - name: Commit maven-repo and bump next version
         run: |
@@ -89,7 +91,7 @@ jobs:
             rsync -a /tmp/eazycmp-maven-repo/ maven-repo/
           fi
 
-          git add maven-repo/
+          git add maven-repo/ index.html versions.json .nojekyll
 
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
             CURRENT=$(python3 scripts/version.py current)

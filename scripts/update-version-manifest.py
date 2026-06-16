@@ -12,7 +12,7 @@ from pathlib import Path
 
 GROUP_ID = "com.github.Imajy.eazyCmp"
 ARTIFACT_ID = "shared"
-REPO_URL = "https://imajy.github.io/eazyCmp/"
+MAVEN_REPO_URL = "https://imajy.github.io/eazyCmp/maven-repo/"
 
 
 def load_manifest(path: Path) -> dict:
@@ -23,7 +23,7 @@ def load_manifest(path: Path) -> dict:
             "latest": "",
             "versions": [],
             "releases": [],
-            "repository": REPO_URL,
+            "repository": MAVEN_REPO_URL,
             "updatedAt": "",
         }
     return json.loads(path.read_text())
@@ -71,7 +71,7 @@ def upsert_release(
     data["latest"] = version
     data["groupId"] = GROUP_ID
     data["artifactId"] = ARTIFACT_ID
-    data["repository"] = REPO_URL
+    data["repository"] = MAVEN_REPO_URL
     data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     return data
 
