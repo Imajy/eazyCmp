@@ -92,9 +92,9 @@ jobs:
 
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
             cp -r maven-repo /tmp/eazycmp-maven-repo
-            git fetch origin main
-            git checkout main
-            git pull origin main
+            git fetch origin master
+            git checkout master
+            git pull origin master
             mkdir -p maven-repo
             rsync -a /tmp/eazycmp-maven-repo/ maven-repo/
           fi
@@ -115,7 +115,7 @@ jobs:
           else
             NEXT=$(python3 scripts/version.py current)
             git commit -m "Publish EazyCmp $VERSION · next $NEXT [skip ci]"
-            git push origin main
+            git push origin master
           fi
 
   deploy-pages:
