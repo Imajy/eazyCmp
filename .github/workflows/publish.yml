@@ -7,12 +7,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   publish:
@@ -79,11 +73,6 @@ jobs:
             --published-at "$PUBLISHED_AT" \
             --commit "$RELEASE_COMMIT"
 
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: maven-repo
-
       - name: Commit maven-repo and bump next version
         run: |
           VERSION="${{ steps.version.outputs.value }}"
@@ -101,7 +90,6 @@ jobs:
 
           git add maven-repo/
 
-          # Auto-bump version.properties after a tagged release only.
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
             CURRENT=$(python3 scripts/version.py current)
             if [[ "$CURRENT" == "$VERSION" ]]; then
@@ -114,17 +102,6 @@ jobs:
             echo "No changes to commit"
           else
             NEXT=$(python3 scripts/version.py current)
-            git commit -m "Publish EazyCmp $VERSION · next $NEXT [skip ci]"
+            git commit -m "Publish EazyCmp $VERSION · next $NEXT"
             git push origin master
           fi
-
-  deploy-pages:
-    needs: publish
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
