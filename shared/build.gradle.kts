@@ -6,7 +6,6 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
     id("maven-publish")
-    id("signing")
 }
 
 // JitPack runs on Linux — skip slow iOS native compile for fast publishes (~3-6 min).
@@ -135,19 +134,9 @@ configurations.configureEach {
 
 publishing {
     repositories {
+        // Free: artifacts committed to repo by GitHub Actions (see .github/workflows/publish.yml)
         maven {
-            name = "LocalRepo"
             url = uri("${rootProject.projectDir}/maven-repo")
-        }
-        maven {
-            name = "MavenCentral"
-            val releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
-            credentials {
-                username = project.findProperty("ossrhUsername")?.toString() ?: System.getenv("OSSRH_USERNAME") ?: ""
-                password = project.findProperty("ossrhPassword")?.toString() ?: System.getenv("OSSRH_PASSWORD") ?: ""
-            }
         }
     }
     publications.withType<MavenPublication> {
@@ -173,18 +162,6 @@ publishing {
                 developerConnection.set("scm:git:ssh://github.com:Imajy/eazyCmp.git")
                 url.set("https://github.com/Imajy/eazyCmp")
             }
-        }
-    }
-}
-
-signing {
-    val isRequired = !version.toString().endsWith("SNAPSHOT") && !project.hasProperty("skipSigning")
-    if (isRequired) {
-        val signingKey = project.findProperty("signingKey")?.toString() ?: System.getenv("SIGNING_KEY") ?: ""
-        val signingPassword = project.findProperty("signingPassword")?.toString() ?: System.getenv("SIGNING_PASSWORD") ?: ""
-        if (signingKey.isNotEmpty() && signingPassword.isNotEmpty()) {
-            useInMemoryPgpKeys(signingKey, signingPassword)
-            sign(publishing.publications)
         }
     }
 }
