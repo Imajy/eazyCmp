@@ -8,11 +8,11 @@
   "releases": [
     {
       "version": "1.0.0.001-rc-001",
-      "message": "Initial release on GitHub Pages Maven repo",
-      "publishedAt": "2026-06-16T00:00:00Z",
-      "commit": ""
+      "message": "Fix CI: commit EazyCmpBuildInfo instead of Gradle generation",
+      "publishedAt": "2026-06-16T17:33:44+05:30",
+      "commit": "6b0f5400217302e06770678b475cc978bcf8652e"
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/",
-  "updatedAt": "2026-06-16T00:00:00Z"
+  "updatedAt": "2026-06-16T12:06:49Z"
 }
