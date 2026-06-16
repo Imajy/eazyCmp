@@ -226,11 +226,11 @@
         {
           "name": "shared-jvm-1.0.0-rc-001.jar",
           "url": "shared-jvm-1.0.0-rc-001.jar",
-          "size": 1240416,
-          "sha512": "b7ba160bc4d9c87541f8f6ab9577630a1eb1c610063374ac92dfb415150d8585c77ce87f6b296c437cb0da42aae7be71ed832b815fab80804fe594432a2f9cbf",
-          "sha256": "d68073f7366026dee2178c4b3be233725846e1f4e72d11660429cf939c51e309",
-          "sha1": "cfb6aa7fef95078aea82a502b5497aed2d776547",
-          "md5": "6810f9054930000250cd8ff95394b4fc"
+          "size": 1240317,
+          "sha512": "4b40a3274de9ca7d4b1fc903177e9a924961f8c9e5cde1a1d16c0419fe36a02e07d388b3d8588bff96939c94d69fdfbbe25b98d33e15b7aa1c21bf24dec33563",
+          "sha256": "1a299f3c6abd2f84d70842a5b89348743138c44ee909db8afdbfca383fa80de4",
+          "sha1": "05e65cf1217974a912a5a11df4640abfe87a85b1",
+          "md5": "57baf73029bb38fb1327467dd40e057a"
         }
       ]
     },
@@ -480,11 +480,11 @@
         {
           "name": "shared-jvm-1.0.0-rc-001.jar",
           "url": "shared-jvm-1.0.0-rc-001.jar",
-          "size": 1240416,
-          "sha512": "b7ba160bc4d9c87541f8f6ab9577630a1eb1c610063374ac92dfb415150d8585c77ce87f6b296c437cb0da42aae7be71ed832b815fab80804fe594432a2f9cbf",
-          "sha256": "d68073f7366026dee2178c4b3be233725846e1f4e72d11660429cf939c51e309",
-          "sha1": "cfb6aa7fef95078aea82a502b5497aed2d776547",
-          "md5": "6810f9054930000250cd8ff95394b4fc"
+          "size": 1240317,
+          "sha512": "4b40a3274de9ca7d4b1fc903177e9a924961f8c9e5cde1a1d16c0419fe36a02e07d388b3d8588bff96939c94d69fdfbbe25b98d33e15b7aa1c21bf24dec33563",
+          "sha256": "1a299f3c6abd2f84d70842a5b89348743138c44ee909db8afdbfca383fa80de4",
+          "sha1": "05e65cf1217974a912a5a11df4640abfe87a85b1",
+          "md5": "57baf73029bb38fb1327467dd40e057a"
         }
       ]
     },
@@ -503,11 +503,11 @@
         {
           "name": "shared-jvm-1.0.0-rc-001-sources.jar",
           "url": "shared-jvm-1.0.0-rc-001-sources.jar",
-          "size": 159825,
-          "sha512": "134788d95ff2b7bee2a2133b7c3f72c0a7acc49129312152e2967eb8f1028d6162bf094bdd2d9c6eb8479f7981af84a70f4bc920d8aa29a4fed6efebd532cd57",
-          "sha256": "48a7532bf4584303c9f8c0749abb946a390d2851f6f64b384c21dc2d68e26e45",
-          "sha1": "688fd225c22fb4a550db3df85f53297ca61ce9e1",
-          "md5": "6c2d2f0ee59d51236f3e1f6e9e970be8"
+          "size": 159828,
+          "sha512": "365bb4323c725c188edd6d1798a809323da0e1753e51b7a3dc7e6cd38c902b3f9f9dc09fd9faa2c653330629e13e1da23ed09cbcd738968d2c44cd2b057ffdfb",
+          "sha256": "dad87a671cbcba59d102f289725c4819e2b42419adad322094f3b9ef8b73a918",
+          "sha1": "b9ac3f11ca4d47596818c33e81cd23da76160c7c",
+          "md5": "79965d56ad3a565a9ceb92c7bca7b7ff"
         }
       ]
     }
