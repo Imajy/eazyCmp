@@ -67,8 +67,8 @@ fun GenericBottomSheet(
         sheetGesturesEnabled = true,
         shape = RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp),
         properties = ModalBottomSheetProperties(
-            shouldDismissOnBackPress = true,
-            shouldDismissOnClickOutside = true
+            shouldDismissOnBackPress = false,
+            shouldDismissOnClickOutside = false
         ),
         scrimColor = BottomSheetDefaults.ScrimColor
     ) {
