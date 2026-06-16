@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>EazyCmp Maven Repository</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #111; background: #f6f8fa; }
+    body { max-width: 1080px; margin: 2rem auto; padding: 0 1rem 3rem; }
+    h1 { margin-bottom: .25rem; }
+    .hero {
+      background: #fff; border: 1px solid #d0d7de; border-radius: 12px;
+      padding: 1.25rem 1.5rem; margin: 1.25rem 0 1.75rem;
+    }
+    .hero .latest-label { font-size: .85rem; color: #57606a; text-transform: uppercase; letter-spacing: .04em; }
+    .hero .latest-value { font-size: 1.75rem; font-weight: 700; margin: .25rem 0 .5rem; }
+    .muted { color: #57606a; }
+    pre, code { background: #fff; border: 1px solid #d0d7de; border-radius: 6px; }
+    pre { padding: 1rem; overflow-x: auto; }
+    pre.snippet { margin: 0; padding: .5rem .75rem; font-size: .85rem; white-space: pre-wrap; word-break: break-word; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+    th, td { padding: .85rem 1rem; border-bottom: 1px solid #eaeef2; vertical-align: top; }
+    th { text-align: left; background: #f6f8fa; font-size: .92rem; }
+    tr:last-child td { border-bottom: none; }
+    tr.latest-row { background: #f6ffed; }
+    td.message { max-width: 320px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+    td.when { min-width: 170px; font-size: .92rem; }
+    .badge {
+      display: inline-block; margin-left: .35rem; padding: .1rem .45rem;
+      border-radius: 999px; background: #1a7f37; color: #fff; font-size: .72rem; font-weight: 600;
+    }
+    a { color: #0969da; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>EazyCmp</h1>
+  <p class="muted">Kotlin Multiplatform Maven repo — Android, iOS &amp; JVM. Pick any published version below.</p>
+
+  <div class="hero">
+    <div class="latest-label">Latest version</div>
+    <div class="latest-value"><code>1.0.0.001-rc-001</code></div>
+    <div class="muted">Catalog last updated: 16 Jun 2026, 00:00 UTC · 1 release(s)</div>
+  </div>
+
+  <h2>Setup (consumer project)</h2>
+  <pre>dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://imajy.github.io/eazyCmp/") }
+    }
+}
+
+commonMain.dependencies {
+    implementation("com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001)
+}</pre>
+
+  <h2>All published versions</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Release message</th>
+        <th>Published</th>
+        <th>Gradle dependency</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="latest-row">
+          <td><code>1.0.0.001-rc-001</code> <span class="badge">latest</span></td>
+          <td class="message">Initial release on GitHub Pages Maven repo</td>
+          <td class="when">16 Jun 2026, 00:00 UTC<br/><span class="muted">—</span></td>
+          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001&quot;)</pre></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p class="muted" style="margin-top:1.5rem">
+    Manifest: <a href="versions.json">versions.json</a> ·
+    Source: <a href="https://github.com/Imajy/eazyCmp">GitHub</a>
+  </p>
+</body>
+</html>

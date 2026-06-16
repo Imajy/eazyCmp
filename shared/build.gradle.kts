@@ -15,6 +15,50 @@ val skipIosTargets =
         System.getenv("EAZYCMP_SKIP_IOS") == "true" ||
         System.getenv("JITPACK") == "true"
 
+group = "com.github.Imajy.eazyCmp"
+
+fun readEazyCmpVersion(): String {
+    val fromProperty = findProperty("eazycmp.version")?.toString()
+    if (!fromProperty.isNullOrBlank()) return fromProperty
+
+    val fromEnv = System.getenv("RELEASE_VERSION")?.takeIf { it.isNotBlank() }
+    if (fromEnv != null) return fromEnv
+
+    val versionFile = rootProject.file("version.properties")
+    if (versionFile.exists()) {
+        versionFile.readLines()
+            .firstOrNull { it.trim().startsWith("version=") }
+            ?.substringAfter("=")
+            ?.trim()
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { return it }
+    }
+    return "1.0.0.001-rc-001"
+}
+
+version = readEazyCmpVersion()
+
+val eazyCmpVersionDir = layout.buildDirectory.dir("generated/eazycmp/kotlin")
+
+val generateEazyCmpVersion by tasks.registering {
+    val libraryVersion = version.toString()
+    outputs.dir(eazyCmpVersionDir)
+    doLast {
+        val outFile = eazyCmpVersionDir.get().asFile
+            .resolve("com/aj/shared/internal/EazyCmpBuildInfo.kt")
+        outFile.parentFile.mkdirs()
+        outFile.writeText(
+            """
+            package com.aj.shared.internal
+
+            internal object EazyCmpBuildInfo {
+                const val VERSION: String = "$libraryVersion"
+            }
+            """.trimIndent(),
+        )
+    }
+}
+
 kotlin {
     androidLibrary {
         namespace = "com.aj.shared"
@@ -108,6 +152,10 @@ kotlin {
             implementation(libs.zxing.core)
         }
     }
+
+    sourceSets.named("commonMain") {
+        kotlin.srcDir(eazyCmpVersionDir)
+    }
 }
 
 compose.resources {
@@ -118,8 +166,13 @@ compose.resources {
 tasks.withType<Copy>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-group = "com.github.Imajy.eazyCmp"
-version = "1.0.0-rc-001"
+
+tasks.matching {
+    it.name.contains("compile", ignoreCase = true) &&
+        it.name.contains("Kotlin", ignoreCase = true)
+}.configureEach {
+    dependsOn(generateEazyCmpVersion)
+}
 
 configurations.configureEach {
     if (name.contains("jvm", ignoreCase = true) && (isCanBeResolved || isCanBeConsumed)) {

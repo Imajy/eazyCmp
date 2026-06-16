@@ -42,8 +42,10 @@ import com.aj.shared.update.UpdateChecker
 import com.aj.shared.upload.UploadManager
 import com.aj.shared.upload.UploadQueueManager
 
+import com.aj.shared.internal.EazyCmpBuildInfo
+
 object EazyCmp {
-    const val VERSION = "1.0.03-alpha-11"
+    val VERSION: String get() = EazyCmpBuildInfo.VERSION
 
     // --- Core platform services ---
     val location: LocationManager by lazy { LocationManager() }

@@ -1,0 +1,18 @@
+{
+  "groupId": "com.github.Imajy.eazyCmp",
+  "artifactId": "shared",
+  "latest": "1.0.0.001-rc-001",
+  "versions": [
+    "1.0.0.001-rc-001"
+  ],
+  "releases": [
+    {
+      "version": "1.0.0.001-rc-001",
+      "message": "Initial release on GitHub Pages Maven repo",
+      "publishedAt": "2026-06-16T00:00:00Z",
+      "commit": ""
+    }
+  ],
+  "repository": "https://imajy.github.io/eazyCmp/",
+  "updatedAt": "2026-06-16T00:00:00Z"
+}

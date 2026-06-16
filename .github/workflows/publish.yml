@@ -2,13 +2,17 @@ name: Publish Multiplatform Artifacts
 
 on:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - 'maven-repo/**' # Avoid workflow loops by ignoring changes under maven-repo/
+    tags:
+      - '*'
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -20,6 +24,18 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Resolve release version
+        id: version
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            echo "value=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "source=tag" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$(python3 scripts/version.py current)" >> "$GITHUB_OUTPUT"
+            echo "source=version.properties" >> "$GITHUB_OUTPUT"
+          fi
+          python3 scripts/version.py validate
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -29,19 +45,86 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run Publish to local Maven Repo
+      - name: Publish Android, iOS and JVM artifacts
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
         run: |
           chmod +x gradlew
           ./gradlew publishAllPublicationsToMavenRepository --no-daemon
 
-      - name: Commit and Push changes
+      - name: Collect release metadata
+        id: meta
+        if: github.ref_type == 'tag'
         run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          {
+            echo "message<<EOF"
+            git log -1 --format=%B "$VERSION" | sed '/^$/d' | head -n 5
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "published_at=$(git log -1 --format=%cI "$VERSION")" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse "$VERSION^{commit}")" >> "$GITHUB_OUTPUT"
+
+      - name: Update version manifest and Pages index
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          RELEASE_MESSAGE: ${{ steps.meta.outputs.message }}
+          PUBLISHED_AT: ${{ steps.meta.outputs.published_at }}
+          RELEASE_COMMIT: ${{ steps.meta.outputs.commit }}
+        run: |
+          python3 scripts/update-version-manifest.py \
+            --manifest maven-repo/versions.json \
+            --version "$VERSION" \
+            --message "$RELEASE_MESSAGE" \
+            --published-at "$PUBLISHED_AT" \
+            --commit "$RELEASE_COMMIT"
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: maven-repo
+
+      - name: Commit maven-repo and bump next version
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add maven-repo/
-          if git diff --cached --quiet; then
-            echo "No changes in maven-repo to commit"
-          else
-            git commit -m "Automated publish of multiplatform artifacts [skip ci]"
-            git push origin HEAD:main
+
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            cp -r maven-repo /tmp/eazycmp-maven-repo
+            git fetch origin main
+            git checkout main
+            git pull origin main
+            mkdir -p maven-repo
+            rsync -a /tmp/eazycmp-maven-repo/ maven-repo/
           fi
+
+          git add maven-repo/
+
+          # Auto-bump version.properties after a tagged release only.
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            CURRENT=$(python3 scripts/version.py current)
+            if [[ "$CURRENT" == "$VERSION" ]]; then
+              python3 scripts/version.py bump
+              git add version.properties
+            fi
+          fi
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            NEXT=$(python3 scripts/version.py current)
+            git commit -m "Publish EazyCmp $VERSION · next $NEXT [skip ci]"
+            git push origin main
+          fi
+
+  deploy-pages:
+    needs: publish
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
