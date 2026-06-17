@@ -1,8 +1,9 @@
 {
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
-  "latest": "1.0.0.1-rc-001",
+  "latest": "1.0.0.1-rc-002",
   "versions": [
+    "1.0.0.1-rc-002",
     "1.0.0.1-rc-001",
     "1.0.0.001-rc-002",
     "1.0.0-rc-001",
@@ -12,6 +13,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-002",
+      "message": "page update",
+      "publishedAt": "2026-06-17T11:17:40+05:30",
+      "commit": "f66513c02023c5e0fb869498128cffc0509bab73"
+    },
     {
       "version": "1.0.0.1-rc-001",
       "message": "Add git push helper script",
@@ -56,5 +63,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-17T04:31:23Z"
+  "updatedAt": "2026-06-17T05:50:48Z",
+  "failures": []
 }
