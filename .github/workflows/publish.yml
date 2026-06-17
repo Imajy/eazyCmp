@@ -2,15 +2,23 @@ name: Publish Multiplatform Artifacts
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master
 
 permissions:
   contents: write
   actions: write
 
+concurrency:
+  group: publish-master
+  cancel-in-progress: false
+
 jobs:
   publish:
+    if: >-
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      !startsWith(github.event.head_commit.message, 'Publish EazyCmp') &&
+      !startsWith(github.event.head_commit.message, 'Sync Pages catalog')
     runs-on: macos-latest
 
     steps:
@@ -22,13 +30,7 @@ jobs:
       - name: Resolve release version
         id: version
         run: |
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            echo "value=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
-            echo "source=tag" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=$(python3 scripts/version.py current)" >> "$GITHUB_OUTPUT"
-            echo "source=version.properties" >> "$GITHUB_OUTPUT"
-          fi
+          echo "value=$(python3 scripts/version.py current)" >> "$GITHUB_OUTPUT"
           python3 scripts/version.py validate
 
       - name: Set up JDK 17
@@ -49,16 +51,15 @@ jobs:
 
       - name: Collect release metadata
         id: meta
-        if: github.ref_type == 'tag'
         run: |
           VERSION="${{ steps.version.outputs.value }}"
           {
             echo "message<<EOF"
-            git log -1 --format=%B "$VERSION" | sed '/^$/d' | head -n 5
+            git log -1 --format=%B | sed '/^$/d' | head -n 5
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          echo "published_at=$(git log -1 --format=%cI "$VERSION")" >> "$GITHUB_OUTPUT"
-          echo "commit=$(git rev-parse "$VERSION^{commit}")" >> "$GITHUB_OUTPUT"
+          echo "published_at=$(git log -1 --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Update version manifest and Pages index
         env:
@@ -76,42 +77,31 @@ jobs:
           chmod +x scripts/sync-pages-root.sh
           ./scripts/sync-pages-root.sh
 
-      - name: Commit maven-repo and bump next version
+      - name: Commit published artifacts and bump next version
         run: |
           VERSION="${{ steps.version.outputs.value }}"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            cp -r maven-repo /tmp/eazycmp-maven-repo
-            git fetch origin main
-            git checkout main
-            git pull origin main
-            mkdir -p maven-repo
-            rsync -a /tmp/eazycmp-maven-repo/ maven-repo/
-          fi
+          python3 scripts/version.py bump
+          NEXT=$(python3 scripts/version.py current)
 
-          git add maven-repo/ index.html versions.json .nojekyll
+          BUILD_INFO="shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt"
+          mkdir -p "$(dirname "$BUILD_INFO")"
+          {
+            echo "package com.aj.shared.internal"
+            echo ""
+            echo "internal object EazyCmpBuildInfo {"
+            echo "    const val VERSION: String = \"$NEXT\""
+            echo "}"
+          } > "$BUILD_INFO"
 
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            CURRENT=$(python3 scripts/version.py current)
-            if [[ "$CURRENT" == "$VERSION" ]]; then
-              python3 scripts/version.py bump
-              git add version.properties shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt
-            fi
-          fi
+          git add maven-repo/ index.html versions.json .nojekyll version.properties \
+            shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            NEXT=$(python3 scripts/version.py current)
-            git commit -m "Publish EazyCmp $VERSION · next $NEXT"
-            git push origin main
+            git commit -m "Publish EazyCmp $VERSION · next $NEXT [skip ci]"
+            git push origin master
           fi
-
-      - name: Trigger GitHub Pages deploy
-        if: github.ref_type == 'tag'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh workflow run deploy-pages.yml --ref main
