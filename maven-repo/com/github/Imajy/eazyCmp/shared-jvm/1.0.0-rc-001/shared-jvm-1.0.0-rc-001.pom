@@ -18,6 +18,18 @@
       <url>https://opensource.org/licenses/MIT</url>
     </license>
   </licenses>
+  <developers>
+    <developer>
+      <id>imajy</id>
+      <name>Imajy</name>
+      <email>ajaykumarjaipur39@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/Imajy/eazyCmp.git</connection>
+    <developerConnection>scm:git:ssh://github.com:Imajy/eazyCmp.git</developerConnection>
+    <url>https://github.com/Imajy/eazyCmp</url>
+  </scm>
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
