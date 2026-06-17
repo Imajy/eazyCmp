@@ -11,6 +11,7 @@ from pathlib import Path
 CHANNELS = ("rc", "alpha", "beta")
 MAX_CHANNEL_BUILD = 100
 DEFAULT_VERSION = "1.0.0.001-rc-001"
+BUILD_INFO_RELATIVE = Path("shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt")
 VERSION_PATTERN = re.compile(
     r"^(?P<base>\d+\.\d+\.\d+\.(?P<build>\d+))-(?P<channel>rc|alpha|beta)-(?P<num>\d{1,3})$"
 )
@@ -76,9 +77,24 @@ def read_version_file(path: Path) -> str:
     return DEFAULT_VERSION
 
 
-def write_version_file(path: Path, version: str) -> None:
+def write_build_info(root: Path, version: str) -> None:
+    path = root / BUILD_INFO_RELATIVE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        f"""package com.aj.shared.internal
+
+internal object EazyCmpBuildInfo {{
+    const val VERSION: String = "{version}"
+}}
+"""
+    )
+
+
+def write_version_file(path: Path, version: str, root: Path | None = None) -> None:
     parse_version(version)
     path.write_text(f"version={version}\n")
+    if root is not None:
+        write_build_info(root, version)
 
 
 def describe_next(value: str) -> str:
@@ -112,15 +128,21 @@ def main() -> None:
     if command == "bump":
         current = read_version_file(version_file)
         nxt = increment_version(current)
-        write_version_file(version_file, nxt)
+        write_version_file(version_file, nxt, root)
         print(nxt)
         return
 
     if command == "set":
         if len(sys.argv) < 3:
             raise SystemExit("Usage: version.py set <version>")
-        write_version_file(version_file, sys.argv[2])
+        write_version_file(version_file, sys.argv[2], root)
         print(sys.argv[2])
+        return
+
+    if command == "sync":
+        current = read_version_file(version_file)
+        write_build_info(root, current)
+        print(current)
         return
 
     if command == "validate":
@@ -129,7 +151,7 @@ def main() -> None:
         return
 
     raise SystemExit(
-        "Usage: version.py [current|next|bump|describe|set <version>|validate]"
+        "Usage: version.py [current|next|bump|describe|set <version>|validate|sync]"
     )
 
 
