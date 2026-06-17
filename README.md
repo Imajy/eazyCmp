@@ -23,7 +23,7 @@
 
 ## Table of Contents
 1. [Installation](#1-installation)
-2. [JitPack Fast Build](#2-jitpack-fast-build)
+2. [Platform Compatibility & Target Configuration](#2-platform-compatibility--target-configuration)
 3. [Setup & Dependency Injection](#3-setup--dependency-injection)
 4. [EazyCmp Facade — All Services](#4-eazycmp-facade--all-services)
 5. [Networking (`api`)](#5-networking-module-api)
@@ -45,65 +45,76 @@
 
 ## 1. Installation
 
-Add the dependency to your shared module's `build.gradle.kts`:
+This library is hosted on a custom GitHub Pages Maven repository. Follow these steps to configure your project.
+
+### Step 1: Add the Maven Repository
+Declare the custom Maven repository URL in your project's `settings.gradle.kts` file under the `dependencyResolutionManagement` section:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        // Custom EazyCmp Repository
+        maven("https://imajy.github.io/eazyCmp/maven-repo/")
+    }
+}
+```
+
+### Step 2: Add the Dependency
+Add the library dependency to your shared module's `build.gradle.kts` (usually under `commonMain` dependencies):
 
 ```kotlin
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("com.github.Imajy:eazyCmp:1.0.03-alpha-11")
+            implementation("com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001") // Replace with the latest version
         }
-    }
-}
-```
-
-Make sure your repository list includes JitPack:
-```kotlin
-dependencyResolutionManagement {
-    repositories {
-        maven("https://jitpack.io")
     }
 }
 ```
 
 ---
 
-## 2. JitPack Fast Build
+## 2. Platform Compatibility & Target Configuration
 
-JitPack builds are optimized to finish in **~3–6 minutes** (was 15–25+ min before).
+### Supported Platforms
+EazyCmp is fully compatible with the following target platforms:
+* **Android** (minSdk 24, compileSdk 36)
+* **JVM / Desktop**
+* **iOS (Apple Silicon / Devices)**: `iosArm64` and `iosSimulatorArm64`
 
-| Optimization | What it does |
-|--------------|--------------|
-| Skip iOS on JitPack Linux VM | iOS native compile removed from CI (biggest speedup) |
-| `-x test -x lint` | Skips tests & lint on publish |
-| `--parallel --build-cache` | Parallel tasks + Gradle cache |
-| `kotlin.native.cacheKind=static` | Faster local/KMP native rebuilds |
+### IMPORTANT: Apple x86_64 (`iosX64`) Simulator Target Not Supported
+Starting from **Compose Multiplatform 1.11.1+** (which this library is built on), support for the Apple x86_64 target architecture (`iosX64`) has been **fully removed** due to deprecation upstream.
 
-### Android / Desktop — use JitPack normally
-```kotlin
-implementation("com.github.Imajy:eazyCmp:1.0.03-alpha-11")
+Because of this, if your consumer application targets `iosX64`, dependency resolution will fail. **To resolve this, you must remove `iosX64()` from your targets in your consumer project's `build.gradle.kts`**:
+
+```diff
+ kotlin {
+     androidTarget()
+     jvm()
+     
+     iosArm64()
+     iosSimulatorArm64()
+-    iosX64() // Remove this line from your consumer project
+ }
 ```
 
-### iOS — JitPack publishes common + metadata; iOS binary builds on your Mac
-Add the same JitPack dependency in `shared/build.gradle.kts`. Xcode builds the iOS target locally when you compile the app — no extra step for most KMP apps.
+*Note: Since Intel Macs are deprecated for modern simulator runs in Compose Multiplatform, using `iosSimulatorArm64` (for Apple Silicon) and `iosArm64` (for physical devices) is the standard target configuration.*
 
-For **full iOS klib from source** (no JitPack), use composite build:
-```kotlin
-// settings.gradle.kts
-includeBuild("../eazyCmp") // local clone
-```
+---
 
-### Trigger a new JitPack build
-```bash
-git tag 1.0.03-alpha-11
-git push origin 1.0.03-alpha-11
-# Build: https://jitpack.io/#Imajy/eazyCmp
-```
+## 3. Development & Local Testing
 
-### Local publish (test before tag)
+### Local Publish (Test before Tag)
+To publish a test version of the library to your machine's local Maven repository (`mavenLocal`):
 ```bash
 ./gradlew :shared:publishToMavenLocal -x test --parallel --build-cache
 ```
+
+Then add `mavenLocal()` to your consumer project's repositories to test the build.
+
+---
 
 ---
 

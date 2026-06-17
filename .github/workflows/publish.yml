@@ -47,7 +47,45 @@ jobs:
           RELEASE_VERSION: ${{ steps.version.outputs.value }}
         run: |
           chmod +x gradlew
-          ./gradlew publishAllPublicationsToMavenRepository --no-daemon
+          ./gradlew publishAllPublicationsToMavenRepository --no-daemon 2>&1 | tee build.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Handle Publish Failure
+        if: failure()
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          COMMIT="${{ github.sha }}"
+          TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          LOG_DIR="maven-repo/logs"
+          mkdir -p "$LOG_DIR"
+          
+          # Clean ANSI escape codes from build log
+          sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" build.log > "$LOG_DIR/build-$VERSION-failed.log" || cp build.log "$LOG_DIR/build-$VERSION-failed.log"
+          
+          # Record build failure
+          python3 scripts/update-version-manifest.py \
+            --manifest maven-repo/versions.json \
+            --version "$VERSION" \
+            --commit "$COMMIT" \
+            --published-at "$TIMESTAMP" \
+            --failed-log "logs/build-$VERSION-failed.log" \
+            --record-failure
+          
+          # Sync Pages catalog to repo root
+          chmod +x scripts/sync-pages-root.sh
+          ./scripts/sync-pages-root.sh
+          
+          # Commit and push build failure info
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add maven-repo/logs/ versions.json maven-repo/versions.json index.html
+          
+          if git diff --cached --quiet; then
+            echo "No failure details to commit"
+          else
+            git commit -m "Record build failure for version $VERSION [skip ci]"
+            git push origin master
+          fi
 
       - name: Collect release metadata
         id: meta

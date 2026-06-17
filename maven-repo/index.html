@@ -571,12 +571,6 @@
         <span class="logo-dot"></span>
         <span class="logo-text">EazyCmp</span>
       </div>
-      <a href="https://github.com/Imajy/eazyCmp" target="_blank" class="github-btn-link">
-        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:text-bottom">
-          <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 2.68.89 0 .7.01 1.35.01 1.58 0 .21-.15.46-.55.38A8.012 8.012 0 0 1 0 8c0-4.42 3.58-8 8-8z"></path>
-        </svg>
-        GitHub Repository
-      </a>
     </div>
   </header>
 
@@ -617,8 +611,9 @@
           <span class="card-subtext">Repository Forks:</span>
           <strong id="forks-count" style="color: var(--accent-purple)">—</strong>
         </div>
-        <div style="margin-top: 0.5rem; text-align: center;">
-          <img src="https://komarev.com/ghpvc/?username=Imajy&amp;repo=eazyCmp&amp;color=06b6d4&amp;style=flat-square&amp;label=Library+Usage" alt="Page Views" style="border-radius: 4px; display: inline-block; vertical-align: middle;" />
+        <div style="margin-top: 0.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <img src="https://img.shields.io/github/dependents-count/Imajy/eazyCmp?color=06b6d4&amp;style=flat-square&amp;label=Dependent+Projects" alt="Dependent Projects" style="border-radius: 4px; display: inline-block; vertical-align: middle;" />
+          <img src="https://komarev.com/ghpvc/?username=Imajy&amp;repo=eazyCmp&amp;color=06b6d4&amp;style=flat-square&amp;label=Dashboard+Views" alt="Dashboard Views" style="border-radius: 4px; display: inline-block; vertical-align: middle;" />
         </div>
       </div>
 
@@ -644,7 +639,12 @@
         Recent Build Failures Log
       </h3>
       <div id="failed-builds-list" class="failed-builds-container">
-        <div style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1rem; width: 100%;">Checking GitHub Actions history...</div>
+
+      <div class="no-failures" style="grid-column: 1 / -1; text-align: center; padding: 2rem; background: rgba(16, 185, 129, 0.02); border: 1px solid rgba(16, 185, 129, 0.08); border-radius: 12px; color: var(--accent-green); font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%;">
+        <span class="no-failures-icon">✓</span>
+        No recent build failures. All deployment runs completed successfully!
+      </div>
+        
       </div>
     </div>
 
@@ -839,58 +839,11 @@
               statusBadge.innerHTML = '<span class="status-indicator success"></span> Running...';
               statusBadge.className = "status-badge success";
             }
-          } else {
-            const statusBadge = document.getElementById("build-status");
-            statusBadge.innerHTML = '<span class="status-indicator success"></span> No runs';
-            statusBadge.className = "status-badge success";
-          }
-
-          // Filter failed runs
-          const failedRuns = publishRuns.filter(run => run.conclusion === "failure");
-          const failuresContainer = document.getElementById("failed-builds-list");
-          
-          if (failedRuns.length > 0) {
-            failuresContainer.innerHTML = failedRuns.map(run => {
-              const failedDate = new Date(run.updated_at);
-              const relativeTime = getRelativeTime(failedDate);
-              const commitMsg = run.head_commit.message.split('\n')[0];
-              
-              return `
-                <div class="failed-run-card">
-                  <div class="failed-run-header">
-                    <span class="failed-version">Build Run #${run.run_number}</span>
-                    <span class="failed-time" title="${failedDate.toString()}">${relativeTime}</span>
-                  </div>
-                  <div class="failed-commit">
-                    ${escapeHtml(commitMsg)}
-                  </div>
-                  <div class="failed-action">
-                    <a href="${run.html_url}" target="_blank" class="btn-error-logs">View Error Logs &rarr;</a>
-                  </div>
-                </div>
-              `;
-            }).join("");
-          } else {
-            failuresContainer.innerHTML = `
-              <div class="no-failures">
-                <span class="no-failures-icon">✓</span>
-                No recent build failures. All deployment runs completed successfully!
-              </div>
-            `;
           }
         }
       } catch (error) {
         console.error("Failed to load dashboard metrics:", error);
       }
-    }
-
-    function escapeHtml(text) {
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
     }
 
     function getRelativeTime(date) {

@@ -191,6 +191,8 @@ def main() -> None:
     parser.add_argument("--published-at", default="", help="ISO-8601 publish time")
     parser.add_argument("--commit", default="", help="Git commit SHA")
     parser.add_argument("--backfill-git", action="store_true", help="Fill missing releases from git tags")
+    parser.add_argument("--record-failure", action="store_true", help="Record this run as a failure")
+    parser.add_argument("--failed-log", default="", help="Path to the failed build log file relative to maven-repo")
     parser.add_argument(
         "--scan-maven-repo",
         action="store_true",
@@ -209,15 +211,32 @@ def main() -> None:
         data = backfill_releases_from_git(data)
 
     if args.version:
-        message = args.message
-        published_at = args.published_at
-        commit = args.commit
-        if not message or not published_at or not commit:
-            git_message, git_time, git_commit = git_tag_metadata(args.version)
-            message = message or git_message
-            published_at = published_at or git_time
-            commit = commit or git_commit
-        data = upsert_release(data, args.version, message, published_at, commit)
+        if args.record_failure:
+            failures = list(data.get("failures") or [])
+            failures = [f for f in failures if f.get("version") != args.version]
+            failures.insert(0, {
+                "version": args.version,
+                "commit": args.commit,
+                "publishedAt": args.published_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "logFile": args.failed_log
+            })
+            data["failures"] = failures[:10]
+            data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        else:
+            # Clean from failures list if successful
+            failures = list(data.get("failures") or [])
+            failures = [f for f in failures if f.get("version") != args.version]
+            data["failures"] = failures
+            
+            message = args.message
+            published_at = args.published_at
+            commit = args.commit
+            if not message or not published_at or not commit:
+                git_message, git_time, git_commit = git_tag_metadata(args.version)
+                message = message or git_message
+                published_at = published_at or git_time
+                commit = commit or git_commit
+            data = upsert_release(data, args.version, message, published_at, commit)
 
     save_manifest(manifest_path, data)
 
