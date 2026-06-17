@@ -12,7 +12,7 @@ from pathlib import Path
 
 GROUP_ID = "com.github.Imajy.eazyCmp"
 ARTIFACT_ID = "shared"
-REPO_URL = "https://imajy.github.io/eazyCmp/"
+MAVEN_REPO_URL = "https://imajy.github.io/eazyCmp/maven-repo/"
 
 
 def load_manifest(path: Path) -> dict:
@@ -23,7 +23,7 @@ def load_manifest(path: Path) -> dict:
             "latest": "",
             "versions": [],
             "releases": [],
-            "repository": REPO_URL,
+            "repository": MAVEN_REPO_URL,
             "updatedAt": "",
         }
     return json.loads(path.read_text())
@@ -58,7 +58,7 @@ def upsert_release(
     if not replaced:
         releases.insert(0, entry)
 
-    releases.sort(key=lambda r: r.get("publishedAt", ""), reverse=True)
+    releases.sort(key=release_sort_key, reverse=True)
 
     versions = [r["version"] for r in releases]
     # Keep any legacy version strings not present in releases.
@@ -71,9 +71,16 @@ def upsert_release(
     data["latest"] = version
     data["groupId"] = GROUP_ID
     data["artifactId"] = ARTIFACT_ID
-    data["repository"] = REPO_URL
+    data["repository"] = MAVEN_REPO_URL
     data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     return data
+
+
+def directory_published_at(version_dir: Path) -> str:
+    if not version_dir.is_dir():
+        return ""
+    ts = version_dir.stat().st_mtime
+    return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def git_tag_metadata(version: str) -> tuple[str, str, str]:
@@ -96,8 +103,60 @@ def git_tag_metadata(version: str) -> tuple[str, str, str]:
         ).strip()
         return message, published_at, commit
     except (subprocess.CalledProcessError, FileNotFoundError):
-        now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        return f"Release EazyCmp {version}", now, ""
+        return f"Release EazyCmp {version}", "", ""
+
+
+def release_sort_key(release: dict) -> tuple[str, str]:
+    published = release.get("publishedAt") or ""
+    return (published, release.get("version", ""))
+
+
+def discover_maven_versions(repo_root: Path) -> list[str]:
+    """Return version dirs published under shared/ (canonical KMP artifact)."""
+    shared_root = repo_root / "com" / "github" / "Imajy" / "eazyCmp" / "shared"
+    if not shared_root.is_dir():
+        return []
+
+    versions: list[str] = []
+    for child in shared_root.iterdir():
+        if child.is_dir() and not child.name.startswith("."):
+            versions.append(child.name)
+    return sorted(versions, reverse=True)
+
+
+def backfill_releases_from_maven(data: dict, repo_root: Path) -> dict:
+    releases: list[dict] = list(data.get("releases") or [])
+    known = {r.get("version") for r in releases}
+
+    for version in discover_maven_versions(repo_root):
+        if version in known:
+            continue
+        message, published_at, commit = git_tag_metadata(version)
+        if not published_at:
+            version_dir = repo_root / "com" / "github" / "Imajy" / "eazyCmp" / "shared" / version
+            published_at = directory_published_at(version_dir)
+        releases.append(
+            {
+                "version": version,
+                "message": message,
+                "publishedAt": published_at,
+                "commit": commit,
+            }
+        )
+
+    releases.sort(key=release_sort_key, reverse=True)
+    data["releases"] = releases
+
+    versions = [r["version"] for r in releases]
+    for legacy in data.get("versions") or []:
+        if legacy not in versions:
+            versions.append(legacy)
+    data["versions"] = versions
+
+    if releases and not data.get("latest"):
+        data["latest"] = releases[0]["version"]
+    data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return data
 
 
 def backfill_releases_from_git(data: dict) -> dict:
@@ -117,7 +176,7 @@ def backfill_releases_from_git(data: dict) -> dict:
             }
         )
 
-    releases.sort(key=lambda r: r.get("publishedAt", ""), reverse=True)
+    releases.sort(key=release_sort_key, reverse=True)
     data["releases"] = releases
     if releases and not data.get("latest"):
         data["latest"] = releases[0]["version"]
@@ -132,10 +191,19 @@ def main() -> None:
     parser.add_argument("--published-at", default="", help="ISO-8601 publish time")
     parser.add_argument("--commit", default="", help="Git commit SHA")
     parser.add_argument("--backfill-git", action="store_true", help="Fill missing releases from git tags")
+    parser.add_argument(
+        "--scan-maven-repo",
+        action="store_true",
+        help="Add releases for every version directory in maven-repo/shared",
+    )
     args = parser.parse_args()
 
     manifest_path = Path(args.manifest)
     data = load_manifest(manifest_path)
+    repo_root = manifest_path.parent
+
+    if args.scan_maven_repo:
+        data = backfill_releases_from_maven(data, repo_root)
 
     if args.backfill_git:
         data = backfill_releases_from_git(data)
@@ -153,7 +221,7 @@ def main() -> None:
 
     save_manifest(manifest_path, data)
 
-    if args.version or args.backfill_git:
+    if args.version or args.backfill_git or args.scan_maven_repo:
         root = Path(__file__).resolve().parents[1]
         subprocess.check_call(
             [sys.executable, str(root / "scripts/generate-maven-pages.py"), str(manifest_path.parent)]

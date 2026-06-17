@@ -11,7 +11,8 @@ from pathlib import Path
 
 GROUP_ID = "com.github.Imajy.eazyCmp"
 ARTIFACT_ID = "shared"
-REPO_URL = "https://imajy.github.io/eazyCmp/"
+SITE_URL = "https://imajy.github.io/eazyCmp/"
+MAVEN_REPO_URL = "https://imajy.github.io/eazyCmp/maven-repo/"
 GITHUB_REPO = "https://github.com/Imajy/eazyCmp"
 
 
@@ -28,19 +29,25 @@ def format_when(iso_value: str) -> str:
 
 def load_releases(data: dict) -> list[dict]:
     releases = list(data.get("releases") or [])
-    if releases:
-        releases.sort(key=lambda r: r.get("publishedAt", ""), reverse=True)
-        return releases
+    if not releases:
+        return [
+            {
+                "version": version,
+                "message": f"Release EazyCmp {version}",
+                "publishedAt": "",
+                "commit": "",
+            }
+            for version in data.get("versions") or []
+        ]
 
-    return [
-        {
-            "version": version,
-            "message": f"Release EazyCmp {version}",
-            "publishedAt": "",
-            "commit": "",
-        }
-        for version in data.get("versions") or []
-    ]
+    latest = data.get("latest") or ""
+    releases.sort(key=lambda r: r.get("publishedAt", ""), reverse=True)
+    if latest:
+        for index, release in enumerate(releases):
+            if release.get("version") == latest:
+                releases.insert(0, releases.pop(index))
+                break
+    return releases
 
 
 def commit_link(sha: str) -> str:
@@ -89,6 +96,7 @@ def main() -> None:
     latest = data.get("latest") or (releases[0]["version"] if releases else "")
     updated_at = format_when(data.get("updatedAt", ""))
     version_rows = render_rows(releases, latest)
+    setup_snippet = f'implementation("{GROUP_ID}:{ARTIFACT_ID}:{latest or "VERSION"}")'
 
     index_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -127,7 +135,7 @@ def main() -> None:
 </head>
 <body>
   <h1>EazyCmp</h1>
-  <p class="muted">Kotlin Multiplatform Maven repo — Android, iOS &amp; JVM. Pick any published version below.</p>
+  <p class="muted">Kotlin Multiplatform Maven repo — Android, iOS &amp; JVM. Use the latest below, or pin any older version from the table.</p>
 
   <div class="hero">
     <div class="latest-label">Latest version</div>
@@ -140,15 +148,16 @@ def main() -> None:
     repositories {{
         google()
         mavenCentral()
-        maven {{ url = uri("{REPO_URL}") }}
+        maven {{ url = uri("{MAVEN_REPO_URL}") }}
     }}
 }}
 
 commonMain.dependencies {{
-    implementation("{GROUP_ID}:{ARTIFACT_ID}:{latest or "VERSION"})
+    {setup_snippet}
 }}</pre>
 
-  <h2>All published versions</h2>
+  <h2>Version history</h2>
+  <p class="muted">Every row stays on the Maven repo — consumers can keep an older dependency line while others upgrade.</p>
   <table>
     <thead>
       <tr>

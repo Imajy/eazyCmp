@@ -7,12 +7,7 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  actions: write
 
 jobs:
   publish:
@@ -78,11 +73,8 @@ jobs:
             --message "$RELEASE_MESSAGE" \
             --published-at "$PUBLISHED_AT" \
             --commit "$RELEASE_COMMIT"
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: maven-repo
+          chmod +x scripts/sync-pages-root.sh
+          ./scripts/sync-pages-root.sh
 
       - name: Commit maven-repo and bump next version
         run: |
@@ -99,14 +91,13 @@ jobs:
             rsync -a /tmp/eazycmp-maven-repo/ maven-repo/
           fi
 
-          git add maven-repo/
+          git add maven-repo/ index.html versions.json .nojekyll
 
-          # Auto-bump version.properties after a tagged release only.
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
             CURRENT=$(python3 scripts/version.py current)
             if [[ "$CURRENT" == "$VERSION" ]]; then
               python3 scripts/version.py bump
-              git add version.properties
+              git add version.properties shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt
             fi
           fi
 
@@ -114,17 +105,13 @@ jobs:
             echo "No changes to commit"
           else
             NEXT=$(python3 scripts/version.py current)
-            git commit -m "Publish EazyCmp $VERSION · next $NEXT [skip ci]"
+            git commit -m "Publish EazyCmp $VERSION · next $NEXT"
             git push origin main
           fi
 
-  deploy-pages:
-    needs: publish
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Trigger GitHub Pages deploy
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run deploy-pages.yml --ref main
