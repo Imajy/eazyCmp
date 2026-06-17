@@ -1,8 +1,10 @@
 {
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
-  "latest": "1.0.0.001-rc-001",
+  "latest": "1.0.0.1-rc-001",
   "versions": [
+    "1.0.0.1-rc-001",
+    "1.0.0.001-rc-002",
     "1.0.0-rc-001",
     "1.0.0.001-rc-001",
     "1.0.04-alpha-078",
@@ -10,6 +12,18 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-001",
+      "message": "Add git push helper script",
+      "publishedAt": "2026-06-17T09:57:37+05:30",
+      "commit": "5ddf78f80092af765868f502d69fc1ef4acd7b2f"
+    },
+    {
+      "version": "1.0.0.001-rc-002",
+      "message": "Release EazyCmp 1.0.0.001-rc-002",
+      "publishedAt": "2026-06-17T04:29:53Z",
+      "commit": ""
+    },
     {
       "version": "1.0.0-rc-001",
       "message": "Release EazyCmp 1.0.0-rc-001",
@@ -42,5 +56,5 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-17T04:23:21Z"
+  "updatedAt": "2026-06-17T04:31:23Z"
 }
