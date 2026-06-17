@@ -33,7 +33,7 @@ fun readEazyCmpVersion(): String {
             ?.takeIf { it.isNotEmpty() }
             ?.let { return it }
     }
-    return "1.0.0.001-rc-001"
+    return "1.0.0.1-rc-001"
 }
 
 version = readEazyCmpVersion()

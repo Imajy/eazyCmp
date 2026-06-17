@@ -1,9 +1,8 @@
 {
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
-  "latest": "1.0.0.001-rc-002",
+  "latest": "1.0.0.001-rc-001",
   "versions": [
-    "1.0.0.001-rc-002",
     "1.0.0-rc-001",
     "1.0.0.001-rc-001",
     "1.0.04-alpha-078",
@@ -11,12 +10,6 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
-    {
-      "version": "1.0.0.001-rc-002",
-      "message": "Merge origin/master into master and resolve publish conflicts.\nKeep master-push auto-publish workflow, restore rc-001 Maven artifacts\nfrom remote, and rebuild version history catalog from maven-repo.\nCo-authored-by: Cursor <cursoragent@cursor.com>",
-      "publishedAt": "2026-06-17T09:40:50+05:30",
-      "commit": "9e57c024920571692249d6d1c30e6cdfae8382e9"
-    },
     {
       "version": "1.0.0-rc-001",
       "message": "Release EazyCmp 1.0.0-rc-001",
@@ -49,5 +42,5 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-17T04:15:49Z"
+  "updatedAt": "2026-06-17T04:23:21Z"
 }

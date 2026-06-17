@@ -3,121 +3,889 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>EazyCmp Maven Repository</title>
+  <title>EazyCmp Maven Repository &amp; Release Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <style>
-    :root { font-family: system-ui, sans-serif; color: #111; background: #f6f8fa; }
-    body { max-width: 1080px; margin: 2rem auto; padding: 0 1rem 3rem; }
-    h1 { margin-bottom: .25rem; }
-    .hero {
-      background: #fff; border: 1px solid #d0d7de; border-radius: 12px;
-      padding: 1.25rem 1.5rem; margin: 1.25rem 0 1.75rem;
+    :root {
+      --bg-primary: #030712;
+      --bg-secondary: #0b1528;
+      --bg-card: rgba(15, 23, 42, 0.65);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(6, 182, 212, 0.15);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-orange: #f97316;
+      --font-sans: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
     }
-    .hero .latest-label { font-size: .85rem; color: #57606a; text-transform: uppercase; letter-spacing: .04em; }
-    .hero .latest-value { font-size: 1.75rem; font-weight: 700; margin: .25rem 0 .5rem; }
-    .muted { color: #57606a; }
-    pre, code { background: #fff; border: 1px solid #d0d7de; border-radius: 6px; }
-    pre { padding: 1rem; overflow-x: auto; }
-    pre.snippet { margin: 0; padding: .5rem .75rem; font-size: .85rem; white-space: pre-wrap; word-break: break-word; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
-    th, td { padding: .85rem 1rem; border-bottom: 1px solid #eaeef2; vertical-align: top; }
-    th { text-align: left; background: #f6f8fa; font-size: .92rem; }
-    tr:last-child td { border-bottom: none; }
-    tr.latest-row { background: #f6ffed; }
-    td.message { max-width: 320px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
-    td.when { min-width: 170px; font-size: .92rem; }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      background-color: var(--bg-primary);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    header {
+      background: rgba(3, 7, 18, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-dot {
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent-cyan);
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #9ca3af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .github-btn-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .github-btn-link:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    .hero-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.03em;
+      background: linear-gradient(to right, #ffffff, #a855f7, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-glow);
+      box-shadow: 0 15px 35px -8px rgba(6, 182, 212, 0.15);
+    }
+
+    .card-latest::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+    .card-stats::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); }
+    .card-metrics::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); }
+    .card-build::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+
+    .card-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-sans);
+    }
+
+    .card-subtext {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .status-badge.loading { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); }
+    .status-badge.success { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+    .status-badge.failure { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
+    .status-badge.warning { background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-indicator.success { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); animation: pulse 2s infinite; }
+    .status-indicator.failure { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
+    .status-indicator.warning { background: var(--accent-orange); box-shadow: 0 0 8px var(--accent-orange); }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .metric-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 3rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-title-icon {
+      width: 8px;
+      height: 18px;
+      background: var(--accent-cyan);
+      border-radius: 4px;
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    @media(max-width: 768px) {
+      .setup-grid { grid-template-columns: 1fr; }
+    }
+
+    .setup-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      position: relative;
+    }
+
+    .setup-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .setup-title {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+    }
+
+    .code-copy-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      width: 100%;
+    }
+
+    .snippet-code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      flex-grow: 1;
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .failures-dashboard {
+      background: rgba(239, 68, 68, 0.02);
+      border: 1px dashed rgba(239, 68, 68, 0.15);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .failures-title {
+      color: var(--accent-red);
+      font-weight: 700;
+      margin: 0 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+    }
+
+    .failed-builds-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    .failed-run-card {
+      background: rgba(239, 68, 68, 0.04);
+      border: 1px solid rgba(239, 68, 68, 0.12);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .failed-run-card:hover {
+      background: rgba(239, 68, 68, 0.07);
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .failed-run-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .failed-version {
+      font-weight: 600;
+      color: var(--accent-red);
+    }
+
+    .failed-commit {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .failed-action {
+      text-align: right;
+    }
+
+    .btn-error-logs {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn-error-logs:hover {
+      text-decoration: underline;
+    }
+
+    .no-failures {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(16, 185, 129, 0.02);
+      border: 1px solid rgba(16, 185, 129, 0.08);
+      border-radius: 12px;
+      color: var(--accent-green);
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .no-failures-icon {
+      font-size: 1.5rem;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    th {
+      background: rgba(3, 7, 18, 0.4);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr.latest-row {
+      background: rgba(16, 185, 129, 0.03);
+    }
+
+    tr.latest-row:hover {
+      background: rgba(16, 185, 129, 0.06);
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .version-cell {
+      font-weight: 700;
+    }
+
     .badge {
-      display: inline-block; margin-left: .35rem; padding: .1rem .45rem;
-      border-radius: 999px; background: #1a7f37; color: #fff; font-size: .72rem; font-weight: 600;
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
-    a { color: #0969da; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    td.message {
+      max-width: 380px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+
+    td.when {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      min-width: 180px;
+    }
+
+    .muted {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    .commit-link {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+
+    .commit-link:hover {
+      text-decoration: underline;
+    }
+
+    .code-cell {
+      min-width: 320px;
+    }
+
+    .no-data {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 3rem;
+    }
+
+    footer {
+      margin-top: 5rem;
+      border-top: 1px solid var(--border-color);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h1>EazyCmp</h1>
-  <p class="muted">Kotlin Multiplatform Maven repo — Android, iOS &amp; JVM. Use the latest below, or pin any older version from the table.</p>
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <span class="logo-dot"></span>
+        <span class="logo-text">EazyCmp</span>
+      </div>
+      <a href="https://github.com/Imajy/eazyCmp" target="_blank" class="github-btn-link">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:text-bottom">
+          <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 2.68.89 0 .7.01 1.35.01 1.58 0 .21-.15.46-.55.38A8.012 8.012 0 0 1 0 8c0-4.42 3.58-8 8-8z"></path>
+        </svg>
+        GitHub Repository
+      </a>
+    </div>
+  </header>
 
-  <div class="hero">
-    <div class="latest-label">Latest version</div>
-    <div class="latest-value"><code>1.0.0.001-rc-002</code></div>
-    <div class="muted">Catalog last updated: 17 Jun 2026, 04:15 UTC · 6 release(s)</div>
-  </div>
+  <main>
+    <section class="hero-section">
+      <h1 class="hero-title">Release Dashboard</h1>
+      <p class="hero-desc">Kotlin Multiplatform (KMP) toolkit for Android, iOS &amp; JVM. Hosted live on GitHub Pages.</p>
+    </section>
 
-  <h2>Setup (consumer project)</h2>
-  <pre>dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://imajy.github.io/eazyCmp/maven-repo/") }
-    }
-}
+    <section class="dashboard-grid">
+      <!-- Card 1: Latest Version -->
+      <div class="card card-latest">
+        <div class="card-label">
+          <span>Latest Release</span>
+          <span class="status-badge success" style="padding: 0.1rem 0.5rem; font-size: 0.7rem;">
+            <span class="status-indicator success"></span> LIVE
+          </span>
+        </div>
+        <div class="card-value" style="font-family: var(--font-mono); font-size: 1.6rem;">1.0.0.001-rc-001</div>
+        <div class="card-subtext">Published: 17 Jun 2026, 04:23 UTC</div>
+      </div>
 
-commonMain.dependencies {
-    implementation("com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-002")
-}</pre>
+      <!-- Card 2: Release Statistics -->
+      <div class="card card-stats">
+        <div class="card-label">Update Frequency</div>
+        <div class="card-value">Every 1.3 days</div>
+        <div class="card-subtext">Total cataloged releases: 5</div>
+      </div>
 
-  <h2>Version history</h2>
-  <p class="muted">Every row stays on the Maven repo — consumers can keep an older dependency line while others upgrade.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Version</th>
-        <th>Release message</th>
-        <th>Published</th>
-        <th>Gradle dependency</th>
-      </tr>
-    </thead>
-    <tbody>
+      <!-- Card 3: Usage Metrics -->
+      <div class="card card-metrics">
+        <div class="card-label">Usage Metrics</div>
+        <div class="metric-item">
+          <span class="card-subtext">GitHub Stars:</span>
+          <strong id="stars-count" style="color: var(--accent-cyan)">—</strong>
+        </div>
+        <div class="metric-item">
+          <span class="card-subtext">Repository Forks:</span>
+          <strong id="forks-count" style="color: var(--accent-purple)">—</strong>
+        </div>
+        <div style="margin-top: 0.5rem; text-align: center;">
+          <img src="https://komarev.com/ghpvc/?username=Imajy&amp;repo=eazyCmp&amp;color=06b6d4&amp;style=flat-square&amp;label=Library+Usage" alt="Page Views" style="border-radius: 4px; display: inline-block; vertical-align: middle;" />
+        </div>
+      </div>
+
+      <!-- Card 4: Build Status -->
+      <div class="card card-build">
+        <div class="card-label">Latest Build Status</div>
+        <div class="card-value" style="font-size: 1.4rem;">
+          <span id="build-status" class="status-badge loading">
+            <span class="status-indicator warning"></span> Checking...
+          </span>
+        </div>
+        <div class="card-subtext" id="build-commit-sub">—</div>
+      </div>
+    </section>
+
+    <!-- Failures Dashboard section -->
+    <div class="failures-dashboard">
+      <h3 class="failures-title">
+        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:middle;color:var(--accent-red)">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+          <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0L7.1 4.995z"></path>
+        </svg>
+        Recent Build Failures Log
+      </h3>
+      <div id="failed-builds-list" class="failed-builds-container">
+        <div style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1rem; width: 100%;">Checking GitHub Actions history...</div>
+      </div>
+    </div>
+
+    <!-- Quick Integration -->
+    <h2 class="section-title"><span class="section-title-icon"></span>Gradle Integration</h2>
+    <div class="setup-grid">
+      <!-- Box 1: Repo -->
+      <div class="setup-box">
+        <div class="setup-box-header">
+          <span class="setup-title">1. Add Repository URL</span>
+          <button class="btn-copy" onclick="copyCode('code-repo')" data-copy-id="code-repo">Copy</button>
+        </div>
+        <pre><code id="code-repo">maven { url = uri(&quot;https://imajy.github.io/eazyCmp/maven-repo/&quot;) }</code></pre>
+      </div>
+
+      <!-- Box 2: Dependency -->
+      <div class="setup-box">
+        <div class="setup-box-header">
+          <span class="setup-title">2. Declare Dependency</span>
+          <button class="btn-copy" onclick="copyCode('code-dep')" data-copy-id="code-dep">Copy</button>
+        </div>
+        <pre><code id="code-dep">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001&quot;)</code></pre>
+      </div>
+    </div>
+
+    <!-- Version History -->
+    <h2 class="section-title"><span class="section-title-icon"></span>Version History</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Release Message</th>
+            <th>Published</th>
+            <th>Dependency Line</th>
+          </tr>
+        </thead>
+        <tbody>
+
         <tr class="latest-row">
-          <td><code>1.0.0.001-rc-002</code> <span class="badge">latest</span></td>
-          <td class="message">Merge origin/master into master and resolve publish conflicts.
-Keep master-push auto-publish workflow, restore rc-001 Maven artifacts
-from remote, and rebuild version history catalog from maven-repo.
-Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;</td>
-          <td class="when">17 Jun 2026, 09:40 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/9e57c024920571692249d6d1c30e6cdfae8382e9" title="9e57c024920571692249d6d1c30e6cdfae8382e9">9e57c02</a></span></td>
-          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-002&quot;)</pre></td>
+          <td class="version-cell"><code>1.0.0.001-rc-001</code> <span class="badge badge-success">latest</span></td>
+          <td class="message">First release — Android iOS JVM UI kit</td>
+          <td class="when">16 Jun 2026, 12:00 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/aeda5b8" title="aeda5b8" target="_blank" class="commit-link">aeda5b8</a></span></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.0.001-rc-001">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.0.001-rc-001')" data-copy-id="dep-1.0.0.001-rc-001">Copy</button>
+            </div>
+          </td>
         </tr>
 
         <tr>
-          <td><code>1.0.0-rc-001</code></td>
+          <td class="version-cell"><code>1.0.0-rc-001</code></td>
           <td class="message">Release EazyCmp 1.0.0-rc-001</td>
           <td class="when">17 Jun 2026, 02:00 UTC<br/><span class="muted">—</span></td>
-          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0-rc-001&quot;)</pre></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.0-rc-001">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0-rc-001&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.0-rc-001')" data-copy-id="dep-1.0.0-rc-001">Copy</button>
+            </div>
+          </td>
         </tr>
 
         <tr>
-          <td><code>1.0.0.001-rc-001</code></td>
-          <td class="message">First release — Android iOS JVM UI kit</td>
-          <td class="when">16 Jun 2026, 12:00 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/aeda5b8" title="aeda5b8">aeda5b8</a></span></td>
-          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001&quot;)</pre></td>
-        </tr>
-
-        <tr>
-          <td><code>1.0.04-alpha-078</code></td>
+          <td class="version-cell"><code>1.0.04-alpha-078</code></td>
           <td class="message">Release EazyCmp 1.0.04-alpha-078</td>
           <td class="when">12 Jun 2026, 03:43 UTC<br/><span class="muted">—</span></td>
-          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.04-alpha-078&quot;)</pre></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.04-alpha-078">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.04-alpha-078&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.04-alpha-078')" data-copy-id="dep-1.0.04-alpha-078">Copy</button>
+            </div>
+          </td>
         </tr>
 
         <tr>
-          <td><code>1.0.04-alpha-076</code></td>
+          <td class="version-cell"><code>1.0.04-alpha-076</code></td>
           <td class="message">Release version 1.0.04-alpha-076: Bump version and align build settings</td>
-          <td class="when">11 Jun 2026, 23:37 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/cf44cd06e08d704d46d3bfa7aa52496109465fb8" title="cf44cd06e08d704d46d3bfa7aa52496109465fb8">cf44cd0</a></span></td>
-          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.04-alpha-076&quot;)</pre></td>
+          <td class="when">11 Jun 2026, 23:37 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/cf44cd06e08d704d46d3bfa7aa52496109465fb8" title="cf44cd06e08d704d46d3bfa7aa52496109465fb8" target="_blank" class="commit-link">cf44cd0</a></span></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.04-alpha-076">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.04-alpha-076&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.04-alpha-076')" data-copy-id="dep-1.0.04-alpha-076">Copy</button>
+            </div>
+          </td>
         </tr>
 
         <tr>
-          <td><code>1.0.04-alpha-077</code></td>
+          <td class="version-cell"><code>1.0.04-alpha-077</code></td>
           <td class="message">Release EazyCmp 1.0.04-alpha-077</td>
           <td class="when">11 Jun 2026, 19:21 UTC<br/><span class="muted">—</span></td>
-          <td><pre class="snippet">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.04-alpha-077&quot;)</pre></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.04-alpha-077">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.04-alpha-077&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.04-alpha-077')" data-copy-id="dep-1.0.04-alpha-077">Copy</button>
+            </div>
+          </td>
         </tr>
-    </tbody>
-  </table>
+        </tbody>
+      </table>
+    </div>
+  </main>
 
-  <p class="muted" style="margin-top:1.5rem">
-    Manifest: <a href="versions.json">versions.json</a> ·
-    Source: <a href="https://github.com/Imajy/eazyCmp">GitHub</a>
-  </p>
+  <footer>
+    <p>&copy; 2026 EazyCmp. Hosted via GitHub Pages. Manifest: <a href="versions.json" target="_blank">versions.json</a></p>
+  </footer>
+
+  <script>
+    function copyCode(id) {
+      const code = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector(`[data-copy-id="${id}"]`);
+        const originalText = btn.innerText;
+        btn.innerText = "Copied!";
+        btn.style.background = "var(--accent-green)";
+        btn.style.borderColor = "var(--accent-green)";
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.background = "";
+          btn.style.borderColor = "";
+        }, 1500);
+      });
+    }
+
+    async function fetchGithubStats() {
+      const repo = "Imajy/eazyCmp";
+      try {
+        // 1. Fetch Repository Details
+        const repoRes = await fetch(`https://api.github.com/repos/${repo}`);
+        if (repoRes.ok) {
+          const repoData = await repoRes.json();
+          document.getElementById("stars-count").innerText = repoData.stargazers_count.toLocaleString();
+          document.getElementById("forks-count").innerText = repoData.forks_count.toLocaleString();
+        }
+
+        // 2. Fetch Actions runs for Build Status and Failures
+        const runsRes = await fetch(`https://api.github.com/repos/${repo}/actions/runs?per_page=20`);
+        if (runsRes.ok) {
+          const runsData = await runsRes.json();
+          const runs = runsData.workflow_runs || [];
+          
+          // Filter runs for the publish workflow named "Publish Multiplatform Artifacts"
+          const publishRuns = runs.filter(run => 
+            run.name === "Publish Multiplatform Artifacts" || 
+            run.path.includes("publish.yml")
+          );
+
+          // Render Latest Status
+          if (publishRuns.length > 0) {
+            const latestRun = publishRuns[0];
+            const statusBadge = document.getElementById("build-status");
+            const commitSub = document.getElementById("build-commit-sub");
+            
+            commitSub.innerText = `Run #${latestRun.run_number} (Commit: ${latestRun.head_commit.message.split('\n')[0].substring(0, 30)}...)`;
+            
+            if (latestRun.status === "completed" || latestRun.status === "success" || latestRun.status === "failure") {
+              if (latestRun.conclusion === "success") {
+                statusBadge.innerHTML = '<span class="status-indicator success"></span> Passing';
+                statusBadge.className = "status-badge success";
+              } else if (latestRun.conclusion === "failure") {
+                statusBadge.innerHTML = '<span class="status-indicator failure"></span> Failing';
+                statusBadge.className = "status-badge failure";
+              } else {
+                statusBadge.innerHTML = `<span class="status-indicator warning"></span> ${latestRun.conclusion || latestRun.status}`;
+                statusBadge.className = "status-badge warning";
+              }
+            } else {
+              statusBadge.innerHTML = '<span class="status-indicator success"></span> Running...';
+              statusBadge.className = "status-badge success";
+            }
+          } else {
+            const statusBadge = document.getElementById("build-status");
+            statusBadge.innerHTML = '<span class="status-indicator success"></span> No runs';
+            statusBadge.className = "status-badge success";
+          }
+
+          // Filter failed runs
+          const failedRuns = publishRuns.filter(run => run.conclusion === "failure");
+          const failuresContainer = document.getElementById("failed-builds-list");
+          
+          if (failedRuns.length > 0) {
+            failuresContainer.innerHTML = failedRuns.map(run => {
+              const failedDate = new Date(run.updated_at);
+              const relativeTime = getRelativeTime(failedDate);
+              const commitMsg = run.head_commit.message.split('\n')[0];
+              
+              return `
+                <div class="failed-run-card">
+                  <div class="failed-run-header">
+                    <span class="failed-version">Build Run #${run.run_number}</span>
+                    <span class="failed-time" title="${failedDate.toString()}">${relativeTime}</span>
+                  </div>
+                  <div class="failed-commit">
+                    ${escapeHtml(commitMsg)}
+                  </div>
+                  <div class="failed-action">
+                    <a href="${run.html_url}" target="_blank" class="btn-error-logs">View Error Logs &rarr;</a>
+                  </div>
+                </div>
+              `;
+            }).join("");
+          } else {
+            failuresContainer.innerHTML = `
+              <div class="no-failures">
+                <span class="no-failures-icon">✓</span>
+                No recent build failures. All deployment runs completed successfully!
+              </div>
+            `;
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load dashboard metrics:", error);
+      }
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function getRelativeTime(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      let interval = Math.floor(seconds / 31536000);
+      if (interval >= 1) return interval + " years ago";
+      interval = Math.floor(seconds / 2592000);
+      if (interval >= 1) return interval + " months ago";
+      interval = Math.floor(seconds / 86400);
+      if (interval >= 1) return interval + " days ago";
+      interval = Math.floor(seconds / 3600);
+      if (interval >= 1) return interval + " hours ago";
+      interval = Math.floor(seconds / 60);
+      if (interval >= 1) return interval + " minutes ago";
+      return "just now";
+    }
+
+    // Load metrics on page load
+    window.addEventListener("DOMContentLoaded", fetchGithubStats);
+  </script>
 </body>
 </html>

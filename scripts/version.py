@@ -8,12 +8,12 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-CHANNELS = ("rc", "alpha", "beta")
+CHANNELS = ("rc", "beta")
 MAX_CHANNEL_BUILD = 100
-DEFAULT_VERSION = "1.0.0.001-rc-001"
+DEFAULT_VERSION = "1.0.0.1-rc-001"
 BUILD_INFO_RELATIVE = Path("shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt")
 VERSION_PATTERN = re.compile(
-    r"^(?P<base>\d+\.\d+\.\d+\.(?P<build>\d+))-(?P<channel>rc|alpha|beta)-(?P<num>\d{1,3})$"
+    r"^(?P<base>\d+\.\d+\.\d+\.(?P<build>\d+))-(?P<channel>rc|beta)-(?P<num>\d{1,3})$"
 )
 
 
@@ -33,7 +33,7 @@ def parse_version(value: str) -> ParsedVersion:
     match = VERSION_PATTERN.match(value.strip())
     if not match:
         raise ValueError(
-            f"Invalid version '{value}'. Expected format like 1.0.0.001-rc-001"
+            f"Invalid version '{value}'. Expected format like 1.0.0.0-rc-001"
         )
     channel = match.group("channel")
     number = int(match.group("num"))
@@ -60,7 +60,7 @@ def increment_version(value: str) -> str:
 
     next_build = current.build + 1
     base_parts = current.base.rsplit(".", 1)
-    next_base = f"{base_parts[0]}.{next_build:03d}"
+    next_base = f"{base_parts[0]}.{next_build}"
     return f"{next_base}-rc-001"
 
 
