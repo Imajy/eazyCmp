@@ -146,14 +146,8 @@ fun <T> CommonDropDown(
                 val prefixBudget = (widthPx - badgeWidth).coerceAtLeast(0f)
                 val joinedPrefix = labels.take(visibleCount).joinToString(", ")
 
-                val displayPrefix = if (measureTextWidth(joinedPrefix) <= prefixBudget) {
-                    joinedPrefix
-                } else {
-                    truncateWithEllipsis(joinedPrefix, prefixBudget)
-                }
-
-                if (displayPrefix.isNotEmpty() && displayPrefix != "...") {
-                    return MultiSelectDisplay(displayPrefix, badge)
+                if (measureTextWidth(joinedPrefix) <= prefixBudget) {
+                    return MultiSelectDisplay(joinedPrefix, badge)
                 }
             }
 
