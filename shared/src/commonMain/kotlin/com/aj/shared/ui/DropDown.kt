@@ -309,9 +309,6 @@ fun <T> CommonDropDown(
 
             if (showDialog) {
                 val hasSearch = showSearch || showSearchForcefully
-                val useCompactDialog = compactDialogBelowItemCount > 0 &&
-                    !hasSearch &&
-                    items.size < compactDialogBelowItemCount
                 val dialogScrollState = rememberScrollState()
                 Dialog(
                     onDismissRequest = {
@@ -339,10 +336,10 @@ fun <T> CommonDropDown(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f)
                                 .then(
-                                    if (useCompactDialog) {
-                                        Modifier.wrapContentHeight()
-                                    } else {
+                                    if (hasSearch) {
                                         Modifier.heightIn(min = 250.dp, max = 600.dp)
+                                    } else {
+                                        Modifier.heightIn(max = 600.dp)
                                     }
                                 )
                                 .background(whiteColor, RoundedCornerShape(12.dp))
@@ -352,10 +349,10 @@ fun <T> CommonDropDown(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .then(
-                                        if (useCompactDialog) {
-                                            Modifier.wrapContentHeight()
-                                        } else {
+                                        if (hasSearch) {
                                             Modifier.fillMaxHeight()
+                                        } else {
+                                            Modifier.wrapContentHeight()
                                         }
                                     )
                                     .padding(16.dp)
@@ -389,22 +386,24 @@ fun <T> CommonDropDown(
                                 Spacer(Modifier.height(8.dp))
 
                                 Box(
-                                    modifier = if (useCompactDialog) {
-                                        Modifier.fillMaxWidth()
-                                    } else {
+                                    modifier = if (hasSearch) {
                                         Modifier
                                             .weight(1f)
+                                            .fillMaxWidth()
+                                    } else {
+                                        Modifier
+                                            .weight(1f, fill = false)
                                             .fillMaxWidth()
                                     }
                                 ) {
                                     Column(
-                                        modifier = if (useCompactDialog) {
+                                        modifier = if (hasSearch) {
                                             Modifier
-                                                .fillMaxWidth()
+                                                .fillMaxSize()
                                                 .verticalScroll(dialogScrollState)
                                         } else {
                                             Modifier
-                                                .fillMaxSize()
+                                                .fillMaxWidth()
                                                 .verticalScroll(dialogScrollState)
                                         }
                                     ) {
