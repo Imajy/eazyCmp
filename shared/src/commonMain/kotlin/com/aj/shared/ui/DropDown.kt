@@ -311,7 +311,7 @@ fun <T> CommonDropDown(
                 val hasSearch = showSearch || showSearchForcefully
                 val useCompactDialog = compactDialogBelowItemCount > 0 &&
                     !hasSearch &&
-                    filteredItems.size < compactDialogBelowItemCount
+                    items.size < compactDialogBelowItemCount
                 val dialogScrollState = rememberScrollState()
                 Dialog(
                     onDismissRequest = {
