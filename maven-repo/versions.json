@@ -1,8 +1,9 @@
 {
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
-  "latest": "1.0.0.1-rc-003",
+  "latest": "1.0.0.1-rc-004",
   "versions": [
+    "1.0.0.1-rc-004",
     "1.0.0.1-rc-003",
     "1.0.0.1-rc-002",
     "1.0.0.1-rc-001",
@@ -14,6 +15,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-004",
+      "message": "DropDown multiselect issue resolved",
+      "publishedAt": "2026-06-19T15:20:55+05:30",
+      "commit": "229aa7424d7d9efb48572264951095f95400b46a"
+    },
     {
       "version": "1.0.0.1-rc-003",
       "message": "DropDown multiselect issue resolved",
@@ -70,6 +77,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-19T07:38:29Z",
+  "updatedAt": "2026-06-19T09:52:58Z",
   "failures": []
 }
