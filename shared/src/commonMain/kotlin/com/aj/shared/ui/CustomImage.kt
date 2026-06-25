@@ -19,12 +19,9 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import coil3.size.Scale
-import coil3.svg.SvgDecoder
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
@@ -39,9 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.ui.unit.sp
 import com.aj.shared.EazyCmp
-import com.aj.shared.getCacheDir
-import coil3.disk.DiskCache
-import okio.Path.Companion.toPath
+import coil3.svg.SvgDecoder
 
 
 
@@ -128,20 +123,7 @@ fun CustomImage(
 
     val context = LocalPlatformContext.current
 
-    val imageLoader = remember {
-        ImageLoader.Builder(context)
-            .components {
-                add(KtorNetworkFetcherFactory())
-                add(SvgDecoder.Factory())
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(getCacheDir().toPath())
-                    .maxSizeBytes(50L * 1024L * 1024L) // 50MB
-                    .build()
-            }
-            .build()
-    }
+    val imageLoader = EazyCmpImageLoader.remember(context)
 
     val showPlaceholder: @Composable () -> Unit = {
 
@@ -245,16 +227,7 @@ fun CustomImage(
 
             if (isUrl) {
                 SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(cleanPath)
-                        .decoderFactory(SvgDecoder.Factory())
-                        .memoryCacheKey(cleanPath)
-                        .diskCacheKey(cleanPath)
-                        .crossfade(true)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .scale(Scale.FIT)
-                        .build(),
+                    model = EazyCmpImageLoader.urlRequest(context, cleanPath),
                     imageLoader = imageLoader,
                     contentDescription = contentDescription,
                     modifier = modifier,
