@@ -1,0 +1,515 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../shared/1.0.0.1-rc-006/shared-1.0.0.1-rc-006.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "shared",
+    "version": "1.0.0.1-rc-006",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.4.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-json",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-datetime",
+          "version": {
+            "requires": "0.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose-viewmodel",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-core",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-content-negotiation",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-auth",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-logging",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-websockets",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-serialization-kotlinx-json",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.github.alexzhirkevich",
+          "module": "compottie",
+          "version": {
+            "requires": "2.2.1"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil-compose",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil-network-ktor3",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil-svg",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "com.russhwolf",
+          "module": "multiplatform-settings",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "com.russhwolf",
+          "module": "multiplatform-settings-serialization",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.androidx.lifecycle",
+          "module": "lifecycle-viewmodel",
+          "version": {
+            "requires": "2.11.0-beta01"
+          }
+        },
+        {
+          "group": "org.jetbrains.androidx.lifecycle",
+          "module": "lifecycle-runtime",
+          "version": {
+            "requires": "2.11.0-beta01"
+          }
+        },
+        {
+          "group": "org.jetbrains.androidx.navigation",
+          "module": "navigation-compose",
+          "version": {
+            "requires": "2.9.0-beta05"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared-jvm-1.0.0.1-rc-006.jar",
+          "url": "shared-jvm-1.0.0.1-rc-006.jar",
+          "size": 1272529,
+          "sha512": "9c2af1d34467d186ba33130f8e7662c2dd86cadf3878e5508bb8b3f4de01ea789edc00aeac926cd1355348ff29856b2e89f0e77aad6aec35e5c59f8be0a8203c",
+          "sha256": "dae47234fd423392905446256f89e6a4a59fcd676cf48c3bd6f68f35db326d68",
+          "sha1": "10bf45b096654e18ac2259f2565827a3a87ac02f",
+          "md5": "9b7c3377adbf031236ef1f147d333609"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-json",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-datetime",
+          "version": {
+            "requires": "0.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose-viewmodel",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-core",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-content-negotiation",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-auth",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-logging",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-websockets",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-serialization-kotlinx-json",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.github.alexzhirkevich",
+          "module": "compottie",
+          "version": {
+            "requires": "2.2.1"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil-compose",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil-network-ktor3",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "io.coil-kt.coil3",
+          "module": "coil-svg",
+          "version": {
+            "requires": "3.4.0"
+          }
+        },
+        {
+          "group": "com.russhwolf",
+          "module": "multiplatform-settings",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "com.russhwolf",
+          "module": "multiplatform-settings-serialization",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.androidx.lifecycle",
+          "module": "lifecycle-viewmodel",
+          "version": {
+            "requires": "2.11.0-beta01"
+          }
+        },
+        {
+          "group": "org.jetbrains.androidx.lifecycle",
+          "module": "lifecycle-runtime",
+          "version": {
+            "requires": "2.11.0-beta01"
+          }
+        },
+        {
+          "group": "org.jetbrains.androidx.navigation",
+          "module": "navigation-compose",
+          "version": {
+            "requires": "2.9.0-beta05"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-swing",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-okhttp",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-cio",
+          "version": {
+            "requires": "3.5.0"
+          }
+        },
+        {
+          "group": "com.github.sarxos",
+          "module": "webcam-capture",
+          "version": {
+            "requires": "0.3.12"
+          }
+        },
+        {
+          "group": "org.apache.pdfbox",
+          "module": "pdfbox",
+          "version": {
+            "requires": "3.0.7"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared-jvm-1.0.0.1-rc-006.jar",
+          "url": "shared-jvm-1.0.0.1-rc-006.jar",
+          "size": 1272529,
+          "sha512": "9c2af1d34467d186ba33130f8e7662c2dd86cadf3878e5508bb8b3f4de01ea789edc00aeac926cd1355348ff29856b2e89f0e77aad6aec35e5c59f8be0a8203c",
+          "sha256": "dae47234fd423392905446256f89e6a4a59fcd676cf48c3bd6f68f35db326d68",
+          "sha1": "10bf45b096654e18ac2259f2565827a3a87ac02f",
+          "md5": "9b7c3377adbf031236ef1f147d333609"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "shared-jvm-1.0.0.1-rc-006-sources.jar",
+          "url": "shared-jvm-1.0.0.1-rc-006-sources.jar",
+          "size": 162825,
+          "sha512": "41d80ea6e9c9e80927fdb8b2a59190f4f8caee0121e50d32c4b8177fea8e04f3dab7843a624ab9b4ccd2099181e7641ab5248228311bcd443931977e5e488b3b",
+          "sha256": "d66c253fd3a767f63f8cddd1d711ac74c4781427c1ea6609f5ae81fb589120ec",
+          "sha1": "e99f059874506fa26dc39be40f55d9d89b92cc9c",
+          "md5": "a5fd54b1028fb5f79851e0a37bb2a9f6"
+        }
+      ]
+    }
+  ]
+}

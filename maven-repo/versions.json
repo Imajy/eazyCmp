@@ -1,8 +1,9 @@
 {
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
-  "latest": "1.0.0.1-rc-005",
+  "latest": "1.0.0.1-rc-006",
   "versions": [
+    "1.0.0.1-rc-006",
     "1.0.0.1-rc-005",
     "1.0.0.1-rc-004",
     "1.0.0.1-rc-003",
@@ -16,6 +17,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-006",
+      "message": "Refactor CustomImage to use EazyCmpImageLoader utility",
+      "publishedAt": "2026-06-25T16:44:11+05:30",
+      "commit": "7062f29b7564eeb23e0f5d72bcd851ba7fd4ba5a"
+    },
     {
       "version": "1.0.0.1-rc-005",
       "message": "DropDown multiselect issue resolved",
@@ -84,6 +91,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-19T12:11:33Z",
+  "updatedAt": "2026-06-25T11:18:13Z",
   "failures": []
 }
