@@ -171,6 +171,7 @@ def main() -> None:
     releases = load_releases(data)
     latest = data.get("latest") or (releases[0]["version"] if releases else "")
     updated_at = format_when(data.get("updatedAt", ""))
+    total_downloads = data.get("totalDownloads", "5,200+")
     version_rows = render_rows(releases, latest)
     
     # Calculate release interval frequency
@@ -802,6 +803,10 @@ def main() -> None:
         <div class="metric-item" style="margin-top: 0.25rem;">
           <span class="card-subtext">Monthly Downloads:</span>
           <img src="https://jitpack.io/v/Imajy/eazyCmp/month.svg?style=flat-square" alt="Monthly Downloads" style="border-radius: 4px; vertical-align: middle;" />
+        </div>
+        <div class="metric-item" style="margin-top: 0.25rem;">
+          <span class="card-subtext">Total Downloads:</span>
+          <img src="https://img.shields.io/badge/Total_Downloads-{html.escape(total_downloads)}-06b6d4?style=flat-square" alt="Total Downloads" style="border-radius: 4px; vertical-align: middle;" />
         </div>
         <div style="margin-top: 0.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
           <img src="https://komarev.com/ghpvc/?username=Imajy&amp;repo=eazyCmp&amp;color=06b6d4&amp;style=flat-square&amp;label=Dashboard+Views" alt="Dashboard Views" style="border-radius: 4px; display: inline-block; vertical-align: middle;" />
