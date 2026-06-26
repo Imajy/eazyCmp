@@ -317,8 +317,8 @@ fun <T> CommonDropDown(
                         keyboardController?.hide()
                     },
                     properties = DialogProperties(
-                        dismissOnBackPress = true,
-                        dismissOnClickOutside = true,
+                        dismissOnBackPress = false,
+                        dismissOnClickOutside = false,
                         usePlatformDefaultWidth = false
                     )
                 ) {
