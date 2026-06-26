@@ -33,16 +33,36 @@ jobs:
           echo "value=$(python3 scripts/version.py current)" >> "$GITHUB_OUTPUT"
           python3 scripts/version.py validate
 
+      - name: Check if library changed
+        id: check_changes
+        run: |
+          library_changed="false"
+          # Get list of files changed in the latest commit (supports merge commits with -m)
+          files=$(git diff-tree --no-commit-id --name-only -r -m HEAD || true)
+          echo "Changed files:"
+          echo "$files"
+          for file in $files; do
+            if [[ "$file" =~ ^shared/ ]] || [[ "$file" == "build.gradle.kts" ]] || [[ "$file" == "settings.gradle.kts" ]] || [[ "$file" == "gradle.properties" ]] || [[ "$file" == "version.properties" ]] || [[ "$file" =~ ^gradle/ ]]; then
+              library_changed="true"
+              break
+            fi
+          done
+          echo "Library changed: $library_changed"
+          echo "library_changed=$library_changed" >> "$GITHUB_OUTPUT"
+
       - name: Set up JDK 17
+        if: steps.check_changes.outputs.library_changed == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: 'oracle'
           java-version: '17'
 
       - name: Setup Gradle
+        if: steps.check_changes.outputs.library_changed == 'true'
         uses: gradle/actions/setup-gradle@v4
 
       - name: Publish Android, iOS and JVM artifacts
+        if: steps.check_changes.outputs.library_changed == 'true'
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.value }}
         run: |
@@ -51,7 +71,7 @@ jobs:
           exit ${PIPESTATUS[0]}
 
       - name: Handle Publish Failure
-        if: failure()
+        if: failure() && steps.check_changes.outputs.library_changed == 'true'
         run: |
           VERSION="${{ steps.version.outputs.value }}"
           COMMIT="${{ github.sha }}"
@@ -88,6 +108,7 @@ jobs:
           fi
 
       - name: Collect release metadata
+        if: steps.check_changes.outputs.library_changed == 'true'
         id: meta
         run: |
           VERSION="${{ steps.version.outputs.value }}"
@@ -99,7 +120,8 @@ jobs:
           echo "published_at=$(git log -1 --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Update version manifest and Pages index
+      - name: Update version manifest and Pages index (with release)
+        if: steps.check_changes.outputs.library_changed == 'true'
         env:
           VERSION: ${{ steps.version.outputs.value }}
           RELEASE_MESSAGE: ${{ steps.meta.outputs.message }}
@@ -116,7 +138,17 @@ jobs:
           chmod +x scripts/sync-pages-root.sh
           ./scripts/sync-pages-root.sh
 
+      - name: Update version manifest and Pages index (without release)
+        if: steps.check_changes.outputs.library_changed == 'false'
+        run: |
+          python3 scripts/update-version-manifest.py \
+            --manifest maven-repo/versions.json \
+            --scan-maven-repo
+          chmod +x scripts/sync-pages-root.sh
+          ./scripts/sync-pages-root.sh
+
       - name: Commit published artifacts and bump next version
+        if: steps.check_changes.outputs.library_changed == 'true'
         run: |
           VERSION="${{ steps.version.outputs.value }}"
           git config --global user.name "github-actions[bot]"
@@ -142,5 +174,20 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Publish EazyCmp $VERSION · next $NEXT [skip ci]"
+            git push origin master
+          fi
+
+      - name: Commit Pages site only (no release)
+        if: steps.check_changes.outputs.library_changed == 'false'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add index.html versions.json .nojekyll
+
+          if git diff --cached --quiet; then
+            echo "Pages already up to date"
+          else
+            git commit -m "Sync Pages catalog [skip ci]"
             git push origin master
           fi
