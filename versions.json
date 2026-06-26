@@ -1,8 +1,9 @@
 {
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
-  "latest": "1.0.0.1-rc-006",
+  "latest": "1.0.0.1-rc-007",
   "versions": [
+    "1.0.0.1-rc-007",
     "1.0.0.1-rc-006",
     "1.0.0.1-rc-005",
     "1.0.0.1-rc-004",
@@ -17,6 +18,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-007",
+      "message": "DropDown dismiss handeled",
+      "publishedAt": "2026-06-26T09:56:48+05:30",
+      "commit": "4366e9f83c829b3e6f41a868731ca5e57df784df"
+    },
     {
       "version": "1.0.0.1-rc-006",
       "message": "Refactor CustomImage to use EazyCmpImageLoader utility",
@@ -91,6 +98,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-25T11:18:13Z",
+  "updatedAt": "2026-06-26T04:28:57Z",
   "failures": []
 }
