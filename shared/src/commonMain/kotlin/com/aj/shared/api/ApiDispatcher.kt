@@ -15,12 +15,18 @@ object ApiDispatcher {
 
     init {
         scope.launch {
-            while (true) {
-                when {
-                    !high.isEmpty -> high.receive().invoke()
-                    !normal.isEmpty -> normal.receive().invoke()
-                    else -> low.receive().invoke()
-                }
+            for (action in high) {
+                try { action() } catch (e: Exception) { e.printStackTrace() }
+            }
+        }
+        scope.launch {
+            for (action in normal) {
+                try { action() } catch (e: Exception) { e.printStackTrace() }
+            }
+        }
+        scope.launch {
+            for (action in low) {
+                try { action() } catch (e: Exception) { e.printStackTrace() }
             }
         }
     }
