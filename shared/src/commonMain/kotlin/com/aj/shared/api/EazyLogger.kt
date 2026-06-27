@@ -3,50 +3,73 @@ package com.aj.shared.api
 import com.aj.shared.security.redactPiiFromLog
 
 object EazyLogger {
-    var isDebugEnabled: Boolean = false
+    var isDebugEnabled: Boolean = true
 
     fun d(message: String) {
         if (isDebugEnabled) println(message)
     }
 
     fun logApiRequest(
-        base: String,
         url: String,
         method: String,
-        query: Map<String, String>,
-        bodyType: BodyType,
-        hasBody: Boolean,
-        fileCount: Int,
-        hasToken: Boolean
+        headers: Map<String, String>,
+        body: String?
     ) {
         if (!isDebugEnabled) return
-        println("============== API REQUEST ==============")
-        println("BASE        → $base")
-        println("URL         → $url")
-        println("METHOD      → $method")
-        println("QUERY       → $query")
-        println("BODY TYPE   → $bodyType")
-        println("BODY        → ${if (hasBody) "(present)" else "(none)"}")
-        println("FILES       → $fileCount")
-        println("TOKEN       → $hasToken")
-        println("=========================================")
+        println("🚀 ============== API REQUEST ==============")
+        println("URL         → $method $url")
+        println("HEADERS     →")
+        if (headers.isEmpty()) {
+            println("  (none)")
+        } else {
+            headers.forEach { (key, value) ->
+                println("  $key: $value")
+            }
+        }
+        println("BODY        →")
+        if (body.isNullOrBlank()) {
+            println("  (none)")
+        } else {
+            println("  $body")
+        }
+        println("🚀 =========================================")
     }
 
-    fun logApiResponse(url: String, durationMs: Long, rawResponse: String) {
+    fun logApiResponse(
+        url: String,
+        statusCode: Int,
+        headers: Map<String, String>,
+        durationMs: Long,
+        rawResponse: String
+    ) {
         if (!isDebugEnabled) return
-        println("============== API RESPONSE =============")
-        println("$url => ${durationMs}ms")
-        val preview = if (rawResponse.length > 500) rawResponse.take(500) + "..." else rawResponse
-        println(redactPiiFromLog(preview))
-        println("=========================================")
+        println("✅ ============== API RESPONSE =============")
+        println("URL         → $url")
+        println("STATUS CODE → $statusCode")
+        println("TIME        → ${durationMs}ms")
+        println("HEADERS     →")
+        if (headers.isEmpty()) {
+            println("  (none)")
+        } else {
+            headers.forEach { (key, value) ->
+                println("  $key: $value")
+            }
+        }
+        println("RESPONSE    →")
+        if (rawResponse.isBlank()) {
+            println("  (empty)")
+        } else {
+            println("  ${redactPiiFromLog(rawResponse)}")
+        }
+        println("✅ =========================================")
     }
 
     fun logApiError(url: String, durationMs: Long, error: String?) {
         if (!isDebugEnabled) return
-        println("============== API ERROR ================")
+        println("❌ ============== API ERROR ================")
         println("URL         → $url")
         println("TIME        → ${durationMs}ms")
         println("ERROR       → $error")
-        println("=========================================")
+        println("❌ ========================================")
     }
 }

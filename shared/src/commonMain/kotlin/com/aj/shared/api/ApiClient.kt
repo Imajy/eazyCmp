@@ -106,17 +106,6 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
 
             val mergedBody = mergeRequestBody<Req>(base, body)
 
-            EazyLogger.logApiRequest(
-                base = base,
-                url = url,
-                method = method.value,
-                query = query,
-                bodyType = bodyType,
-                hasBody = mergedBody != null,
-                fileCount = files.size,
-                hasToken = config.token != null
-            )
-
             val response = client.request(buildUrl(base, endpoint)) {
                 this.method = method
                 applyDefaults(base)
@@ -160,14 +149,38 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                         }
                     }
                 }
+
+                // Log detailed request
+                val reqHeaders = headers.build().entries().associate { it.key to it.value.joinToString(", ") }
+                val requestBodyString = if (files.isNotEmpty()) {
+                    "Multipart Request (${files.size} files)"
+                } else if (mergedBody != null) {
+                    try {
+                        json.encodeToString(mergedBody)
+                    } catch (e: Exception) {
+                        mergedBody.toString()
+                    }
+                } else {
+                    null
+                }
+
+                EazyLogger.logApiRequest(
+                    url = this.url.build().toString(),
+                    method = this.method.value,
+                    headers = reqHeaders,
+                    body = requestBodyString
+                )
             }
 
             val duration = Clock.System.now() - startTime
             val rawResponse = response.bodyAsText()
             val data: Res = json.decodeFromString(rawResponse)
 
+            val resHeaders = response.headers.entries().associate { it.key to it.value.joinToString(", ") }
             EazyLogger.logApiResponse(
                 url = url,
+                statusCode = response.status.value,
+                headers = resHeaders,
                 durationMs = duration.inWholeMilliseconds,
                 rawResponse = rawResponse
             )
