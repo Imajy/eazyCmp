@@ -16,6 +16,13 @@ import kotlinx.serialization.json.Json
 actual fun provideHttpClient(): HttpClient {
 
     return HttpClient(OkHttp) {
+        engine {
+            config {
+                connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+                readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+                writeTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+            }
+        }
 
         install(ContentNegotiation) {
 
