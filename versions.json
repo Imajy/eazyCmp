@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-007",
+  "latest": "1.0.0.1-rc-008",
   "versions": [
+    "1.0.0.1-rc-008",
     "1.0.0.1-rc-007",
     "1.0.0.1-rc-006",
     "1.0.0.1-rc-005",
@@ -19,6 +20,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-008",
+      "message": "Fix publish checkout depth and trigger release",
+      "publishedAt": "2026-06-27T15:01:12+05:30",
+      "commit": "99c4dad035b491290d4e83e37d0092036de40a37"
+    },
     {
       "version": "1.0.0.1-rc-007",
       "message": "DropDown dismiss handeled",
@@ -99,6 +106,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-27T09:26:32Z",
+  "updatedAt": "2026-06-27T09:34:17Z",
   "failures": []
 }
