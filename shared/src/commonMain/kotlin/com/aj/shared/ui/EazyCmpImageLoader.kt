@@ -52,12 +52,13 @@ object EazyCmpImageLoader {
             .build()
     }
 
-    /** One app-wide loader — memory + disk cache survive navigation and recomposition. */
     fun get(context: PlatformContext): ImageLoader {
         sharedLoader?.let { return it }
         return create(context).also { loader ->
             sharedLoader = loader
-            SingletonImageLoader.setSafe { ctx -> sharedLoader ?: create(ctx).also { sharedLoader = it } }
+            SingletonImageLoader.setSafe { ctx ->
+                sharedLoader ?: create(ctx).also { sharedLoader = it }
+            }
         }
     }
 
@@ -81,7 +82,7 @@ object EazyCmpImageLoader {
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
 
-        if (isSvgUrl(cleanUrl)) {
+        if (isSvgSource(cleanUrl)) {
             builder.decoderFactory(SvgDecoder.Factory())
         }
         return builder.build()
@@ -91,6 +92,7 @@ object EazyCmpImageLoader {
         context: PlatformContext,
         bytes: ByteArray,
         cacheKey: String,
+        sourcePath: String? = null,
     ): ImageRequest {
         val builder = ImageRequest.Builder(context)
             .data(bytes)
@@ -101,7 +103,7 @@ object EazyCmpImageLoader {
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
 
-        if (isSvgBytes(bytes)) {
+        if (isSvgSource(sourcePath) || isSvgBytes(bytes)) {
             builder.decoderFactory(SvgDecoder.Factory())
         }
         return builder.build()
@@ -115,7 +117,8 @@ object EazyCmpImageLoader {
 
     fun normalizeCacheKey(value: String): String = value.trim().replace("\\/", "/")
 
-    private fun isSvgUrl(url: String): Boolean = url.endsWith(".svg", ignoreCase = true)
+    private fun isSvgSource(path: String?): Boolean =
+        path?.endsWith(".svg", ignoreCase = true) == true
 
     private fun isSvgBytes(bytes: ByteArray): Boolean {
         if (bytes.isEmpty()) return false

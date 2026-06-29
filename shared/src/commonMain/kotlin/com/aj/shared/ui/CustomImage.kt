@@ -21,9 +21,9 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
 import com.aj.shared.EazyCmp
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -48,6 +48,14 @@ private fun Placeholder?.isLottie(): Boolean = when (this) {
     is Placeholder.LottieJson,
     is Placeholder.LottieBytes -> true
     else -> false
+}
+
+private fun isLocalAssetPath(path: String): Boolean {
+    val clean = path.trim()
+    return clean.startsWith("drawable/") ||
+        clean.startsWith("files/") ||
+        clean.contains(".") ||
+        clean.startsWith("composeResources/")
 }
 
 @Composable
@@ -130,7 +138,6 @@ fun CustomImage(
             val cleanPath = model.trim().replace("\\/", "/")
             val isUrl = cleanPath.startsWith("http")
             val isJson = cleanPath.endsWith(".json", true)
-            val looksLikeFile = cleanPath.contains(".")
 
             when {
                 isJson -> {
@@ -157,7 +164,7 @@ fun CustomImage(
                     )
                 }
 
-                looksLikeFile -> {
+                isLocalAssetPath(cleanPath) -> {
                     val bytes by produceState<ByteArray?>(initialValue = null, key1 = cleanPath) {
                         value = try {
                             CustomImageResourceResolver.resolveBytes?.invoke(cleanPath)
@@ -169,7 +176,12 @@ fun CustomImage(
                     if (bytes != null) {
                         val cacheKey = remember(cleanPath) { EazyCmpImageLoader.normalizeCacheKey(cleanPath) }
                         val request = remember(cacheKey, bytes) {
-                            EazyCmpImageLoader.bytesRequest(context, bytes!!, cacheKey)
+                            EazyCmpImageLoader.bytesRequest(
+                                context = context,
+                                bytes = bytes!!,
+                                cacheKey = cacheKey,
+                                sourcePath = cleanPath,
+                            )
                         }
                         CachedAsyncImage(
                             request = request,
@@ -209,8 +221,8 @@ fun CustomImage(
 }
 
 /**
- * Cached image load — no [SubcomposeAsyncImage], no [collectAsState] (iOS Metal safe).
- * Cache hit → [AsyncImagePainter.State.Success] on first frame, placeholder skipped.
+ * Cached Coil load. [AsyncImage] for static placeholders; slot-based [SubcomposeAsyncImage]
+ * only for Lottie loading UI (no collectAsState — iOS Metal safe).
  */
 @Composable
 private fun CachedAsyncImage(
@@ -222,45 +234,41 @@ private fun CachedAsyncImage(
     contentScale: ContentScale,
     colorFilter: ColorFilter?,
 ) {
-    val painter = rememberAsyncImagePainter(
+    if (placeholder.isLottie()) {
+        SubcomposeAsyncImage(
+            model = request,
+            imageLoader = imageLoader,
+            contentDescription = contentDescription,
+            modifier = modifier,
+            contentScale = contentScale,
+            colorFilter = colorFilter,
+            loading = {
+                LottiePlaceholder(
+                    placeholder = placeholder!!,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = contentScale,
+                )
+            },
+            error = {
+                StaticPlaceholderContent(
+                    placeholder = placeholder,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = contentScale,
+                )
+            },
+            success = { SubcomposeAsyncImageContent() },
+        )
+        return
+    }
+
+    AsyncImage(
         model = request,
         imageLoader = imageLoader,
+        contentDescription = contentDescription,
+        modifier = modifier,
+        contentScale = contentScale,
+        colorFilter = colorFilter,
     )
-    val state = painter.state.value
-
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        when (state) {
-            is AsyncImagePainter.State.Success -> Image(
-                painter = painter,
-                contentDescription = contentDescription,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = contentScale,
-                colorFilter = colorFilter,
-            )
-
-            is AsyncImagePainter.State.Error -> StaticPlaceholderContent(
-                placeholder = placeholder,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = contentScale,
-            )
-
-            else -> {
-                if (placeholder.isLottie()) {
-                    LottiePlaceholder(
-                        placeholder = placeholder!!,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = contentScale,
-                    )
-                } else {
-                    StaticPlaceholderContent(
-                        placeholder = placeholder,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = contentScale,
-                    )
-                }
-            }
-        }
-    }
 }
 
 @Composable
@@ -310,7 +318,6 @@ private fun PlaceholderContent(
     }
 }
 
-/** Static placeholder only — no nested async loads (crash safe). */
 @Composable
 private fun StaticPlaceholderContent(
     placeholder: Placeholder?,
