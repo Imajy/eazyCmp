@@ -13,16 +13,18 @@ import coil3.request.ImageResult
 import coil3.request.crossfade
 import coil3.svg.SvgDecoder
 import com.aj.shared.getCacheDir
+import okio.FileSystem
 import okio.Path.Companion.toPath
+import kotlin.math.min
 
 /** Shared Coil [ImageLoader] with eazyCmp disk + memory caching. */
 object EazyCmpImageLoader {
     private const val DISK_CACHE_MAX_BYTES = 50L * 1024L * 1024L
 
-    private var cachedLoader: ImageLoader? = null
-    private var cachedContext: PlatformContext? = null
-
     fun create(context: PlatformContext): ImageLoader {
+        val cacheDir = getCacheDir().toPath()
+        FileSystem.SYSTEM.createDirectories(cacheDir)
+
         return ImageLoader.Builder(context)
             .components {
                 add(KtorNetworkFetcherFactory())
@@ -30,25 +32,16 @@ object EazyCmpImageLoader {
             }
             .diskCache {
                 DiskCache.Builder()
-                    .directory(getCacheDir().toPath())
+                    .directory(cacheDir)
                     .maxSizeBytes(DISK_CACHE_MAX_BYTES)
                     .build()
             }
             .build()
     }
 
-    fun get(context: PlatformContext): ImageLoader {
-        val existing = cachedLoader
-        if (existing != null && cachedContext === context) return existing
-        return create(context).also {
-            cachedLoader = it
-            cachedContext = context
-        }
-    }
-
     @Composable
     fun remember(context: PlatformContext = LocalPlatformContext.current): ImageLoader {
-        return remember(context) { get(context) }
+        return remember(context) { create(context) }
     }
 
     fun urlRequest(
@@ -57,20 +50,52 @@ object EazyCmpImageLoader {
         cacheKey: String = url.trim(),
     ): ImageRequest {
         val cleanUrl = url.trim()
-        return ImageRequest.Builder(context)
+        val builder = ImageRequest.Builder(context)
             .data(cleanUrl)
-            .decoderFactory(SvgDecoder.Factory())
             .memoryCacheKey(cacheKey)
             .diskCacheKey(cacheKey)
             .crossfade(true)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
-            .build()
+
+        if (isSvgUrl(cleanUrl)) {
+            builder.decoderFactory(SvgDecoder.Factory())
+        }
+        return builder.build()
+    }
+
+    fun bytesRequest(
+        context: PlatformContext,
+        bytes: ByteArray,
+        cacheKey: String? = null,
+    ): ImageRequest {
+        val builder = ImageRequest.Builder(context)
+            .data(bytes)
+            .crossfade(true)
+            .diskCachePolicy(CachePolicy.ENABLED)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+
+        cacheKey?.let {
+            builder.memoryCacheKey(it)
+            builder.diskCacheKey(it)
+        }
+        if (isSvgBytes(bytes)) {
+            builder.decoderFactory(SvgDecoder.Factory())
+        }
+        return builder.build()
     }
 
     suspend fun executeUrl(
         context: PlatformContext,
         url: String,
         cacheKey: String = url.trim(),
-    ): ImageResult = get(context).execute(urlRequest(context, url, cacheKey))
+    ): ImageResult = create(context).execute(urlRequest(context, url, cacheKey))
+
+    private fun isSvgUrl(url: String): Boolean = url.endsWith(".svg", ignoreCase = true)
+
+    private fun isSvgBytes(bytes: ByteArray): Boolean {
+        if (bytes.isEmpty()) return false
+        val prefix = bytes.decodeToString(0, min(bytes.size, 256))
+        return prefix.contains("<svg", ignoreCase = true)
+    }
 }
