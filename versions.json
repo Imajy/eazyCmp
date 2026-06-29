@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-012",
+  "latest": "1.0.0.1-rc-013",
   "versions": [
+    "1.0.0.1-rc-013",
     "1.0.0.1-rc-012",
     "1.0.0.1-rc-011",
     "1.0.0.1-rc-010",
@@ -24,6 +25,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-013",
+      "message": "Image changes",
+      "publishedAt": "2026-06-29T16:04:44+05:30",
+      "commit": "d84396f928809605e1050308dd0910fb158e86c8"
+    },
     {
       "version": "1.0.0.1-rc-012",
       "message": "Image chanegs",
@@ -134,6 +141,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-29T10:13:52Z",
+  "updatedAt": "2026-06-29T10:38:39Z",
   "failures": []
 }
