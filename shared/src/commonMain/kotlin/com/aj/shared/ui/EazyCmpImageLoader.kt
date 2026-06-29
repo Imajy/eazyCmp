@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import coil3.ImageLoader
 import coil3.PlatformContext
+import coil3.SingletonImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
@@ -16,10 +18,16 @@ import com.aj.shared.getCacheDir
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
+import kotlin.concurrent.Volatile
 import kotlin.math.min
 
+/** Shared Coil [ImageLoader] with eazyCmp disk + memory caching. */
 object EazyCmpImageLoader {
     private const val DISK_CACHE_MAX_BYTES = 50L * 1024L * 1024L
+    private const val MEMORY_CACHE_MAX_BYTES = 25L * 1024L * 1024L
+
+    @Volatile
+    private var sharedLoader: ImageLoader? = null
 
     fun create(context: PlatformContext): ImageLoader {
         val cacheDir = getCacheDir().toPath()
@@ -30,6 +38,11 @@ object EazyCmpImageLoader {
                 add(KtorNetworkFetcherFactory())
                 add(SvgDecoder.Factory())
             }
+            .memoryCache {
+                MemoryCache.Builder()
+                    .maxSizeBytes(MEMORY_CACHE_MAX_BYTES)
+                    .build()
+            }
             .diskCache {
                 DiskCache.Builder()
                     .directory(cacheDir)
@@ -39,22 +52,32 @@ object EazyCmpImageLoader {
             .build()
     }
 
+    /** One app-wide loader — memory + disk cache survive navigation and recomposition. */
+    fun get(context: PlatformContext): ImageLoader {
+        sharedLoader?.let { return it }
+        return create(context).also { loader ->
+            sharedLoader = loader
+            SingletonImageLoader.setSafe { ctx -> sharedLoader ?: create(ctx).also { sharedLoader = it } }
+        }
+    }
+
     @Composable
     fun remember(context: PlatformContext = LocalPlatformContext.current): ImageLoader {
-        return remember(context) { create(context) }
+        return remember { get(context) }
     }
 
     fun urlRequest(
         context: PlatformContext,
         url: String,
-        cacheKey: String = url.trim(),
+        cacheKey: String = normalizeCacheKey(url),
     ): ImageRequest {
         val cleanUrl = url.trim()
         val builder = ImageRequest.Builder(context)
             .data(cleanUrl)
             .memoryCacheKey(cacheKey)
             .diskCacheKey(cacheKey)
-            .crossfade(true)
+            .crossfade(false)
+            .networkCachePolicy(CachePolicy.ENABLED)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
 
@@ -67,18 +90,17 @@ object EazyCmpImageLoader {
     fun bytesRequest(
         context: PlatformContext,
         bytes: ByteArray,
-        cacheKey: String? = null,
+        cacheKey: String,
     ): ImageRequest {
         val builder = ImageRequest.Builder(context)
             .data(bytes)
-            .crossfade(true)
+            .memoryCacheKey(cacheKey)
+            .diskCacheKey(cacheKey)
+            .crossfade(false)
+            .networkCachePolicy(CachePolicy.ENABLED)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
 
-        cacheKey?.let {
-            builder.memoryCacheKey(it)
-            builder.diskCacheKey(it)
-        }
         if (isSvgBytes(bytes)) {
             builder.decoderFactory(SvgDecoder.Factory())
         }
@@ -88,8 +110,10 @@ object EazyCmpImageLoader {
     suspend fun executeUrl(
         context: PlatformContext,
         url: String,
-        cacheKey: String = url.trim(),
-    ): ImageResult = create(context).execute(urlRequest(context, url, cacheKey))
+        cacheKey: String = normalizeCacheKey(url),
+    ): ImageResult = get(context).execute(urlRequest(context, url, cacheKey))
+
+    fun normalizeCacheKey(value: String): String = value.trim().replace("\\/", "/")
 
     private fun isSvgUrl(url: String): Boolean = url.endsWith(".svg", ignoreCase = true)
 

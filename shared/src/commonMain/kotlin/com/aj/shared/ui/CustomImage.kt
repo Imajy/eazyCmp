@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,9 +21,9 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
+import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import com.aj.shared.EazyCmp
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -32,7 +33,6 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
-import kotlin.math.min
 
 sealed interface Placeholder {
     data class LottieUrl(val url: String) : Placeholder
@@ -41,6 +41,13 @@ sealed interface Placeholder {
     data class PainterResource(val painter: Painter) : Placeholder
     data class VectorResource(val imageVector: ImageVector) : Placeholder
     data class ImageUrl(val url: String) : Placeholder
+}
+
+private fun Placeholder?.isLottie(): Boolean = when (this) {
+    is Placeholder.LottieUrl,
+    is Placeholder.LottieJson,
+    is Placeholder.LottieBytes -> true
+    else -> false
 }
 
 @Composable
@@ -64,7 +71,7 @@ fun CustomImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter
+            colorFilter = colorFilter,
         )
         return
     }
@@ -77,7 +84,7 @@ fun CustomImage(
             placeholder = placeholder,
             modifier = modifier,
             contentScale = contentScale,
-            allowRemotePlaceholder = true,
+            imageLoader = imageLoader,
         )
         return
     }
@@ -90,7 +97,7 @@ fun CustomImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter
+            colorFilter = colorFilter,
         )
 
         is ImageVector -> Image(
@@ -100,18 +107,24 @@ fun CustomImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter
+            colorFilter = colorFilter,
         )
 
-        is ByteArray -> AsyncImageWithPlaceholder(
-            model = EazyCmpImageLoader.bytesRequest(context, model),
-            imageLoader = imageLoader,
-            placeholder = placeholder,
-            contentDescription = contentDescription,
-            modifier = modifier,
-            contentScale = contentScale,
-            colorFilter = colorFilter
-        )
+        is ByteArray -> {
+            val cacheKey = remember(model) { model.contentHashCode().toString() }
+            val request = remember(cacheKey) {
+                EazyCmpImageLoader.bytesRequest(context, model, cacheKey)
+            }
+            CachedAsyncImage(
+                request = request,
+                imageLoader = imageLoader,
+                placeholder = placeholder,
+                contentDescription = contentDescription,
+                modifier = modifier,
+                contentScale = contentScale,
+                colorFilter = colorFilter,
+            )
+        }
 
         is String -> {
             val cleanPath = model.trim().replace("\\/", "/")
@@ -128,15 +141,21 @@ fun CustomImage(
                     }
                 }
 
-                isUrl -> AsyncImageWithPlaceholder(
-                    model = EazyCmpImageLoader.urlRequest(context, cleanPath),
-                    imageLoader = imageLoader,
-                    placeholder = placeholder,
-                    contentDescription = contentDescription,
-                    modifier = modifier,
-                    contentScale = contentScale,
-                    colorFilter = colorFilter
-                )
+                isUrl -> {
+                    val cacheKey = remember(cleanPath) { EazyCmpImageLoader.normalizeCacheKey(cleanPath) }
+                    val request = remember(cacheKey) {
+                        EazyCmpImageLoader.urlRequest(context, cleanPath, cacheKey)
+                    }
+                    CachedAsyncImage(
+                        request = request,
+                        imageLoader = imageLoader,
+                        placeholder = placeholder,
+                        contentDescription = contentDescription,
+                        modifier = modifier,
+                        contentScale = contentScale,
+                        colorFilter = colorFilter,
+                    )
+                }
 
                 looksLikeFile -> {
                     val bytes by produceState<ByteArray?>(initialValue = null, key1 = cleanPath) {
@@ -148,21 +167,25 @@ fun CustomImage(
                     }
 
                     if (bytes != null) {
-                        AsyncImageWithPlaceholder(
-                            model = EazyCmpImageLoader.bytesRequest(context, bytes!!),
+                        val cacheKey = remember(cleanPath) { EazyCmpImageLoader.normalizeCacheKey(cleanPath) }
+                        val request = remember(cacheKey, bytes) {
+                            EazyCmpImageLoader.bytesRequest(context, bytes!!, cacheKey)
+                        }
+                        CachedAsyncImage(
+                            request = request,
                             imageLoader = imageLoader,
                             placeholder = placeholder,
                             contentDescription = contentDescription,
                             modifier = modifier,
                             contentScale = contentScale,
-                            colorFilter = colorFilter
+                            colorFilter = colorFilter,
                         )
                     } else {
                         PlaceholderContent(
                             placeholder = placeholder,
                             modifier = modifier,
                             contentScale = contentScale,
-                            allowRemotePlaceholder = true
+                            imageLoader = imageLoader,
                         )
                     }
                 }
@@ -171,7 +194,7 @@ fun CustomImage(
                     placeholder = placeholder,
                     modifier = modifier,
                     contentScale = contentScale,
-                    allowRemotePlaceholder = true
+                    imageLoader = imageLoader,
                 )
             }
         }
@@ -180,46 +203,64 @@ fun CustomImage(
             placeholder = placeholder,
             modifier = modifier,
             contentScale = contentScale,
-            allowRemotePlaceholder = true
+            imageLoader = imageLoader,
         )
     }
 }
 
+/**
+ * Cached image load — no [SubcomposeAsyncImage], no [collectAsState] (iOS Metal safe).
+ * Cache hit → [AsyncImagePainter.State.Success] on first frame, placeholder skipped.
+ */
 @Composable
-private fun AsyncImageWithPlaceholder(
-    model: ImageRequest,
+private fun CachedAsyncImage(
+    request: ImageRequest,
     imageLoader: ImageLoader,
     placeholder: Placeholder?,
     contentDescription: String?,
     modifier: Modifier,
     contentScale: ContentScale,
-    colorFilter: ColorFilter?
+    colorFilter: ColorFilter?,
 ) {
-    SubcomposeAsyncImage(
-        model = model,
+    val painter = rememberAsyncImagePainter(
+        model = request,
         imageLoader = imageLoader,
-        contentDescription = contentDescription,
-        modifier = modifier,
-        contentScale = contentScale,
-        colorFilter = colorFilter,
-        loading = {
-            PlaceholderContent(
-                placeholder = placeholder,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = contentScale,
-                allowRemotePlaceholder = false
-            )
-        },
-        error = {
-            PlaceholderContent(
-                placeholder = placeholder,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = contentScale,
-                allowRemotePlaceholder = false
-            )
-        },
-        success = { SubcomposeAsyncImageContent() }
     )
+    val state = painter.state.value
+
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        when (state) {
+            is AsyncImagePainter.State.Success -> Image(
+                painter = painter,
+                contentDescription = contentDescription,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = contentScale,
+                colorFilter = colorFilter,
+            )
+
+            is AsyncImagePainter.State.Error -> StaticPlaceholderContent(
+                placeholder = placeholder,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = contentScale,
+            )
+
+            else -> {
+                if (placeholder.isLottie()) {
+                    LottiePlaceholder(
+                        placeholder = placeholder!!,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = contentScale,
+                    )
+                } else {
+                    StaticPlaceholderContent(
+                        placeholder = placeholder,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = contentScale,
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -227,7 +268,7 @@ private fun PlaceholderContent(
     placeholder: Placeholder?,
     modifier: Modifier,
     contentScale: ContentScale,
-    allowRemotePlaceholder: Boolean,
+    imageLoader: ImageLoader,
 ) {
     when (placeholder) {
         is Placeholder.LottieUrl,
@@ -238,30 +279,60 @@ private fun PlaceholderContent(
             painter = placeholder.painter,
             contentDescription = null,
             modifier = modifier,
-            contentScale = contentScale
+            contentScale = contentScale,
         )
 
         is Placeholder.VectorResource -> Image(
             imageVector = placeholder.imageVector,
             contentDescription = null,
             modifier = modifier,
-            contentScale = contentScale
+            contentScale = contentScale,
         )
 
         is Placeholder.ImageUrl -> {
-            if (allowRemotePlaceholder) {
-                AsyncImage(
-                    model = placeholder.url,
-                    contentDescription = null,
-                    modifier = modifier,
-                    contentScale = contentScale
-                )
-            } else {
-                PlaceholderFallback(modifier)
+            val context = LocalPlatformContext.current
+            val cacheKey = remember(placeholder.url) {
+                EazyCmpImageLoader.normalizeCacheKey(placeholder.url)
             }
+            val request = remember(cacheKey, context) {
+                EazyCmpImageLoader.urlRequest(context, placeholder.url, cacheKey)
+            }
+            AsyncImage(
+                model = request,
+                imageLoader = imageLoader,
+                contentDescription = null,
+                modifier = modifier,
+                contentScale = contentScale,
+            )
         }
 
         null -> {}
+    }
+}
+
+/** Static placeholder only — no nested async loads (crash safe). */
+@Composable
+private fun StaticPlaceholderContent(
+    placeholder: Placeholder?,
+    modifier: Modifier,
+    contentScale: ContentScale,
+) {
+    when (placeholder) {
+        is Placeholder.PainterResource -> Image(
+            painter = placeholder.painter,
+            contentDescription = null,
+            modifier = modifier,
+            contentScale = contentScale,
+        )
+
+        is Placeholder.VectorResource -> Image(
+            imageVector = placeholder.imageVector,
+            contentDescription = null,
+            modifier = modifier,
+            contentScale = contentScale,
+        )
+
+        else -> PlaceholderFallback(modifier)
     }
 }
 
@@ -269,7 +340,7 @@ private fun PlaceholderContent(
 private fun PlaceholderFallback(modifier: Modifier) {
     Box(
         modifier = modifier.background(Color.LightGray.copy(alpha = 0.25f)),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ){}
 }
 
@@ -282,7 +353,7 @@ private fun PreviewImage(
     alignment: Alignment,
     contentScale: ContentScale,
     alpha: Float,
-    colorFilter: ColorFilter?
+    colorFilter: ColorFilter?,
 ) {
     when (model) {
         is Painter -> Image(
@@ -292,7 +363,7 @@ private fun PreviewImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter
+            colorFilter = colorFilter,
         )
 
         is ImageVector -> Image(
@@ -302,7 +373,7 @@ private fun PreviewImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter
+            colorFilter = colorFilter,
         )
 
         else -> when (placeholder) {
@@ -310,14 +381,14 @@ private fun PreviewImage(
                 painter = placeholder.painter,
                 contentDescription = null,
                 modifier = modifier,
-                contentScale = contentScale
+                contentScale = contentScale,
             )
 
             is Placeholder.VectorResource -> Image(
                 imageVector = placeholder.imageVector,
                 contentDescription = null,
                 modifier = modifier,
-                contentScale = contentScale
+                contentScale = contentScale,
             )
 
             else -> Box(
@@ -371,11 +442,11 @@ fun LottiePlaceholder(
     Image(
         painter = rememberLottiePainter(
             composition = composition,
-            progress = { progress }
+            progress = { progress },
         ),
         contentDescription = null,
         modifier = modifier,
-        contentScale = contentScale
+        contentScale = contentScale,
     )
 }
 
