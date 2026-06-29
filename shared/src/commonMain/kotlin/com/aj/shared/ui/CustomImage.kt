@@ -149,7 +149,7 @@ fun CustomImage(
 
                     if (bytes != null) {
                         AsyncImageWithPlaceholder(
-                            model = EazyCmpImageLoader.bytesRequest(context, bytes),
+                            model = EazyCmpImageLoader.bytesRequest(context, bytes!!),
                             imageLoader = imageLoader,
                             placeholder = placeholder,
                             contentDescription = contentDescription,
@@ -269,8 +269,8 @@ private fun PlaceholderContent(
 private fun PlaceholderFallback(modifier: Modifier) {
     Box(
         modifier = modifier.background(Color.LightGray.copy(alpha = 0.25f)),
-        contentAlignment = Alignment.Center,
-    )
+        contentAlignment = Alignment.Center
+    ){}
 }
 
 @Composable
