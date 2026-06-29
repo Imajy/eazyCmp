@@ -3,8 +3,8 @@
   <groupId>com.github.Imajy.eazyCmp</groupId>
   <artifactId>shared-iosarm64</artifactId>
   <versioning>
-    <latest>1.0.0.1-rc-011</latest>
-    <release>1.0.0.1-rc-011</release>
+    <latest>1.0.0.1-rc-012</latest>
+    <release>1.0.0.1-rc-012</release>
     <versions>
       <version>1.0.04-alpha-076</version>
       <version>1.0.04-alpha-077</version>
@@ -23,7 +23,8 @@
       <version>1.0.0.1-rc-009</version>
       <version>1.0.0.1-rc-010</version>
       <version>1.0.0.1-rc-011</version>
+      <version>1.0.0.1-rc-012</version>
     </versions>
-    <lastUpdated>20260629100849</lastUpdated>
+    <lastUpdated>20260629101349</lastUpdated>
   </versioning>
 </metadata>
