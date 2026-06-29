@@ -3,8 +3,8 @@
   <groupId>com.github.Imajy.eazyCmp</groupId>
   <artifactId>shared-jvm</artifactId>
   <versioning>
-    <latest>1.0.0.1-rc-010</latest>
-    <release>1.0.0.1-rc-010</release>
+    <latest>1.0.0.1-rc-011</latest>
+    <release>1.0.0.1-rc-011</release>
     <versions>
       <version>1.0.04-alpha-076</version>
       <version>1.0.04-alpha-077</version>
@@ -22,7 +22,8 @@
       <version>1.0.0.1-rc-008</version>
       <version>1.0.0.1-rc-009</version>
       <version>1.0.0.1-rc-010</version>
+      <version>1.0.0.1-rc-011</version>
     </versions>
-    <lastUpdated>20260627115205</lastUpdated>
+    <lastUpdated>20260629100814</lastUpdated>
   </versioning>
 </metadata>

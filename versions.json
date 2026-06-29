@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-010",
+  "latest": "1.0.0.1-rc-011",
   "versions": [
+    "1.0.0.1-rc-011",
     "1.0.0.1-rc-010",
     "1.0.0.1-rc-009",
     "1.0.0.1-rc-008",
@@ -13,9 +14,21 @@
     "1.0.0.1-rc-004",
     "1.0.0.1-rc-003",
     "1.0.0.1-rc-002",
-    "1.0.0.1-rc-001"
+    "1.0.0.1-rc-001",
+    "1.0.0.001-rc-002",
+    "1.0.0-rc-001",
+    "1.0.0.001-rc-001",
+    "1.0.04-alpha-078",
+    "1.0.04-alpha-076",
+    "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-011",
+      "message": "Image chanegs",
+      "publishedAt": "2026-06-29T15:34:45+05:30",
+      "commit": "3270e2f6a584485825c6d3b0aa5760e7c04bfbe4"
+    },
     {
       "version": "1.0.0.1-rc-010",
       "message": "Api",
@@ -114,13 +127,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-29T10:03:29Z",
-  "failures": [
-    {
-      "version": "1.0.0.1-rc-011",
-      "commit": "bc5186cd0b04e3701ff086987d78bb2ab3a626fa",
-      "publishedAt": "2026-06-29T10:03:29Z",
-      "logFile": "logs/build-1.0.0.1-rc-011-failed.log"
-    }
-  ]
+  "updatedAt": "2026-06-29T10:08:52Z",
+  "failures": []
 }
