@@ -64,7 +64,7 @@ fun CustomImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter,
+            colorFilter = colorFilter
         )
         return
     }
@@ -90,7 +90,7 @@ fun CustomImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter,
+            colorFilter = colorFilter
         )
 
         is ImageVector -> Image(
@@ -100,7 +100,7 @@ fun CustomImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter,
+            colorFilter = colorFilter
         )
 
         is ByteArray -> AsyncImageWithPlaceholder(
@@ -110,7 +110,7 @@ fun CustomImage(
             contentDescription = contentDescription,
             modifier = modifier,
             contentScale = contentScale,
-            colorFilter = colorFilter,
+            colorFilter = colorFilter
         )
 
         is String -> {
@@ -135,7 +135,7 @@ fun CustomImage(
                     contentDescription = contentDescription,
                     modifier = modifier,
                     contentScale = contentScale,
-                    colorFilter = colorFilter,
+                    colorFilter = colorFilter
                 )
 
                 looksLikeFile -> {
@@ -155,14 +155,14 @@ fun CustomImage(
                             contentDescription = contentDescription,
                             modifier = modifier,
                             contentScale = contentScale,
-                            colorFilter = colorFilter,
+                            colorFilter = colorFilter
                         )
                     } else {
                         PlaceholderContent(
                             placeholder = placeholder,
                             modifier = modifier,
                             contentScale = contentScale,
-                            allowRemotePlaceholder = true,
+                            allowRemotePlaceholder = true
                         )
                     }
                 }
@@ -171,7 +171,7 @@ fun CustomImage(
                     placeholder = placeholder,
                     modifier = modifier,
                     contentScale = contentScale,
-                    allowRemotePlaceholder = true,
+                    allowRemotePlaceholder = true
                 )
             }
         }
@@ -180,7 +180,7 @@ fun CustomImage(
             placeholder = placeholder,
             modifier = modifier,
             contentScale = contentScale,
-            allowRemotePlaceholder = true,
+            allowRemotePlaceholder = true
         )
     }
 }
@@ -193,7 +193,7 @@ private fun AsyncImageWithPlaceholder(
     contentDescription: String?,
     modifier: Modifier,
     contentScale: ContentScale,
-    colorFilter: ColorFilter?,
+    colorFilter: ColorFilter?
 ) {
     SubcomposeAsyncImage(
         model = model,
@@ -207,7 +207,7 @@ private fun AsyncImageWithPlaceholder(
                 placeholder = placeholder,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = contentScale,
-                allowRemotePlaceholder = false,
+                allowRemotePlaceholder = false
             )
         },
         error = {
@@ -215,10 +215,10 @@ private fun AsyncImageWithPlaceholder(
                 placeholder = placeholder,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = contentScale,
-                allowRemotePlaceholder = false,
+                allowRemotePlaceholder = false
             )
         },
-        success = { SubcomposeAsyncImageContent() },
+        success = { SubcomposeAsyncImageContent() }
     )
 }
 
@@ -238,14 +238,14 @@ private fun PlaceholderContent(
             painter = placeholder.painter,
             contentDescription = null,
             modifier = modifier,
-            contentScale = contentScale,
+            contentScale = contentScale
         )
 
         is Placeholder.VectorResource -> Image(
             imageVector = placeholder.imageVector,
             contentDescription = null,
             modifier = modifier,
-            contentScale = contentScale,
+            contentScale = contentScale
         )
 
         is Placeholder.ImageUrl -> {
@@ -254,7 +254,7 @@ private fun PlaceholderContent(
                     model = placeholder.url,
                     contentDescription = null,
                     modifier = modifier,
-                    contentScale = contentScale,
+                    contentScale = contentScale
                 )
             } else {
                 PlaceholderFallback(modifier)
@@ -282,7 +282,7 @@ private fun PreviewImage(
     alignment: Alignment,
     contentScale: ContentScale,
     alpha: Float,
-    colorFilter: ColorFilter?,
+    colorFilter: ColorFilter?
 ) {
     when (model) {
         is Painter -> Image(
@@ -292,7 +292,7 @@ private fun PreviewImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter,
+            colorFilter = colorFilter
         )
 
         is ImageVector -> Image(
@@ -302,7 +302,7 @@ private fun PreviewImage(
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,
-            colorFilter = colorFilter,
+            colorFilter = colorFilter
         )
 
         else -> when (placeholder) {
@@ -310,14 +310,14 @@ private fun PreviewImage(
                 painter = placeholder.painter,
                 contentDescription = null,
                 modifier = modifier,
-                contentScale = contentScale,
+                contentScale = contentScale
             )
 
             is Placeholder.VectorResource -> Image(
                 imageVector = placeholder.imageVector,
                 contentDescription = null,
                 modifier = modifier,
-                contentScale = contentScale,
+                contentScale = contentScale
             )
 
             else -> Box(
@@ -371,11 +371,11 @@ fun LottiePlaceholder(
     Image(
         painter = rememberLottiePainter(
             composition = composition,
-            progress = { progress },
+            progress = { progress }
         ),
         contentDescription = null,
         modifier = modifier,
-        contentScale = contentScale,
+        contentScale = contentScale
     )
 }
 

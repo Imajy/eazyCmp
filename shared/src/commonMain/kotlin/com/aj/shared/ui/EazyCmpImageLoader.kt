@@ -18,7 +18,6 @@ import okio.Path.Companion.toPath
 import okio.SYSTEM
 import kotlin.math.min
 
-/** Shared Coil [ImageLoader] with eazyCmp disk + memory caching. */
 object EazyCmpImageLoader {
     private const val DISK_CACHE_MAX_BYTES = 50L * 1024L * 1024L
 
