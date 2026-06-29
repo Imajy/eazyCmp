@@ -15,6 +15,7 @@ import coil3.svg.SvgDecoder
 import com.aj.shared.getCacheDir
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import okio.SYSTEM
 import kotlin.math.min
 
 /** Shared Coil [ImageLoader] with eazyCmp disk + memory caching. */
