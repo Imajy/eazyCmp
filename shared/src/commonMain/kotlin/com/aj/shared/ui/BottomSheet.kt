@@ -80,7 +80,7 @@ fun GenericBottomSheet(
         sheetState = sheetState,
         containerColor = whiteColor,
         dragHandle = null,
-        sheetGesturesEnabled = true,
+        sheetGesturesEnabled = false,
         shape = RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp),
         properties = ModalBottomSheetProperties(
             shouldDismissOnBackPress = false,
