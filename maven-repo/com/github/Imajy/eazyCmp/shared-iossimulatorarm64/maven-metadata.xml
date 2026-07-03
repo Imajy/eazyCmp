@@ -3,8 +3,8 @@
   <groupId>com.github.Imajy.eazyCmp</groupId>
   <artifactId>shared-iossimulatorarm64</artifactId>
   <versioning>
-    <latest>1.0.0.1-rc-015</latest>
-    <release>1.0.0.1-rc-015</release>
+    <latest>1.0.0.1-rc-016</latest>
+    <release>1.0.0.1-rc-016</release>
     <versions>
       <version>1.0.04-alpha-076</version>
       <version>1.0.04-alpha-077</version>
@@ -27,7 +27,8 @@
       <version>1.0.0.1-rc-013</version>
       <version>1.0.0.1-rc-014</version>
       <version>1.0.0.1-rc-015</version>
+      <version>1.0.0.1-rc-016</version>
     </versions>
-    <lastUpdated>20260703105937</lastUpdated>
+    <lastUpdated>20260703122105</lastUpdated>
   </versioning>
 </metadata>

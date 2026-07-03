@@ -589,15 +589,15 @@
             <span class="status-indicator success"></span> LIVE
           </span>
         </div>
-        <div class="card-value" style="font-family: var(--font-mono); font-size: 1.6rem;">1.0.0.1-rc-015</div>
-        <div class="card-subtext">Published: 03 Jul 2026, 12:16 UTC</div>
+        <div class="card-value" style="font-family: var(--font-mono); font-size: 1.6rem;">1.0.0.1-rc-016</div>
+        <div class="card-subtext">Published: 03 Jul 2026, 12:21 UTC</div>
       </div>
 
       <!-- Card 2: Release Statistics -->
       <div class="card card-stats">
         <div class="card-label">Update Frequency</div>
-        <div class="card-value">Every 1.1 days</div>
-        <div class="card-subtext">Total cataloged releases: 21</div>
+        <div class="card-value">Every 1.0 days</div>
+        <div class="card-subtext">Total cataloged releases: 22</div>
       </div>
 
       <!-- Card 3: Usage & Downloads -->
@@ -651,18 +651,10 @@
       </h3>
       <div id="failed-builds-list" class="failed-builds-container">
 
-        <div class="failed-run-card">
-          <div class="failed-run-header">
-            <span class="failed-version">Build Run (Version 1.0.0.1-rc-016)</span>
-            <span class="failed-time">03 Jul 2026, 12:16 UTC</span>
-          </div>
-          <div class="failed-commit">
-            Commit: <code>0d0907c</code>
-          </div>
-          <div class="failed-action">
-            <a href="https://imajy.github.io/eazyCmp/maven-repo/logs/build-1.0.0.1-rc-016-failed.log" target="_blank" class="btn-error-logs">View Error Logs &rarr;</a>
-          </div>
-        </div>
+      <div class="no-failures" style="grid-column: 1 / -1; text-align: center; padding: 2rem; background: rgba(16, 185, 129, 0.02); border: 1px solid rgba(16, 185, 129, 0.08); border-radius: 12px; color: var(--accent-green); font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%;">
+        <span class="no-failures-icon">✓</span>
+        No recent build failures. All deployment runs completed successfully!
+      </div>
         
       </div>
     </div>
@@ -685,7 +677,7 @@
           <span class="setup-title">2. Declare Dependency</span>
           <button class="btn-copy" onclick="copyCode('code-dep')" data-copy-id="code-dep">Copy</button>
         </div>
-        <pre><code id="code-dep">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-015&quot;)</code></pre>
+        <pre><code id="code-dep">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-016&quot;)</code></pre>
       </div>
     </div>
 
@@ -704,7 +696,19 @@
         <tbody>
 
         <tr class="latest-row">
-          <td class="version-cell"><code>1.0.0.1-rc-015</code> <span class="badge badge-success">latest</span></td>
+          <td class="version-cell"><code>1.0.0.1-rc-016</code> <span class="badge badge-success">latest</span></td>
+          <td class="message">Image Caching Improved</td>
+          <td class="when">03 Jul 2026, 17:49 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/103cca6ca1c49c25b475a9d3de314b07012e50aa" title="103cca6ca1c49c25b475a9d3de314b07012e50aa" target="_blank" class="commit-link">103cca6</a></span></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.0.1-rc-016">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-016&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.0.1-rc-016')" data-copy-id="dep-1.0.0.1-rc-016">Copy</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="version-cell"><code>1.0.0.1-rc-015</code></td>
           <td class="message">bottom sheet gesture disabled</td>
           <td class="when">03 Jul 2026, 16:26 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/dc6e672217a5cdac52957747e67fe7598a76da0c" title="dc6e672217a5cdac52957747e67fe7598a76da0c" target="_blank" class="commit-link">dc6e672</a></span></td>
           <td class="code-cell">

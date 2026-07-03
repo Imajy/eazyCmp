@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-015",
+  "latest": "1.0.0.1-rc-016",
   "versions": [
+    "1.0.0.1-rc-016",
     "1.0.0.1-rc-015",
     "1.0.0.1-rc-014",
     "1.0.0.1-rc-013",
@@ -27,6 +28,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-016",
+      "message": "Image Caching Improved",
+      "publishedAt": "2026-07-03T17:49:01+05:30",
+      "commit": "103cca6ca1c49c25b475a9d3de314b07012e50aa"
+    },
     {
       "version": "1.0.0.1-rc-015",
       "message": "bottom sheet gesture disabled",
@@ -155,13 +162,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-03T12:16:34Z",
-  "failures": [
-    {
-      "version": "1.0.0.1-rc-016",
-      "commit": "0d0907c54c35c86550df50932c913b5e1795ab9d",
-      "publishedAt": "2026-07-03T12:16:34Z",
-      "logFile": "logs/build-1.0.0.1-rc-016-failed.log"
-    }
-  ]
+  "updatedAt": "2026-07-03T12:21:07Z",
+  "failures": []
 }
