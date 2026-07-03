@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-014",
+  "latest": "1.0.0.1-rc-015",
   "versions": [
+    "1.0.0.1-rc-015",
     "1.0.0.1-rc-014",
     "1.0.0.1-rc-013",
     "1.0.0.1-rc-012",
@@ -26,6 +27,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-015",
+      "message": "bottom sheet gesture disabled",
+      "publishedAt": "2026-07-03T16:26:25+05:30",
+      "commit": "dc6e672217a5cdac52957747e67fe7598a76da0c"
+    },
     {
       "version": "1.0.0.1-rc-014",
       "message": "Image changes",
@@ -148,6 +155,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-06-29T10:55:29Z",
+  "updatedAt": "2026-07-03T10:59:41Z",
   "failures": []
 }
