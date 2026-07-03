@@ -49,10 +49,11 @@ object EazyCmpImageLoader {
                     .maxSizeBytes(DISK_CACHE_MAX_BYTES)
                     .build()
             }
-            // S3 (and many CDNs) send no-store / short max-age headers that would
-            // otherwise stop Coil from persisting images to disk. Ignoring them lets
-            // an already-downloaded image survive app restarts and load from cache.
-            .respectCacheHeaders(false)
+            // Coil 3.x already ignores Cache-Control headers by default and always
+            // writes responses to the disk cache, so S3's no-store / short max-age
+            // headers don't stop images from surviving app restarts. Combined with the
+            // stable cache key (query-param stripping), an image downloaded once is
+            // served from cache on every subsequent load.
             .build()
     }
 
