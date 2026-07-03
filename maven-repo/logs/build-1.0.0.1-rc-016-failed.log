@@ -1,0 +1,131 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: publishAllPublicationsToMavenRepository
+Type-safe project accessors is an incubating feature.
+> Task :shared:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :shared:androidPreBuild UP-TO-DATE
+> Task :shared:preAndroidMainBuild UP-TO-DATE
+> Task :shared:copyNonXmlValueResourcesForCommonMain
+> Task :shared:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForCommonMain
+> Task :shared:generateExpectResourceCollectorsForCommonMain
+> Task :shared:generateComposeResClass
+> Task :shared:generateResourceAccessorsForCommonMain
+> Task :shared:generateActualResourceCollectorsForAndroidMain
+> Task :shared:generateAndroidMainEmptyResourceFiles
+> Task :shared:copyAndroidMainComposeResourcesToAndroidAssets
+> Task :shared:packageAndroidMainResources FROM-CACHE
+> Task :shared:androidSourcesJar
+> Task :shared:generateAndroidMainAssets UP-TO-DATE
+> Task :shared:mergeAndroidMainJniLibFolders
+> Task :shared:mergeAndroidMainNativeLibs NO-SOURCE
+> Task :shared:copyAndroidMainJniLibsProjectOnly
+> Task :shared:mergeAndroidMainAssets
+> Task :shared:prepareAndroidMainArtProfile
+> Task :shared:prepareLintJarForPublish
+> Task :shared:processAndroidMainManifest FROM-CACHE
+> Task :shared:writeAndroidMainAarMetadata
+> Task :shared:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :shared:checkIosArm64MainComposeLibrariesCompatibility
+w: Skiko dependencies' versions are incompatible.
+    io.coil-kt.coil3:coil-core-iosarm64:3.4.0
+    \--- org.jetbrains.skiko:skiko:0.9.22.2 -> 0.144.6
+
+    io.coil-kt.coil3:coil-svg-iosarm64:3.4.0
+    \--- org.jetbrains.skiko:skiko:0.9.22.2 -> 0.144.6
+
+This may lead to compilation errors or unexpected behavior at runtime.
+Such version mismatch might be caused by dependency constraints in one of the included libraries.
+You can inspect resulted dependencies tree via `./gradlew :shared:dependencies  --configuration iosArm64CompileKlibraries`.
+See more details in Gradle documentation: https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html#sec:listing-dependencies
+
+Note: Skiko is considered implementation detail in Compose Multiplatform and might be incompatible across versions.
+Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
+
+
+> Task :shared:checkAndroidMainAarMetadata
+> Task :shared:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:generatePomFileForAndroidPublication
+> Task :shared:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:convertXmlValueResourcesForIosArm64Main NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForIosArm64Main NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForIosArm64Main NO-SOURCE
+> Task :shared:generateResourceAccessorsForIosArm64Main NO-SOURCE
+> Task :shared:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :shared:parseAndroidMainLocalResources FROM-CACHE
+> Task :shared:generateActualResourceCollectorsForIosArm64Main
+> Task :shared:generateAndroidMainRFile FROM-CACHE
+
+> Task :shared:downloadKotlinNativeDistribution
+Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-aarch64-2.3.21 is not empty. Native bundle files will be overwritten.
+
+> Task :shared:extractAndroidMainAnnotations FROM-CACHE
+> Task :shared:transformCommonMainDependenciesMetadata
+
+> Task :shared:compileCommonMainKotlinMetadata FAILED
+e: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/EazyCmpImageLoader.kt:55:14 Unresolved reference 'respectCacheHeaders'.
+
+> Task :shared:compileAndroidMain FAILED
+e: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/EazyCmpImageLoader.kt:55:14 Unresolved reference 'respectCacheHeaders'.
+
+> Task :shared:downloadKotlinNativeDistribution
+Downloading native dependencies (LLVM, sysroot etc). This is a one-time action performed only on the first run of the compiler.
+Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/19-aarch64-macos/llvm-19-aarch64-macos-essentials-81.tar.gz to /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz
+
+> Task :shared:commonizeNativeDistribution
+
+> Task :shared:downloadKotlinNativeDistribution
+Done.
+Extracting dependency: /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz into /Users/runner/.konan/dependencies
+Downloading dependency https://download.jetbrains.com/kotlin/native/libffi-3.3-1-macos-arm64.tar.gz to /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz
+Done.
+Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz into /Users/runner/.konan/dependencies
+gradle/actions: Writing build results to /Users/runner/work/_temp/.gradle-actions/build-results/__run-1783080934721.json
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':shared:compileCommonMainKotlinMetadata'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':shared:compileAndroidMain'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 1m 2s
+30 actionable tasks: 25 executed, 5 from cache
+Configuration cache entry stored.

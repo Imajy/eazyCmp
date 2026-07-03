@@ -155,6 +155,13 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-03T10:59:41Z",
-  "failures": []
+  "updatedAt": "2026-07-03T12:16:34Z",
+  "failures": [
+    {
+      "version": "1.0.0.1-rc-016",
+      "commit": "0d0907c54c35c86550df50932c913b5e1795ab9d",
+      "publishedAt": "2026-07-03T12:16:34Z",
+      "logFile": "logs/build-1.0.0.1-rc-016-failed.log"
+    }
+  ]
 }
