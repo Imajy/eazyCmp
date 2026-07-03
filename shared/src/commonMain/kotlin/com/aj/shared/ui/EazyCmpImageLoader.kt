@@ -49,6 +49,10 @@ object EazyCmpImageLoader {
                     .maxSizeBytes(DISK_CACHE_MAX_BYTES)
                     .build()
             }
+            // S3 (and many CDNs) send no-store / short max-age headers that would
+            // otherwise stop Coil from persisting images to disk. Ignoring them lets
+            // an already-downloaded image survive app restarts and load from cache.
+            .respectCacheHeaders(false)
             .build()
     }
 
@@ -115,7 +119,48 @@ object EazyCmpImageLoader {
         cacheKey: String = normalizeCacheKey(url),
     ): ImageResult = get(context).execute(urlRequest(context, url, cacheKey))
 
-    fun normalizeCacheKey(value: String): String = value.trim().replace("\\/", "/")
+    /**
+     * Volatile query parameters that change on every request (e.g. AWS S3 presigned
+     * URL signatures / expiry). They must be excluded from the cache key, otherwise
+     * the same image gets a different key each time and is re-downloaded endlessly.
+     */
+    private val VOLATILE_QUERY_PARAMS = setOf(
+        "x-amz-algorithm",
+        "x-amz-credential",
+        "x-amz-date",
+        "x-amz-expires",
+        "x-amz-signedheaders",
+        "x-amz-signature",
+        "x-amz-security-token",
+        "x-amz-content-sha256",
+        "awsaccesskeyid",
+        "signature",
+        "expires",
+        "policy",
+        "token",
+    )
+
+    /**
+     * Builds a stable cache key for an image source. For remote URLs, signing/expiry
+     * query params are stripped so a presigned S3 URL always maps to the same key
+     * (the actual network request still uses the full signed URL via [urlRequest]).
+     */
+    fun normalizeCacheKey(value: String): String {
+        val cleaned = value.trim().replace("\\/", "/")
+        val queryIndex = cleaned.indexOf('?')
+        if (queryIndex < 0) return cleaned
+
+        val base = cleaned.substring(0, queryIndex)
+        val query = cleaned.substring(queryIndex + 1)
+        if (query.isEmpty()) return base
+
+        val stableParams = query.split('&').filter { param ->
+            val name = param.substringBefore('=').lowercase()
+            name.isNotEmpty() && name !in VOLATILE_QUERY_PARAMS
+        }
+
+        return if (stableParams.isEmpty()) base else base + "?" + stableParams.joinToString("&")
+    }
 
     private fun isSvgSource(path: String?): Boolean =
         path?.endsWith(".svg", ignoreCase = true) == true
