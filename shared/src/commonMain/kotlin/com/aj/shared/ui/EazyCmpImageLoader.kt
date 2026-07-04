@@ -14,7 +14,6 @@ import coil3.request.ImageRequest
 import coil3.request.ImageResult
 import coil3.request.crossfade
 import coil3.svg.SvgDecoder
-import com.aj.shared.getCacheDir
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
@@ -30,8 +29,10 @@ object EazyCmpImageLoader {
     private var sharedLoader: ImageLoader? = null
 
     fun create(context: PlatformContext): ImageLoader {
-        val cacheDir = getCacheDir().toPath()
-        FileSystem.SYSTEM.createDirectories(cacheDir)
+        val cacheDir = imageCacheDirectory(context).toPath()
+        if (!FileSystem.SYSTEM.exists(cacheDir)) {
+            FileSystem.SYSTEM.createDirectories(cacheDir)
+        }
 
         return ImageLoader.Builder(context)
             .components {
