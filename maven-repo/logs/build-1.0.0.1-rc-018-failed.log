@@ -1,0 +1,157 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: publishAllPublicationsToMavenRepository
+Type-safe project accessors is an incubating feature.
+> Task :shared:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :shared:androidPreBuild UP-TO-DATE
+> Task :shared:preAndroidMainBuild UP-TO-DATE
+> Task :shared:copyNonXmlValueResourcesForCommonMain
+> Task :shared:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForCommonMain
+> Task :shared:generateExpectResourceCollectorsForCommonMain
+> Task :shared:generateComposeResClass
+> Task :shared:generateResourceAccessorsForCommonMain
+> Task :shared:generateAndroidMainEmptyResourceFiles
+> Task :shared:generateActualResourceCollectorsForAndroidMain
+> Task :shared:copyAndroidMainComposeResourcesToAndroidAssets
+> Task :shared:packageAndroidMainResources FROM-CACHE
+> Task :shared:androidSourcesJar
+> Task :shared:generateAndroidMainAssets UP-TO-DATE
+> Task :shared:mergeAndroidMainJniLibFolders
+> Task :shared:mergeAndroidMainAssets
+> Task :shared:mergeAndroidMainNativeLibs NO-SOURCE
+> Task :shared:prepareAndroidMainArtProfile
+> Task :shared:copyAndroidMainJniLibsProjectOnly
+> Task :shared:prepareLintJarForPublish
+> Task :shared:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:processAndroidMainManifest FROM-CACHE
+> Task :shared:writeAndroidMainAarMetadata
+
+> Task :shared:checkIosArm64MainComposeLibrariesCompatibility
+w: Skiko dependencies' versions are incompatible.
+    io.coil-kt.coil3:coil-core-iosarm64:3.4.0
+    \--- org.jetbrains.skiko:skiko:0.9.22.2 -> 0.144.6
+
+    io.coil-kt.coil3:coil-svg-iosarm64:3.4.0
+    \--- org.jetbrains.skiko:skiko:0.9.22.2 -> 0.144.6
+
+This may lead to compilation errors or unexpected behavior at runtime.
+Such version mismatch might be caused by dependency constraints in one of the included libraries.
+You can inspect resulted dependencies tree via `./gradlew :shared:dependencies  --configuration iosArm64CompileKlibraries`.
+See more details in Gradle documentation: https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html#sec:listing-dependencies
+
+Note: Skiko is considered implementation detail in Compose Multiplatform and might be incompatible across versions.
+Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
+
+
+> Task :shared:checkAndroidMainAarMetadata
+> Task :shared:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :shared:convertXmlValueResourcesForIosArm64Main NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForIosArm64Main NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForIosArm64Main NO-SOURCE
+> Task :shared:generateResourceAccessorsForIosArm64Main NO-SOURCE
+> Task :shared:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :shared:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :shared:generatePomFileForAndroidPublication
+> Task :shared:parseAndroidMainLocalResources FROM-CACHE
+> Task :shared:generateActualResourceCollectorsForIosArm64Main
+> Task :shared:generateAndroidMainRFile FROM-CACHE
+> Task :shared:extractAndroidMainAnnotations FROM-CACHE
+
+> Task :shared:commonizeNativeDistribution
+Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-aarch64-2.3.21 is not empty. Native bundle files will be overwritten.
+
+> Task :shared:transformCommonMainDependenciesMetadata
+
+> Task :shared:compileCommonMainKotlinMetadata
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/auth/AppleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/auth/GoogleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/auth/OtpAutoReader.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/domain/IndianInsurance.kt:14:24 'expect val monthNumber: Int' is deprecated. Use the 'month' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/domain/IndianInsurance.kt:14:42 'expect val monthNumber: Int' is deprecated. Use the 'month' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/domain/IndianInsurance.kt:15:15 'expect val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/domain/IndianInsurance.kt:15:32 'expect val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:6:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:34:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/haptic/HapticManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/location/LocationManager.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/network/ConnectivityObserver.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/network/SseClient.kt:29:36 'suspend fun ByteReadChannel.readUTF8Line(max: Int = ...): String?' is deprecated. Use readLineStrict or readLine instead. See deprecation notes for more details.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.kt:12:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/notification/PushTokenManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/permission/PermissionManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/platform/ClipboardManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/platform/DeviceInfo.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/platform/QrGenerator.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/platform/QrScanner.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/security/AppLockManager.kt:66:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/share/ShareManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/storage/CacheFileIO.kt:3:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/storage/SecureStorage.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:21:26 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:24:16 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:87:18 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:100:26 'expect val monthNumber: Int' is deprecated. Use the 'month' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:101:24 'expect val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:217:50 'expect val monthNumber: Int' is deprecated. Use the 'month' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/DatePicker.kt:217:68 'expect val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/kit/SwipeToDelete.kt:30:17 'fun rememberSwipeToDismissBoxState(initialValue: SwipeToDismissBoxValue = ..., confirmValueChange: (SwipeToDismissBoxValue) -> Boolean = ..., positionalThreshold: (Float) -> Float = ...): SwipeToDismissBoxState' is deprecated. confirmValueChange is deprecated without replacement. Rather than relying on a callback to veto state changes, the anchor set should not include disallowed anchors. See androidx.compose.foundation.samples.AnchoredDraggableDynamicAnchorsSample for an example of using dynamic anchors over confirmValueChange.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/kit/TooltipPopover.kt:36:44 'fun rememberPlainTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/upload/FileCompressor.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+
+> Task :shared:metadataCommonMainProcessResources NO-SOURCE
+> Task :shared:metadataCommonMainClasses
+
+> Task :shared:downloadKotlinNativeDistribution
+Downloading native dependencies (LLVM, sysroot etc). This is a one-time action performed only on the first run of the compiler.
+Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/19-aarch64-macos/llvm-19-aarch64-macos-essentials-81.tar.gz to /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz
+Done.
+Extracting dependency: /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz into /Users/runner/.konan/dependencies
+
+> Task :shared:transformNativeMainDependenciesMetadata
+> Task :shared:metadataNativeMainProcessResources NO-SOURCE
+> Task :shared:transformAppleMainDependenciesMetadata
+> Task :shared:metadataAppleMainProcessResources NO-SOURCE
+
+> Task :shared:compileAndroidMain FAILED
+e: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/androidMain/kotlin/com/aj/shared/EazyCmp.android.kt:14:24 Backing field of 'var appContext: Context' is not accessible at this point.
+
+> Task :shared:transformIosMainDependenciesMetadata
+
+> Task :shared:downloadKotlinNativeDistribution
+Downloading dependency https://download.jetbrains.com/kotlin/native/libffi-3.3-1-macos-arm64.tar.gz to /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz
+Done.
+Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz into /Users/runner/.konan/dependencies
+gradle/actions: Writing build results to /Users/runner/work/_temp/.gradle-actions/build-results/__run-1783167130505.json
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':shared:compileAndroidMain'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 43s
+33 actionable tasks: 28 executed, 5 from cache
+Configuration cache entry stored.
