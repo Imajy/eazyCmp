@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-016",
+  "latest": "1.0.0.1-rc-017",
   "versions": [
+    "1.0.0.1-rc-017",
     "1.0.0.1-rc-016",
     "1.0.0.1-rc-015",
     "1.0.0.1-rc-014",
@@ -28,6 +29,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-017",
+      "message": "Image Caching Improved",
+      "publishedAt": "2026-07-04T09:04:28+05:30",
+      "commit": "d83d0649cf831434fc75abb06f700372eecf6380"
+    },
     {
       "version": "1.0.0.1-rc-016",
       "message": "Image Caching Improved",
@@ -162,6 +169,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-03T12:21:07Z",
+  "updatedAt": "2026-07-04T03:36:52Z",
   "failures": []
 }
