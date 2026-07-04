@@ -121,11 +121,13 @@ object EazyCmpImageLoader {
     ): ImageResult = get(context).execute(urlRequest(context, url, cacheKey))
 
     /**
-     * Volatile query parameters that change on every request (e.g. AWS S3 presigned
-     * URL signatures / expiry). They must be excluded from the cache key, otherwise
-     * the same image gets a different key each time and is re-downloaded endlessly.
+     * AWS S3 presigned-URL parameters (SigV4). These are pure authentication/expiry
+     * values that change on every request but never identify the image itself, so
+     * they are safe to drop from the cache key. Only stripped when the URL is a real
+     * presigned URL (see [normalizeCacheKey]) so we never touch app-specific params
+     * that might identify distinct images.
      */
-    private val VOLATILE_QUERY_PARAMS = setOf(
+    private val AWS_PRESIGN_PARAMS = setOf(
         "x-amz-algorithm",
         "x-amz-credential",
         "x-amz-date",
@@ -134,17 +136,18 @@ object EazyCmpImageLoader {
         "x-amz-signature",
         "x-amz-security-token",
         "x-amz-content-sha256",
-        "awsaccesskeyid",
-        "signature",
-        "expires",
-        "policy",
-        "token",
     )
 
     /**
-     * Builds a stable cache key for an image source. For remote URLs, signing/expiry
-     * query params are stripped so a presigned S3 URL always maps to the same key
-     * (the actual network request still uses the full signed URL via [urlRequest]).
+     * Builds a stable cache key for an image source.
+     *
+     * For AWS S3 presigned URLs the object path already uniquely identifies the image,
+     * so only the rotating `X-Amz-*` signing params are dropped — the same image then
+     * maps to the same key across signature refreshes and app restarts.
+     *
+     * Every other URL keeps its full query untouched, so two different images can never
+     * collapse onto the same cache key (which would show the wrong image). The actual
+     * network request always uses the full original URL via [urlRequest].
      */
     fun normalizeCacheKey(value: String): String {
         val cleaned = value.trim().replace("\\/", "/")
@@ -155,11 +158,13 @@ object EazyCmpImageLoader {
         val query = cleaned.substring(queryIndex + 1)
         if (query.isEmpty()) return base
 
-        val stableParams = query.split('&').filter { param ->
-            val name = param.substringBefore('=').lowercase()
-            name.isNotEmpty() && name !in VOLATILE_QUERY_PARAMS
-        }
+        val params = query.split('&').filter { it.isNotEmpty() }
+        val isAwsPresigned = params.any { it.substringBefore('=').lowercase() == "x-amz-signature" }
+        if (!isAwsPresigned) return cleaned
 
+        val stableParams = params.filter { param ->
+            param.substringBefore('=').lowercase() !in AWS_PRESIGN_PARAMS
+        }
         return if (stableParams.isEmpty()) base else base + "?" + stableParams.joinToString("&")
     }
 
