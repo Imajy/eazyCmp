@@ -2,6 +2,7 @@ package com.aj.shared.domain
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -11,8 +12,8 @@ data class AgeResult(val years: Int, val months: Int)
 
 fun ageFromDob(dob: LocalDate, today: LocalDate = todayLocalDate()): AgeResult {
     var years = today.year - dob.year
-    var months = today.monthNumber - dob.monthNumber
-    if (today.dayOfMonth < dob.dayOfMonth) {
+    var months = today.month.number - dob.month.number
+    if (today.day < dob.day) {
         months -= 1
     }
     if (months < 0) {

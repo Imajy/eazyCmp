@@ -42,6 +42,8 @@ actual fun provideHttpClient(): HttpClient {
 }
 lateinit var appContext: Context
 
+fun isAppContextInitialized(): Boolean = ::appContext.isInitialized
+
 fun initEazyCmp(context: Context, name : String) {
     appContext = context
     SETTINGS_NAME = name

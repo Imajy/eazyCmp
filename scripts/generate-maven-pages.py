@@ -775,13 +775,13 @@ def main() -> None:
           </span>
         </div>
         <div class="card-value" style="font-family: var(--font-mono); font-size: 1.6rem;">{html.escape(latest or "—")}</div>
-        <div class="card-subtext">Published: {updated_at or "—"}</div>
+        <div class="card-subtext" id="latest-published-time">Published: {updated_at or "—"}</div>
       </div>
 
       <!-- Card 2: Release Statistics -->
       <div class="card card-stats">
         <div class="card-label">Update Frequency</div>
-        <div class="card-value">{frequency}</div>
+        <div class="card-value" id="update-frequency-val">{frequency}</div>
         <div class="card-subtext">Total cataloged releases: {len(releases)}</div>
       </div>
 
@@ -969,8 +969,83 @@ def main() -> None:
       return "just now";
     }}
 
+    async function updateDynamicStats() {{
+      try {{
+        const response = await fetch("versions.json");
+        if (!response.ok) return;
+        const data = await response.json();
+        const releases = data.releases || [];
+        if (releases.length === 0) return;
+
+        const validTimes = [];
+        for (const r of releases) {{
+          if (r.publishedAt) {{
+            const d = new Date(r.publishedAt.replace("Z", "+00:00"));
+            if (!isNaN(d)) {{
+              validTimes.push(d);
+            }}
+          }}
+        }}
+        
+        if (validTimes.length > 0) {{
+          validTimes.sort((a, b) => a - b);
+          const intervals = [];
+          for (let i = 0; i < validTimes.length - 1; i++) {{
+            intervals.push((validTimes[i+1] - validTimes[i]) / 1000);
+          }}
+          
+          const latestReleaseDate = validTimes[validTimes.length - 1];
+          const timeSinceLatest = (new Date() - latestReleaseDate) / 1000;
+          if (timeSinceLatest > 0) {{
+            intervals.push(timeSinceLatest);
+          }}
+          
+          const avgSeconds = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+          const avgDays = avgSeconds / 86400.0;
+          
+          let freqStr = "";
+          if (avgDays < 0.04) {{
+            const minutes = avgDays * 1440.0;
+            freqStr = `Every ${{Math.max(1, Math.round(minutes))}} mins`;
+          }} else if (avgDays < 1) {{
+            const hours = avgDays * 24.0;
+            freqStr = `Every ${{hours.toFixed(1)}} hours`;
+          }} else if (avgDays < 7) {{
+            freqStr = `Every ${{avgDays.toFixed(1)}} days`;
+          }} else {{
+            const weeks = avgDays / 7.0;
+            freqStr = `Every ${{weeks.toFixed(1)}} weeks`;
+          }}
+          
+          const freqEl = document.getElementById("update-frequency-val");
+          if (freqEl) {{
+            freqEl.textContent = freqStr;
+          }}
+          
+          const latestPubEl = document.getElementById("latest-published-time");
+          if (latestPubEl) {{
+            const relative = getRelativeTime(latestReleaseDate);
+            const day = String(latestReleaseDate.getUTCDate()).padStart(2, '0');
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const month = months[latestReleaseDate.getUTCMonth()];
+            const year = latestReleaseDate.getUTCFullYear();
+            const hours = String(latestReleaseDate.getUTCHours()).padStart(2, '0');
+            const mins = String(latestReleaseDate.getUTCMinutes()).padStart(2, '0');
+            const utcDateStr = `${{day}} ${{month}} ${{year}}, ${{hours}}:${{mins}} UTC`;
+            
+            latestPubEl.innerHTML = `Published: ${{utcDateStr}} <span class="muted" style="font-size:0.85em; opacity:0.8;">(${{relative}})</span>`;
+          }}
+        }}
+      }} catch (err) {{
+        console.error("Error updating dynamic stats:", err);
+      }}
+    }}
+
     // Load metrics on page load
-    window.addEventListener("DOMContentLoaded", fetchGithubStats);
+    window.addEventListener("DOMContentLoaded", () => {{
+      fetchGithubStats();
+      updateDynamicStats();
+    }});
   </script>
 </body>
 </html>
