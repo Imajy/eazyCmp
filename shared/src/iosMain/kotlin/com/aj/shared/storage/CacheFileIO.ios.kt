@@ -1,4 +1,7 @@
-@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+@file:OptIn(
+    kotlinx.cinterop.ExperimentalForeignApi::class,
+    kotlinx.cinterop.BetaInteropApi::class
+)
 
 package com.aj.shared.storage
 
@@ -35,7 +38,7 @@ internal actual object CacheFileIO {
         if (parent.isNotEmpty()) {
             fm.createDirectoryAtPath(parent, true, null, null)
         }
-        (content as NSString).writeToFile(path, true, NSUTF8StringEncoding, null)
+        NSString.create(string = content).writeToFile(path, true, NSUTF8StringEncoding, null)
     }
 
     actual fun writeBytes(path: String, bytes: ByteArray) {
