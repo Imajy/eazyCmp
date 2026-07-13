@@ -2,6 +2,7 @@ package com.aj.shared.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ fun EazyCmpTheme(
     themeManager: ThemeManager = EazyCmp.theme,
     colors: EazyColors = LocalEazyColors.current,
     typography: EazyTypography = LocalEazyTypography.current,
+    materialTypography: Typography? = null,
     content: @Composable () -> Unit,
 ) {
     val mode = themeManager.mode
@@ -43,13 +45,19 @@ fun EazyCmpTheme(
         )
     }
 
+    val resolvedTypography = if (materialTypography != null) {
+        typography.toMaterialTypography(base = materialTypography)
+    } else {
+        typography.toMaterialTypography()
+    }
+
     CompositionLocalProvider(
         LocalEazyColors provides colors,
         LocalEazyTypography provides typography,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = typography.toMaterialTypography(),
+            typography = resolvedTypography,
             content = content,
         )
     }

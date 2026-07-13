@@ -1,5 +1,6 @@
 package com.aj.shared.theme
 
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.aj.shared.EazyCmp
@@ -12,6 +13,7 @@ fun EazyCmpProviders(
     displayManager: DisplaySettingsManager = EazyCmp.display,
     colors: EazyColors = EazyColors(),
     typography: EazyTypography = EazyTypography(),
+    materialTypography: Typography? = null,
     content: @Composable () -> Unit,
 ) {
     EazyCmpDisplayHost(manager = displayManager) {
@@ -23,6 +25,7 @@ fun EazyCmpProviders(
                 themeManager = themeManager,
                 colors = colors,
                 typography = typography,
+                materialTypography = materialTypography,
                 content = content,
             )
         }
