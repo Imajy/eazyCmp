@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-020",
+  "latest": "1.0.0.1-rc-021",
   "versions": [
+    "1.0.0.1-rc-021",
     "1.0.0.1-rc-020",
     "1.0.0.1-rc-019",
     "1.0.0.1-rc-018",
@@ -32,6 +33,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-021",
+      "message": "typography added",
+      "publishedAt": "2026-07-13T18:14:08+05:30",
+      "commit": "4a2a454b4073f213de2bbf2c16c9ddb42761c8a6"
+    },
     {
       "version": "1.0.0.1-rc-020",
       "message": "JVM CACHING",
@@ -190,6 +197,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-13T07:02:12Z",
+  "updatedAt": "2026-07-13T12:47:50Z",
   "failures": []
 }
