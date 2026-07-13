@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-019",
+  "latest": "1.0.0.1-rc-020",
   "versions": [
+    "1.0.0.1-rc-020",
     "1.0.0.1-rc-019",
     "1.0.0.1-rc-018",
     "1.0.0.1-rc-017",
@@ -31,6 +32,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-020",
+      "message": "JVM CACHING",
+      "publishedAt": "2026-07-13T12:29:31+05:30",
+      "commit": "080184333535f7a480db81f61d205414506db723"
+    },
     {
       "version": "1.0.0.1-rc-019",
       "message": "date picker ui in screen without dialog",
@@ -183,6 +190,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-09T05:53:19Z",
+  "updatedAt": "2026-07-13T07:02:12Z",
   "failures": []
 }
