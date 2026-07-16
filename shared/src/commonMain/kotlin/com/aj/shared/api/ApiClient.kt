@@ -174,8 +174,6 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
 
             val duration = Clock.System.now() - startTime
             val rawResponse = response.bodyAsText()
-            val data: Res = json.decodeFromString(rawResponse)
-
             val resHeaders = response.headers.entries().associate { it.key to it.value.joinToString(", ") }
             EazyLogger.logApiResponse(
                 url = url,
@@ -184,6 +182,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 durationMs = duration.inWholeMilliseconds,
                 rawResponse = rawResponse
             )
+            val data: Res = json.decodeFromString(rawResponse)
             emit(Resource.Success(data))
         } catch (e: Exception) {
             val duration = Clock.System.now() - startTime
