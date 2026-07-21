@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-022",
+  "latest": "1.0.0.1-rc-023",
   "versions": [
+    "1.0.0.1-rc-023",
     "1.0.0.1-rc-022",
     "1.0.0.1-rc-021",
     "1.0.0.1-rc-020",
@@ -34,6 +35,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-023",
+      "message": "scaffold padding improvements",
+      "publishedAt": "2026-07-21T17:54:47+05:30",
+      "commit": "fe88607a47bb056983386c8df55481c6b910f0d4"
+    },
     {
       "version": "1.0.0.1-rc-022",
       "message": "response logger",
@@ -204,6 +211,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-16T09:10:15Z",
+  "updatedAt": "2026-07-21T12:28:22Z",
   "failures": []
 }
