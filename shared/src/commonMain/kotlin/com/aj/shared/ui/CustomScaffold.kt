@@ -57,6 +57,9 @@ fun CustomScaffold(
     titleColor: Color = blackColor,
     titleStyle: TextStyle = MaterialTheme.typography.titleMedium,
     iconSize: Int = 35,
+    backIconStartPadding : PaddingValues = PaddingValues(start = 4.dp),
+    actionImg1Padding : PaddingValues = PaddingValues(start = 4.dp),
+    actionImg2Padding : PaddingValues = PaddingValues(start = 4.dp),
     gradient: Brush = screenGradientColor,
     loading: (@Composable () -> Unit)? = null,
     loadingLottieUrl : Placeholder = EazyCmp.defaultApiLoadingPlaceholder,
@@ -106,7 +109,7 @@ fun CustomScaffold(
                                         indication = null,
                                         onClick = onBackClick
                                     )
-                                    .size(iconSize.dp).padding(start = 4.dp)
+                                    .size(iconSize.dp).padding(backIconStartPadding)
                             )
                         }
                     },
@@ -125,7 +128,7 @@ fun CustomScaffold(
                                             indication = null,
                                             onClick = action1Click
                                         )
-                                        .size(iconSize.dp).padding(start = 4.dp)
+                                        .size(iconSize.dp).padding(actionImg1Padding)
                                 )
                             }
                             if (action2Img != null) {
@@ -137,7 +140,7 @@ fun CustomScaffold(
                                             indication = null,
                                             onClick = action2Click
                                         )
-                                        .size(iconSize.dp).padding(start = 4.dp)
+                                        .size(iconSize.dp).padding(actionImg2Padding)
                                 )
                             }
                         }
