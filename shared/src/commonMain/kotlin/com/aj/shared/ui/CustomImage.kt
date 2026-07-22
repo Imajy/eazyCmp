@@ -33,6 +33,8 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import com.github.imajy.shared.generated.resources.Res
 
 sealed interface Placeholder {
     data class LottieUrl(val url: String) : Placeholder
@@ -41,6 +43,33 @@ sealed interface Placeholder {
     data class PainterResource(val painter: Painter) : Placeholder
     data class VectorResource(val imageVector: ImageVector) : Placeholder
     data class ImageUrl(val url: String) : Placeholder
+    data class LocalPath(val path: String) : Placeholder
+
+    companion object {
+        fun from(pathOrUrl: String): Placeholder {
+            val clean = pathOrUrl.trim().replace("\\/", "/")
+            val isUrl = clean.startsWith("http://", ignoreCase = true) || clean.startsWith("https://", ignoreCase = true)
+            val isJson = clean.endsWith(".json", ignoreCase = true) || clean.startsWith("{")
+            return when {
+                isJson && isUrl -> LottieUrl(clean)
+                isJson -> LottieJson(clean)
+                isUrl -> ImageUrl(clean)
+                else -> LocalPath(clean)
+            }
+        }
+
+        fun from(source: Any?): Placeholder? {
+            return when (source) {
+                null -> null
+                is Placeholder -> source
+                is Painter -> PainterResource(source)
+                is ImageVector -> VectorResource(source)
+                is ByteArray -> LottieBytes(source)
+                is String -> from(source)
+                else -> null
+            }
+        }
+    }
 }
 
 private fun Placeholder?.isLottie(): Boolean = when (this) {
@@ -166,11 +195,7 @@ fun CustomImage(
 
                 isLocalAssetPath(cleanPath) -> {
                     val bytes by produceState<ByteArray?>(initialValue = null, key1 = cleanPath) {
-                        value = try {
-                            CustomImageResourceResolver.resolveBytes?.invoke(cleanPath)
-                        } catch (_: Exception) {
-                            null
-                        }
+                        value = resolveResourceBytes(cleanPath)
                     }
 
                     if (bytes != null) {
@@ -314,6 +339,34 @@ private fun PlaceholderContent(
             )
         }
 
+        is Placeholder.LocalPath -> {
+            val context = LocalPlatformContext.current
+            val bytes by produceState<ByteArray?>(initialValue = null, key1 = placeholder.path) {
+                value = resolveResourceBytes(placeholder.path)
+            }
+
+            if (bytes != null) {
+                val cacheKey = remember(placeholder.path) { EazyCmpImageLoader.normalizeCacheKey(placeholder.path) }
+                val request = remember(cacheKey, bytes) {
+                    EazyCmpImageLoader.bytesRequest(
+                        context = context,
+                        bytes = bytes!!,
+                        cacheKey = cacheKey,
+                        sourcePath = placeholder.path,
+                    )
+                }
+                AsyncImage(
+                    model = request,
+                    imageLoader = imageLoader,
+                    contentDescription = null,
+                    modifier = modifier,
+                    contentScale = contentScale,
+                )
+            } else {
+                PlaceholderFallback(modifier)
+            }
+        }
+
         null -> {}
     }
 }
@@ -420,8 +473,8 @@ fun LottiePlaceholder(
                 is Placeholder.LottieUrl -> HttpClient().use { it.get(placeholder.url).bodyAsText() }
                 is Placeholder.LottieJson -> {
                     val pathOrJson = placeholder.json
-                    if (pathOrJson.endsWith(".json", ignoreCase = true)) {
-                        val bytes = CustomImageResourceResolver.resolveBytes?.invoke(pathOrJson)
+                    if (pathOrJson.endsWith(".json", ignoreCase = true) || isLocalAssetPath(pathOrJson)) {
+                        val bytes = resolveResourceBytes(pathOrJson)
                         bytes?.decodeToString() ?: "{}"
                     } else {
                         pathOrJson
@@ -459,4 +512,34 @@ fun LottiePlaceholder(
 
 object CustomImageResourceResolver {
     var resolveBytes: (suspend (String) -> ByteArray?)? = null
+}
+
+@OptIn(ExperimentalResourceApi::class)
+suspend fun resolveResourceBytes(path: String): ByteArray? {
+    val customBytes = try {
+        CustomImageResourceResolver.resolveBytes?.invoke(path)
+    } catch (_: Exception) {
+        null
+    }
+    if (customBytes != null) return customBytes
+
+    val cleanPath = path.trim()
+        .removePrefix("composeResources/")
+        .substringAfter("resources/")
+
+    val candidates = listOf(
+        cleanPath,
+        if (!cleanPath.startsWith("drawable/")) "drawable/$cleanPath" else cleanPath,
+        if (!cleanPath.startsWith("files/")) "files/$cleanPath" else cleanPath
+    ).distinct()
+
+    for (candidate in candidates) {
+        try {
+            val bytes = Res.readBytes(candidate)
+            if (bytes.isNotEmpty()) return bytes
+        } catch (_: Exception) {
+            // try next candidate
+        }
+    }
+    return null
 }

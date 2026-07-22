@@ -116,6 +116,14 @@ object EazyCmp {
         "https://letterhead.ajmonic.com/loading.json"
     )
 
+    fun setDefaultApiLoadingPlaceholder(pathOrUrl: String) {
+        defaultApiLoadingPlaceholder = Placeholder.from(pathOrUrl)
+    }
+
+    fun setDefaultImagePlaceholder(pathOrUrl: String) {
+        defaultImagePlaceholder = Placeholder.from(pathOrUrl)
+    }
+
     var isDebugEnabled: Boolean
         get() = EazyLogger.isDebugEnabled
         set(value) { EazyLogger.isDebugEnabled = value }

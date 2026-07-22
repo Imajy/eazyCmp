@@ -35,6 +35,19 @@ fun CustomLoading(
     }
 }
 
+@Composable
+fun CustomLoading(
+    loadingPathOrUrl: String,
+    dismissOnBackPress: Boolean = false,
+    onDismiss: () -> Unit = {}
+) {
+    CustomLoading(
+        loading = Placeholder.from(loadingPathOrUrl),
+        dismissOnBackPress = dismissOnBackPress,
+        onDismiss = onDismiss
+    )
+}
+
 suspend fun loadJson(path: String): String? {
 
     return CustomImageResourceResolver
