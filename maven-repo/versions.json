@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-024",
+  "latest": "1.0.0.1-rc-025",
   "versions": [
+    "1.0.0.1-rc-025",
     "1.0.0.1-rc-024",
     "1.0.0.1-rc-023",
     "1.0.0.1-rc-022",
@@ -36,6 +37,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-025",
+      "message": "Animate snackbar and improve dismiss swipes",
+      "publishedAt": "2026-07-23T17:25:54+05:30",
+      "commit": "1b67ac8f80ae7360c0ada2293c9c19c6f2c143d3"
+    },
     {
       "version": "1.0.0.1-rc-024",
       "message": "user can now add loader from drawables",
@@ -218,6 +225,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-22T07:56:32Z",
+  "updatedAt": "2026-07-23T12:02:56Z",
   "failures": []
 }
