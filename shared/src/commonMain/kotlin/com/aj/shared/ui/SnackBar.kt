@@ -74,11 +74,29 @@ object AppSnackbarManager {
         autoDismissMillis: Long = 4000,
         onAction: (() -> Unit)? = null
     ) {
-        AppSnackbarManager.show(message, type, actionLabel, autoDismissMillis, onAction)
+        if (onSnackbarDataChange == null) return
+
+        dismiss()
+
+        val data = AppSnackbar(
+            message = message ?: "Something went wrong",
+            type = type,
+            actionLabel = actionLabel,
+            duration = SnackbarDuration.Short,
+            onAction = onAction
+        )
+
+        onSnackbarDataChange?.invoke(data)
+
+        autoDismissJob = scope.launch {
+            kotlinx.coroutines.delay(autoDismissMillis)
+            dismiss()
+        }
     }
 
     fun dismiss() {
-        AppSnackbarManager.dismiss()
+        autoDismissJob?.cancel()
+        onSnackbarDataChange?.invoke(null)
     }
 }
 
