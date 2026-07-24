@@ -10,7 +10,8 @@ enum class ApiPriority {
 
 data class RequestOptions(
     val priority: ApiPriority = ApiPriority.NORMAL,
-    val retryOnConnection: Boolean = false
+    val retryOnConnection: Boolean = false,
+    val useCacheFallback: Boolean = true
 )
 
 

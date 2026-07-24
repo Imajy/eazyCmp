@@ -1,100 +1,42 @@
 package com.aj.shared.network
 
-import com.aj.shared.api.json
-import com.aj.shared.storage.SecureStorage
-import kotlinx.serialization.Serializable
-import kotlin.time.Clock
+import com.aj.shared.storage.ApiCacheStorage
+import com.aj.shared.storage.ApiCacheEntry
+import kotlin.time.Duration.Companion.milliseconds
 
-private const val CACHE_INDEX_KEY = "eazy_cmp_api_cache_index"
-
-@Serializable
-private data class CacheEntry(
-    val body: String,
-    val expiresAt: Long,
-)
-
+/**
+ * High-level API Response Cache wrapping ApiCacheStorage.
+ * Stores request URL, request body, response text, and timestamp on disk up to 10MB.
+ */
 class ApiResponseCache(
-    private val storage: SecureStorage = SecureStorage(),
-    private val keyPrefix: String = "api_cache_",
+    private val delegate: ApiCacheStorage = ApiCacheStorage()
 ) {
     fun get(key: String): String? {
-        val cacheKey = cacheStorageKey(key)
-        val raw = storage.getString(cacheKey)
-        if (raw.isBlank()) return null
-
-        val entry = runCatching { json.decodeFromString<CacheEntry>(raw) }.getOrNull() ?: run {
-            storage.remove(cacheKey)
-            removeFromIndex(cacheKey)
-            return null
-        }
-
-        if (entry.expiresAt <= Clock.System.now().toEpochMilliseconds()) {
-            storage.remove(cacheKey)
-            removeFromIndex(cacheKey)
-            return null
-        }
-
-        return entry.body
+        return delegate.getResponseBody(key)
     }
 
-    fun put(key: String, body: String, ttlMs: Long) {
-        val cacheKey = cacheStorageKey(key)
-        val entry = CacheEntry(
-            body = body,
-            expiresAt = Clock.System.now().toEpochMilliseconds() + ttlMs,
+    fun getEntry(key: String): ApiCacheEntry? {
+        return delegate.get(key)
+    }
+
+    fun put(key: String, body: String, ttlMs: Long? = null, url: String = key, requestBody: String? = null) {
+        val duration = ttlMs?.milliseconds
+        delegate.put(
+            key = key,
+            url = url,
+            requestBody = requestBody,
+            responseBody = body,
+            ttl = duration
         )
-        storage.putString(cacheKey, json.encodeToString(entry))
-        addToIndex(cacheKey)
     }
 
     fun evict(key: String) {
-        val cacheKey = cacheStorageKey(key)
-        storage.remove(cacheKey)
-        removeFromIndex(cacheKey)
-    }
-
-    fun clearExpired() {
-        loadIndex().forEach { cacheKey ->
-            val raw = storage.getString(cacheKey)
-            if (raw.isBlank()) {
-                removeFromIndex(cacheKey)
-                return@forEach
-            }
-            val entry = runCatching { json.decodeFromString<CacheEntry>(raw) }.getOrNull()
-            if (entry == null || entry.expiresAt <= Clock.System.now().toEpochMilliseconds()) {
-                storage.remove(cacheKey)
-                removeFromIndex(cacheKey)
-            }
-        }
+        delegate.invalidate(key)
     }
 
     fun clearAll() {
-        loadIndex().forEach { storage.remove(it) }
-        storage.remove(CACHE_INDEX_KEY)
+        delegate.clearAll()
     }
 
-    private fun cacheStorageKey(key: String): String = "$keyPrefix$key"
-
-    private fun loadIndex(): Set<String> {
-        val raw = storage.getString(CACHE_INDEX_KEY)
-        if (raw.isBlank()) return emptySet()
-        return runCatching { json.decodeFromString<Set<String>>(raw) }.getOrDefault(emptySet())
-    }
-
-    private fun saveIndex(keys: Set<String>) {
-        storage.putString(CACHE_INDEX_KEY, json.encodeToString(keys))
-    }
-
-    private fun addToIndex(cacheKey: String) {
-        val index = loadIndex().toMutableSet()
-        index.add(cacheKey)
-        saveIndex(index)
-    }
-
-    private fun removeFromIndex(cacheKey: String) {
-        val index = loadIndex().toMutableSet()
-        if (index.remove(cacheKey)) {
-            saveIndex(index)
-        }
-    }
+    fun getTotalSizeBytes(): Long = delegate.getTotalCacheSizeBytes()
 }

@@ -11,6 +11,7 @@ class EazyCmpNewFeaturesTest {
 
     @Test
     fun testSecureStorage() {
+        EazyCmp.init()
         val storage = SecureStorage()
         storage.clear()
 

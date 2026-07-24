@@ -128,6 +128,7 @@ kotlin {
             implementation(libs.androidx.biometric)
             implementation(libs.play.app.update)
             implementation(libs.play.review)
+            implementation(libs.play.services.auth)
             implementation(libs.zxing.core)
         }
     }

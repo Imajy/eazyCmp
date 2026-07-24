@@ -17,6 +17,10 @@
 
     <!-- Camera temp file sharing for TakePicture — authority uses host applicationId -->
     <application>
+        <activity
+            android:name="com.aj.shared.auth.GoogleSignInActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false" />
         <provider
             android:name="com.aj.shared.platform.EazyCmpFileProvider"
             android:authorities="${applicationId}.eazycmp.camera"

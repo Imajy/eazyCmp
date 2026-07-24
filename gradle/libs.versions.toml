@@ -24,6 +24,7 @@ securityCrypto = "1.1.0"
 biometric = "1.1.0"
 playAppUpdate = "2.1.0"
 playReview = "2.0.2"
+playServicesAuth = "21.2.0"
 navigationCompose = "2.9.0-beta05"
 zxing = "3.5.3"
 
@@ -43,6 +44,7 @@ security-crypto = { module = "androidx.security:security-crypto", version.ref = 
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 play-app-update = { module = "com.google.android.play:app-update", version.ref = "playAppUpdate" }
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 

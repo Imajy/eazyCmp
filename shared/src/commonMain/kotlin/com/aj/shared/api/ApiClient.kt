@@ -90,21 +90,32 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         }
 
         val startTime = Clock.System.now()
+        val cacheKey = "${method.value}:$url"
         try {
-
             if (!EazyCmp.network.isOnline) {
                 if (options.retryOnConnection) {
                     EazyCmp.network.connectivityFlow
                         .filter { it }
                         .first()
+                } else if (options.useCacheFallback) {
+                    val cachedText = EazyCmp.apiCache.getResponseBody(cacheKey)
+                    if (cachedText != null) {
+                        try {
+                            val data: Res = json.decodeFromString(cachedText)
+                            emit(Resource.Success(data))
+                            return@flow
+                        } catch (_: Exception) {}
+                    }
+                    emit(Resource.Error("No internet"))
+                    return@flow
                 } else {
                     emit(Resource.Error("No internet"))
                     return@flow
                 }
             }
 
-
             val mergedBody = mergeRequestBody<Req>(base, body)
+            var capturedReqBody: String? = null
 
             val response = client.request(buildUrl(base, endpoint)) {
                 this.method = method
@@ -163,6 +174,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 } else {
                     null
                 }
+                capturedReqBody = requestBodyString
 
                 EazyLogger.logApiRequest(
                     url = this.url.build().toString(),
@@ -182,6 +194,19 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 durationMs = duration.inWholeMilliseconds,
                 rawResponse = rawResponse
             )
+
+            // Cache response text with timestamp, URL, and request JSON
+            if (response.status.value in 200..299) {
+                runCatching {
+                    EazyCmp.apiCache.put(
+                        key = cacheKey,
+                        url = url,
+                        requestBody = capturedReqBody,
+                        responseBody = rawResponse
+                    )
+                }
+            }
+
             val data: Res = json.decodeFromString(rawResponse)
             emit(Resource.Success(data))
         } catch (e: Exception) {
@@ -192,6 +217,18 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 durationMs = duration.inWholeMilliseconds,
                 error = e.message
             )
+
+            if (options.useCacheFallback) {
+                val cachedText = EazyCmp.apiCache.getResponseBody(cacheKey)
+                if (cachedText != null) {
+                    try {
+                        val data: Res = json.decodeFromString(cachedText)
+                        emit(Resource.Success(data))
+                        return@flow
+                    } catch (_: Exception) {}
+                }
+            }
+
             emit(Resource.Error(e.message ?: "unknown error"))
         }
     }
