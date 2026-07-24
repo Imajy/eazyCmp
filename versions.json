@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-026",
+  "latest": "1.0.0.1-rc-027",
   "versions": [
+    "1.0.0.1-rc-027",
     "1.0.0.1-rc-026",
     "1.0.0.1-rc-025",
     "1.0.0.1-rc-024",
@@ -38,6 +39,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-027",
+      "message": "api cache",
+      "publishedAt": "2026-07-24T10:21:15+05:30",
+      "commit": "3b1e05241a3b55fb822480be2ea061872dead5bd"
+    },
     {
       "version": "1.0.0.1-rc-026",
       "message": "Animate snackbar and improve dismiss swipes",
@@ -232,6 +239,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-23T13:15:50Z",
+  "updatedAt": "2026-07-24T04:53:59Z",
   "failures": []
 }
