@@ -59,6 +59,9 @@ object AppSnackbarManager {
     private var onSnackbarDataChange: ((AppSnackbar?) -> Unit)? = null
     private var autoDismissJob: Job? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var activeMessage: String? = null
+    private var activeType: SnackbarType? = null
+
     fun init(
         hostState: SnackbarHostState,
         onSnackbarDataChange: (AppSnackbar?) -> Unit
@@ -76,10 +79,24 @@ object AppSnackbarManager {
     ) {
         if (onSnackbarDataChange == null) return
 
+        val msg = message ?: "Something went wrong"
+
+        if (activeMessage == msg && activeType == type) {
+            autoDismissJob?.cancel()
+            autoDismissJob = scope.launch {
+                kotlinx.coroutines.delay(autoDismissMillis)
+                dismiss()
+            }
+            return
+        }
+
         dismiss()
 
+        activeMessage = msg
+        activeType = type
+
         val data = AppSnackbar(
-            message = message ?: "Something went wrong",
+            message = msg,
             type = type,
             actionLabel = actionLabel,
             duration = SnackbarDuration.Short,
@@ -96,6 +113,8 @@ object AppSnackbarManager {
 
     fun dismiss() {
         autoDismissJob?.cancel()
+        activeMessage = null
+        activeType = null
         onSnackbarDataChange?.invoke(null)
     }
 }
