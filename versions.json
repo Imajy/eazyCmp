@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-028",
+  "latest": "1.0.0.1-rc-029",
   "versions": [
+    "1.0.0.1-rc-029",
     "1.0.0.1-rc-028",
     "1.0.0.1-rc-027",
     "1.0.0.1-rc-026",
@@ -40,6 +41,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-029",
+      "message": "Generic bottomsheet state tracking implementation",
+      "publishedAt": "2026-07-24T11:14:09+05:30",
+      "commit": "d9ff2838f132346b61d95e8b673bc89f0515bcb0"
+    },
     {
       "version": "1.0.0.1-rc-028",
       "message": "api cache",
@@ -246,6 +253,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-24T05:09:05Z",
+  "updatedAt": "2026-07-24T05:48:10Z",
   "failures": []
 }
