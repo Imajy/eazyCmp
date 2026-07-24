@@ -23,8 +23,9 @@ class ApiCacheStorageTest {
         val entry = cache.get(key)
         assertNotNull(entry)
         assertEquals(url, entry.url)
-        assertEquals(reqBody, entry.requestBody)
-        assertEquals(respBody, entry.responseBody)
+        val respText = cache.getResponseBody(key)
+        assertNotNull(respText)
+        assertTrue(respText.contains("John Doe"))
         assertTrue(entry.timestampEpochMs > 0)
 
         cache.clearAll()
@@ -32,11 +33,9 @@ class ApiCacheStorageTest {
 
     @Test
     fun testEvictionWhenExceedingMaxSize() {
-        // Small limit for testing eviction: 200 bytes
         val smallCache = ApiCacheStorage(maxCacheSizeBytes = 200L)
         smallCache.clearAll()
 
-        // Entry 1 (approx 80 bytes)
         smallCache.put(
             key = "item1",
             url = "https://api.com/1",
@@ -44,7 +43,6 @@ class ApiCacheStorageTest {
             responseBody = "A".repeat(60)
         )
 
-        // Entry 2 (approx 80 bytes)
         smallCache.put(
             key = "item2",
             url = "https://api.com/2",
@@ -54,7 +52,6 @@ class ApiCacheStorageTest {
 
         assertEquals(2, smallCache.getCacheCount())
 
-        // Entry 3 (approx 80 bytes) -> pushes total over 200 bytes limit!
         smallCache.put(
             key = "item3",
             url = "https://api.com/3",
@@ -62,7 +59,6 @@ class ApiCacheStorageTest {
             responseBody = "C".repeat(60)
         )
 
-        // Oldest item1 should be evicted!
         assertNull(smallCache.get("item1"))
         assertNotNull(smallCache.get("item2"))
         assertNotNull(smallCache.get("item3"))

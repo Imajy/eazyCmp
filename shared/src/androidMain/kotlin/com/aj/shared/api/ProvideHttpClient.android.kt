@@ -47,6 +47,13 @@ fun isAppContextInitialized(): Boolean = ::appContext.isInitialized
 fun initEazyCmp(context: Context, name : String) {
     appContext = context
     SETTINGS_NAME = name
+
+    try {
+        val pref = context.getSharedPreferences(name, Context.MODE_PRIVATE)
+        if (!pref.contains("eazy_cmp_initialized")) {
+            pref.edit().putString("eazy_cmp_initialized", "true").apply()
+        }
+    } catch (_: Exception) {}
 }
 
 

@@ -1,12 +1,12 @@
 package com.aj.shared.network
 
 import com.aj.shared.storage.ApiCacheStorage
-import com.aj.shared.storage.ApiCacheEntry
+import com.aj.shared.storage.ApiCacheItem
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * High-level API Response Cache wrapping ApiCacheStorage.
- * Stores request URL, request body, response text, and timestamp on disk up to 10MB.
+ * Stores request URL, request body, response text, and timestamp in single file up to 10MB.
  */
 class ApiResponseCache(
     private val delegate: ApiCacheStorage = ApiCacheStorage()
@@ -15,7 +15,7 @@ class ApiResponseCache(
         return delegate.getResponseBody(key)
     }
 
-    fun getEntry(key: String): ApiCacheEntry? {
+    fun getEntry(key: String): ApiCacheItem? {
         return delegate.get(key)
     }
 

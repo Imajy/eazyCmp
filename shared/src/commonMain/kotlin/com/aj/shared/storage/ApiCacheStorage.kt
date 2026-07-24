@@ -3,51 +3,52 @@ package com.aj.shared.storage
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import kotlin.time.Clock
 import kotlin.time.Duration
 
 @Serializable
-data class ApiCacheEntry(
+data class ApiCacheItem(
     val key: String,
     val url: String,
-    val requestBody: String? = null,
-    val responseBody: String,
+    val timestamp: String,
     val timestampEpochMs: Long,
-    val expiresAtEpochMs: Long? = null,
-    val sizeBytes: Long = 0L
+    val requestBody: JsonElement? = null,
+    val responseBody: JsonElement? = null,
+    val sizeBytes: Long = 0L,
+    val expiresAtEpochMs: Long? = null
 )
 
 @Serializable
-private data class ApiCacheIndexItem(
-    val key: String,
-    val timestampEpochMs: Long,
-    val sizeBytes: Long
-)
-
-@Serializable
-private data class ApiCacheIndex(
-    val items: List<ApiCacheIndexItem> = emptyList()
+data class ApiCacheContainer(
+    val totalSizeBytes: Long = 0L,
+    val totalEntries: Int = 0,
+    val entries: List<ApiCacheItem> = emptyList()
 )
 
 /**
- * File-based 10MB text cache for API responses.
- * Stores request URL, request body, response body text, and timestamp.
- * Evicts oldest cached entries (earliest timestamp) when total size exceeds 10MB.
+ * Single-file 10MB text API cache for Kotlin Multiplatform / Android.
+ * Saved in a single formatted, pretty-printed JSON file: api_response_cache.json.
+ * Formats request and response payloads as clean structured JSON objects.
+ * Evicts oldest items (lowest timestamp) when total cache size exceeds 10MB.
  */
 class ApiCacheStorage(
     private val json: Json = Json { ignoreUnknownKeys = true },
     private val defaultTtl: Duration? = null,
-    val maxCacheSizeBytes: Long = 10 * 1024 * 1024L // 10 MB limit
+    val maxCacheSizeBytes: Long = 10 * 1024 * 1024L // 10 MB Limit
 ) {
-    private val dir = "${CacheFileIO.cacheDirectory()}/api_cache"
-    private val indexPath = "$dir/cache_index.json"
+    private val singleCacheFilePath = "${CacheFileIO.cacheDirectory()}/api_response_cache.json"
 
-    fun get(key: String): ApiCacheEntry? {
-        val raw = CacheFileIO.read(cachePath(key)) ?: return null
-        val entry = runCatching { json.decodeFromString<ApiCacheEntry>(raw) }.getOrNull() ?: run {
-            invalidate(key)
-            return null
-        }
+    private val prettyJson = Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
+
+    fun get(key: String): ApiCacheItem? {
+        val container = loadContainer()
+        val entry = container.entries.firstOrNull { it.key == key } ?: return null
         if (entry.expiresAtEpochMs != null && Clock.System.now().toEpochMilliseconds() > entry.expiresAtEpochMs) {
             invalidate(key)
             return null
@@ -56,7 +57,12 @@ class ApiCacheStorage(
     }
 
     fun getResponseBody(key: String): String? {
-        return get(key)?.responseBody
+        val entry = get(key) ?: return null
+        val element = entry.responseBody ?: return null
+        return when (element) {
+            is JsonPrimitive -> if (element.isString) element.content else element.toString()
+            else -> element.toString()
+        }
     }
 
     fun put(
@@ -66,76 +72,99 @@ class ApiCacheStorage(
         responseBody: String,
         ttl: Duration? = defaultTtl
     ) {
-        val now = Clock.System.now().toEpochMilliseconds()
-        val expiresAt = ttl?.let { now + it.inWholeMilliseconds }
+        val nowMs = Clock.System.now().toEpochMilliseconds()
+        val expiresAt = ttl?.let { nowMs + it.inWholeMilliseconds }
+        val timestampStr = formatTimestamp(nowMs)
+
+        val reqElement = parseToJsonElement(requestBody)
+        val respElement = parseToJsonElement(responseBody)
 
         val contentBytes = (url + (requestBody ?: "") + responseBody).encodeToByteArray().size.toLong()
         if (contentBytes > maxCacheSizeBytes) return
 
-        val entry = ApiCacheEntry(
+        val newEntry = ApiCacheItem(
             key = key,
             url = url,
-            requestBody = requestBody,
-            responseBody = responseBody,
-            timestampEpochMs = now,
-            expiresAtEpochMs = expiresAt,
-            sizeBytes = contentBytes
+            timestamp = timestampStr,
+            timestampEpochMs = nowMs,
+            requestBody = reqElement,
+            responseBody = respElement,
+            sizeBytes = contentBytes,
+            expiresAtEpochMs = expiresAt
         )
 
-        val indexItems = loadIndex().toMutableList()
+        val container = loadContainer()
+        val currentEntries = container.entries.filterNot { it.key == key }.toMutableList()
 
-        val existingIndex = indexItems.indexOfFirst { it.key == key }
-        if (existingIndex != -1) {
-            val removed = indexItems.removeAt(existingIndex)
-            CacheFileIO.delete(cachePath(removed.key))
-        }
+        var currentTotalSize = currentEntries.sumOf { it.sizeBytes }
 
-        var currentTotalSize = indexItems.sumOf { it.sizeBytes }
-        while (currentTotalSize + contentBytes > maxCacheSizeBytes && indexItems.isNotEmpty()) {
-            indexItems.sortBy { it.timestampEpochMs }
-            val oldest = indexItems.removeAt(0)
-            CacheFileIO.delete(cachePath(oldest.key))
+        while (currentTotalSize + contentBytes > maxCacheSizeBytes && currentEntries.isNotEmpty()) {
+            currentEntries.sortBy { it.timestampEpochMs }
+            val oldest = currentEntries.removeAt(0)
             currentTotalSize -= oldest.sizeBytes
         }
 
-        CacheFileIO.write(cachePath(key), json.encodeToString(entry))
-        indexItems.add(ApiCacheIndexItem(key = key, timestampEpochMs = now, sizeBytes = contentBytes))
-        saveIndex(indexItems)
+        currentEntries.add(newEntry)
+        currentEntries.sortByDescending { it.timestampEpochMs }
+
+        val newContainer = ApiCacheContainer(
+            totalSizeBytes = currentEntries.sumOf { it.sizeBytes },
+            totalEntries = currentEntries.size,
+            entries = currentEntries
+        )
+
+        saveContainer(newContainer)
     }
 
     fun invalidate(key: String) {
-        val indexItems = loadIndex().toMutableList()
-        val existingIndex = indexItems.indexOfFirst { it.key == key }
-        if (existingIndex != -1) {
-            indexItems.removeAt(existingIndex)
-            saveIndex(indexItems)
+        val container = loadContainer()
+        val filtered = container.entries.filterNot { it.key == key }
+        if (filtered.size != container.entries.size) {
+            val updated = ApiCacheContainer(
+                totalSizeBytes = filtered.sumOf { it.sizeBytes },
+                totalEntries = filtered.size,
+                entries = filtered
+            )
+            saveContainer(updated)
         }
-        CacheFileIO.delete(cachePath(key))
     }
 
     fun clearAll() {
-        CacheFileIO.deleteAllIn(dir)
+        CacheFileIO.delete(singleCacheFilePath)
     }
 
     fun getTotalCacheSizeBytes(): Long {
-        return loadIndex().sumOf { it.sizeBytes }
+        return loadContainer().totalSizeBytes
     }
 
     fun getCacheCount(): Int {
-        return loadIndex().size
+        return loadContainer().totalEntries
     }
 
-    private fun cachePath(key: String): String {
-        val safeKey = key.hashCode().toUInt().toString(16)
-        return "$dir/$safeKey.cache"
+    private fun parseToJsonElement(rawText: String?): JsonElement? {
+        if (rawText.isNullOrBlank()) return null
+        val trimmed = rawText.trim()
+        if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+            return runCatching { prettyJson.parseToJsonElement(trimmed) }.getOrNull() ?: JsonPrimitive(rawText)
+        }
+        return JsonPrimitive(rawText)
     }
 
-    private fun loadIndex(): List<ApiCacheIndexItem> {
-        val raw = CacheFileIO.read(indexPath) ?: return emptyList()
-        return runCatching { json.decodeFromString<ApiCacheIndex>(raw).items }.getOrDefault(emptyList())
+    private fun loadContainer(): ApiCacheContainer {
+        val raw = CacheFileIO.read(singleCacheFilePath) ?: return ApiCacheContainer()
+        return runCatching { prettyJson.decodeFromString<ApiCacheContainer>(raw) }.getOrDefault(ApiCacheContainer())
     }
 
-    private fun saveIndex(items: List<ApiCacheIndexItem>) {
-        CacheFileIO.write(indexPath, json.encodeToString(ApiCacheIndex(items)))
+    private fun saveContainer(container: ApiCacheContainer) {
+        val raw = prettyJson.encodeToString(container)
+        CacheFileIO.write(singleCacheFilePath, raw)
+    }
+
+    private fun formatTimestamp(epochMs: Long): String {
+        return try {
+            kotlin.time.Instant.fromEpochMilliseconds(epochMs).toString()
+        } catch (_: Exception) {
+            epochMs.toString()
+        }
     }
 }
