@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -67,6 +68,7 @@ fun <T> CommonDropDown(
     selectedItem: T? = null,
     selectedItems: List<T> = emptyList(),
     isMultiSelect: Boolean = false,
+    isSelectAll: Boolean = false,
     itemLabel: ((T) -> String)? = null,
     onItemSelected: (T?) -> Unit = {},
     onType: (String) -> Unit = {},
@@ -420,6 +422,49 @@ fun <T> CommonDropDown(
                                             )
 
                                         } else {
+                                            if (isMultiSelect && isSelectAll && items.size >= 3) {
+                                                val isAllSelected = items.all { tempSelectedItems.contains(it) }
+                                                val primaryColor = MaterialTheme.colorScheme.primary
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(vertical = 6.dp)
+                                                        .background(
+                                                            color = primaryColor.copy(alpha = 0.06f),
+                                                            shape = RoundedCornerShape(8.dp)
+                                                        )
+                                                        .clickable {
+                                                            tempSelectedItems = if (isAllSelected) {
+                                                                emptySet()
+                                                            } else {
+                                                                items.toSet()
+                                                            }
+                                                        }
+                                                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+
+                                                    CustomCheckbox(
+                                                        checked = isAllSelected,
+                                                        onCheckedChange = { checked ->
+                                                            tempSelectedItems = if (checked) {
+                                                                items.toSet()
+                                                            } else {
+                                                                emptySet()
+                                                            }
+                                                        }
+                                                    )
+                                                    Spacer(Modifier.width(12.dp))
+                                                    Text(
+                                                        text = if (isAllSelected) "Unselect All" else "Select All",
+                                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                                            fontWeight = FontWeight.Medium,
+                                                            color = primaryColor
+                                                        )
+                                                    )
+                                                }
+                                                Spacer(Modifier.height(8.dp))
+                                            }
 
                                             filteredItems.forEachIndexed { index, item ->
 
