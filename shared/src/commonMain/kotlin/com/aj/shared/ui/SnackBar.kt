@@ -62,6 +62,9 @@ object AppSnackbarManager {
     private var activeMessage: String? = null
     private var activeType: SnackbarType? = null
 
+    var isSnackbarVisible by mutableStateOf(false)
+        internal set
+
     fun init(
         hostState: SnackbarHostState,
         onSnackbarDataChange: (AppSnackbar?) -> Unit
@@ -103,6 +106,7 @@ object AppSnackbarManager {
             onAction = onAction
         )
 
+        isSnackbarVisible = true
         onSnackbarDataChange?.invoke(data)
 
         autoDismissJob = scope.launch {
@@ -115,6 +119,7 @@ object AppSnackbarManager {
         autoDismissJob?.cancel()
         activeMessage = null
         activeType = null
+        isSnackbarVisible = false
         onSnackbarDataChange?.invoke(null)
     }
 }
