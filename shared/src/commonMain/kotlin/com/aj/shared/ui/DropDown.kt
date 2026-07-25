@@ -95,6 +95,7 @@ fun <T> CommonDropDown(
             trailingIcon != null -> 64.dp
             else -> 48.dp
         }
+
         val availableWidthPx = with(density) {
             when {
                 maxWidth == Dp.Unspecified || maxWidth == Dp.Infinity -> null
