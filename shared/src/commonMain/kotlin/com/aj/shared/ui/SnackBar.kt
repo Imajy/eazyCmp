@@ -25,6 +25,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import com.aj.shared.theme.errorBrush
 import com.aj.shared.theme.successBrush
 import com.aj.shared.theme.warningBrush
 import com.aj.shared.theme.whiteColor
+import com.aj.shared.ui.beamBorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -59,6 +61,26 @@ object AppSnackbarManager {
     private var onSnackbarDataChange: ((AppSnackbar?) -> Unit)? = null
     private var autoDismissJob: Job? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var activeMessage: String? = null
+    private var activeType: SnackbarType? = null
+    private val listeners = mutableListOf<(AppSnackbar?) -> Unit>()
+
+    var isSnackbarVisible by mutableStateOf(false)
+        internal set
+
+    var activeSnackbarData by mutableStateOf<AppSnackbar?>(null)
+        internal set
+
+    fun registerListener(listener: (AppSnackbar?) -> Unit) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener)
+        }
+    }
+
+    fun unregisterListener(listener: (AppSnackbar?) -> Unit) {
+        listeners.remove(listener)
+    }
+
     fun init(
         hostState: SnackbarHostState,
         onSnackbarDataChange: (AppSnackbar?) -> Unit
@@ -74,11 +96,49 @@ object AppSnackbarManager {
         autoDismissMillis: Long = 4000,
         onAction: (() -> Unit)? = null
     ) {
-        AppSnackbarManager.show(message, type, actionLabel, autoDismissMillis, onAction)
+        val msg = message ?: "Something went wrong"
+
+        if (activeMessage == msg && activeType == type) {
+            autoDismissJob?.cancel()
+            autoDismissJob = scope.launch {
+                kotlinx.coroutines.delay(autoDismissMillis)
+                dismiss()
+            }
+            return
+        }
+
+        dismiss()
+
+        activeMessage = msg
+        activeType = type
+
+        val data = AppSnackbar(
+            message = msg,
+            type = type,
+            actionLabel = actionLabel,
+            duration = SnackbarDuration.Short,
+            onAction = onAction
+        )
+
+        activeSnackbarData = data
+        isSnackbarVisible = true
+        onSnackbarDataChange?.invoke(data)
+        listeners.lastOrNull()?.invoke(data)
+
+        autoDismissJob = scope.launch {
+            kotlinx.coroutines.delay(autoDismissMillis)
+            dismiss()
+        }
     }
 
     fun dismiss() {
-        AppSnackbarManager.dismiss()
+        autoDismissJob?.cancel()
+        activeMessage = null
+        activeType = null
+        activeSnackbarData = null
+        isSnackbarVisible = false
+        onSnackbarDataChange?.invoke(null)
+        listeners.forEach { it.invoke(null) }
     }
 }
 
@@ -96,9 +156,8 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    AppSnackbarManager.init(
-        hostState = snackbarHostState,
-        onSnackbarDataChange = { snackbar ->
+    val listener = remember {
+        { snackbar: AppSnackbar? ->
             if (snackbar != null) {
                 activeSnackbarData = snackbar
                 showSnackbar = true
@@ -106,6 +165,18 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
                 showSnackbar = false
             }
         }
+    }
+
+    DisposableEffect(listener) {
+        AppSnackbarManager.registerListener(listener)
+        onDispose {
+            AppSnackbarManager.unregisterListener(listener)
+        }
+    }
+
+    AppSnackbarManager.init(
+        hostState = snackbarHostState,
+        onSnackbarDataChange = {}
     )
 
     Box(
