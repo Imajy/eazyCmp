@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-036",
+  "latest": "1.0.0.1-rc-037",
   "versions": [
+    "1.0.0.1-rc-037",
     "1.0.0.1-rc-036",
     "1.0.0.1-rc-035",
     "1.0.0.1-rc-034",
@@ -48,6 +49,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-037",
+      "message": "feat: implement persistent WebSocket event logging with automated size-based eviction using SocketLogStorage",
+      "publishedAt": "2026-07-26T01:35:56+05:30",
+      "commit": "038021d0d50fbe503e7ace6fe87eb70d12277ef1"
+    },
     {
       "version": "1.0.0.1-rc-036",
       "message": "feat: implement persistent WebSocket event logging with automated size-based eviction using SocketLogStorage",
@@ -302,6 +309,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-25T19:58:05Z",
+  "updatedAt": "2026-07-25T20:11:06Z",
   "failures": []
 }
