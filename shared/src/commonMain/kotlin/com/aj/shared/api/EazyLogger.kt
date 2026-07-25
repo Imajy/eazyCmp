@@ -73,4 +73,36 @@ object EazyLogger {
         println("ERROR       → $error")
         println("❌ ========================================")
     }
+
+    fun logSocketEvent(
+        url: String,
+        event: String,
+        direction: String,
+        requestData: String? = null,
+        responseData: String? = null,
+        error: String? = null
+    ) {
+        if (!isDebugEnabled) return
+        val icon = when (direction) {
+            "SENT" -> "📤"
+            "RECEIVED" -> "📥"
+            "CONNECT" -> "🔌"
+            "DISCONNECT" -> "⏹️"
+            else -> "⚠️"
+        }
+        println("$icon ============== SOCKET EVENT ($direction) ==============")
+        println("URL         → $url")
+        println("EVENT       → $event")
+        println("DIRECTION   → $direction")
+        if (!requestData.isNullOrBlank()) {
+            println("REQUEST     → ${redactPiiFromLog(requestData)}")
+        }
+        if (!responseData.isNullOrBlank()) {
+            println("RESPONSE    → ${redactPiiFromLog(responseData)}")
+        }
+        if (!error.isNullOrBlank()) {
+            println("ERROR       → $error")
+        }
+        println("$icon ========================================================")
+    }
 }

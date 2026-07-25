@@ -1,41 +1,29 @@
 package com.aj.shared.network
 
 import com.aj.shared.api.HttpClientProvider
-import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
-import io.ktor.client.plugins.websocket.webSocket
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
-class WebSocketClient(private val client: io.ktor.client.HttpClient = HttpClientProvider.client) {
+/**
+ * Convenience WebSocket client wrapper around EazySocketManager.
+ * Automatically logs sent and received frames and stores up to 10MB of event logs.
+ */
+class WebSocketClient(
+    private val socketManager: EazySocketManager = EazySocketManager(client = HttpClientProvider.client)
+) {
 
     fun connect(
         url: String,
         extraHeaders: Map<String, String> = emptyMap(),
-    ): Flow<String> = flow {
-        client.webSocket(urlString = url, request = {
-            extraHeaders.forEach { (key, value) -> headers.append(key, value) }
-        }) {
-            listenIncoming(this)
-        }
+    ): Flow<String> {
+        return socketManager.connect(url, extraHeaders).map { it.data }
     }
 
     suspend fun send(url: String, message: String, extraHeaders: Map<String, String> = emptyMap()) {
-        client.webSocket(urlString = url, request = {
-            extraHeaders.forEach { (key, value) -> headers.append(key, value) }
-        }) {
-            send(Frame.Text(message))
-        }
+        socketManager.send(url = url, message = message, extraHeaders = extraHeaders)
     }
 
-    private suspend fun kotlinx.coroutines.flow.FlowCollector<String>.listenIncoming(
-        session: DefaultClientWebSocketSession,
-    ) {
-        for (frame in session.incoming) {
-            if (frame is Frame.Text) {
-                emit(frame.readText())
-            }
-        }
+    suspend fun disconnect(url: String) {
+        socketManager.disconnect(url)
     }
 }

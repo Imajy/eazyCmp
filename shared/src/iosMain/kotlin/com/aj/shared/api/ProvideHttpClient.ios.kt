@@ -11,9 +11,13 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import platform.Foundation.NSUserDefaults
 
+import io.ktor.client.plugins.websocket.WebSockets
+
 actual fun provideHttpClient(): HttpClient {
 
     return HttpClient(Darwin) {
+
+        install(WebSockets)
 
         install(ContentNegotiation) {
 

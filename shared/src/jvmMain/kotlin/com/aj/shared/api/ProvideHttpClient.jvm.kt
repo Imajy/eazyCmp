@@ -12,9 +12,13 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import java.util.prefs.Preferences
 
+import io.ktor.client.plugins.websocket.WebSockets
+
 actual fun provideHttpClient(): HttpClient {
 
     return HttpClient(CIO) {
+
+        install(WebSockets)
 
         install(ContentNegotiation) {
 

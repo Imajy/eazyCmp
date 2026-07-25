@@ -31,7 +31,9 @@ import com.aj.shared.security.BackgroundLockManager
 import com.aj.shared.security.ConsentManager
 import com.aj.shared.security.SessionTimeoutManager
 import com.aj.shared.share.ShareManager
+import com.aj.shared.network.EazySocketManager
 import com.aj.shared.storage.ApiCacheStorage
+import com.aj.shared.storage.SocketLogStorage
 import com.aj.shared.storage.FormDraftManager
 import com.aj.shared.storage.LocalDataStore
 import com.aj.shared.storage.PreferencesStore
@@ -71,10 +73,12 @@ object EazyCmp {
     val formDrafts: FormDraftManager by lazy { FormDraftManager() }
     val preferences: PreferencesStore by lazy { PreferencesStore() }
     val apiCache: ApiCacheStorage by lazy { ApiCacheStorage() }
+    val socketLogCache: SocketLogStorage by lazy { SocketLogStorage() }
     val localStore: LocalDataStore by lazy { LocalDataStore("default") }
     val responseCache: ApiResponseCache by lazy { ApiResponseCache() }
 
-    // --- Network ---
+    // --- Network & Sockets ---
+    val socket: EazySocketManager by lazy { EazySocketManager() }
     val offlineQueue: OfflineQueueManager by lazy { OfflineQueueManager() }
     val requestDeduplicator: RequestDeduplicator by lazy { RequestDeduplicator() }
 

@@ -13,6 +13,8 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
+import io.ktor.client.plugins.websocket.WebSockets
+
 actual fun provideHttpClient(): HttpClient {
 
     return HttpClient(OkHttp) {
@@ -23,6 +25,8 @@ actual fun provideHttpClient(): HttpClient {
                 writeTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
             }
         }
+
+        install(WebSockets)
 
         install(ContentNegotiation) {
 
