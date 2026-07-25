@@ -141,7 +141,8 @@ fun <T> CommonDropDown(
                 return MultiSelectDisplay(allJoined, "")
             }
 
-            for (visibleCount in labels.size - 1 downTo 1) {
+            var bestFit: MultiSelectDisplay? = null
+            for (visibleCount in 1 until labels.size) {
                 val hiddenCount = labels.size - visibleCount
                 val badge = "+$hiddenCount"
                 val badgeWidth = measureTextWidth(badge)
@@ -149,8 +150,14 @@ fun <T> CommonDropDown(
                 val joinedPrefix = labels.take(visibleCount).joinToString(", ")
 
                 if (measureTextWidth(joinedPrefix) <= prefixBudget) {
-                    return MultiSelectDisplay(joinedPrefix, badge)
+                    bestFit = MultiSelectDisplay(joinedPrefix, badge)
+                } else {
+                    break
                 }
+            }
+
+            if (bestFit != null) {
+                return bestFit
             }
 
             val badge = "+${labels.size - 1}"
