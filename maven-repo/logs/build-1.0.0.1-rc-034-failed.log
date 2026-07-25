@@ -2,14 +2,14 @@ To honour the JVM settings for this build a single-use Daemon process will be fo
 Daemon will be stopped at the end of the build 
 Calculating task graph as no cached configuration is available for tasks: publishAllPublicationsToMavenRepository
 Type-safe project accessors is an incubating feature.
-> Task :shared:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
 > Task :shared:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
 > Task :shared:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
 > Task :shared:generateResourceAccessorsForAndroidMain NO-SOURCE
 > Task :shared:androidPreBuild UP-TO-DATE
 > Task :shared:preAndroidMainBuild UP-TO-DATE
 > Task :shared:copyNonXmlValueResourcesForCommonMain
-> Task :shared:convertXmlValueResourcesForCommonMain NO-SOURCE
 > Task :shared:prepareComposeResourcesTaskForCommonMain
 > Task :shared:generateExpectResourceCollectorsForCommonMain
 > Task :shared:generateComposeResClass
@@ -18,17 +18,18 @@ Type-safe project accessors is an incubating feature.
 > Task :shared:generateAndroidMainEmptyResourceFiles
 > Task :shared:copyAndroidMainComposeResourcesToAndroidAssets
 > Task :shared:packageAndroidMainResources FROM-CACHE
-> Task :shared:androidSourcesJar
-> Task :shared:generateAndroidMainAssets UP-TO-DATE
 > Task :shared:mergeAndroidMainJniLibFolders
 > Task :shared:mergeAndroidMainNativeLibs NO-SOURCE
-> Task :shared:mergeAndroidMainAssets
-> Task :shared:prepareAndroidMainArtProfile
+> Task :shared:androidSourcesJar
+> Task :shared:generateAndroidMainAssets UP-TO-DATE
 > Task :shared:copyAndroidMainJniLibsProjectOnly
+> Task :shared:prepareAndroidMainArtProfile
 > Task :shared:prepareLintJarForPublish
+> Task :shared:processAndroidMainManifest FROM-CACHE
 > Task :shared:kmpPartiallyResolvedDependenciesChecker
 > Task :shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :shared:processAndroidMainManifest FROM-CACHE
+> Task :shared:writeAndroidMainAarMetadata
+> Task :shared:mergeAndroidMainAssets
 > Task :shared:checkAndroidMainAarMetadata
 
 > Task :shared:checkIosArm64MainComposeLibrariesCompatibility
@@ -48,12 +49,14 @@ Note: Skiko is considered implementation detail in Compose Multiplatform and mig
 Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
 
 
-> Task :shared:writeAndroidMainAarMetadata
-> Task :shared:generatePomFileForAndroidPublication
 > Task :shared:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :shared:generateResourceAccessorsForAppleMain NO-SOURCE
 > Task :shared:convertXmlValueResourcesForIosArm64Main NO-SOURCE
 > Task :shared:copyNonXmlValueResourcesForIosArm64Main NO-SOURCE
 > Task :shared:prepareComposeResourcesTaskForIosArm64Main NO-SOURCE
+> Task :shared:generatePomFileForAndroidPublication
 > Task :shared:generateResourceAccessorsForIosArm64Main NO-SOURCE
 > Task :shared:convertXmlValueResourcesForIosMain NO-SOURCE
 > Task :shared:copyNonXmlValueResourcesForIosMain NO-SOURCE
@@ -61,40 +64,37 @@ Please align Skiko dependencies to the same version. If possible, avoid direct S
 > Task :shared:generateResourceAccessorsForIosMain NO-SOURCE
 > Task :shared:convertXmlValueResourcesForNativeMain NO-SOURCE
 > Task :shared:copyNonXmlValueResourcesForNativeMain NO-SOURCE
-> Task :shared:copyNonXmlValueResourcesForAppleMain NO-SOURCE
 > Task :shared:prepareComposeResourcesTaskForNativeMain NO-SOURCE
 > Task :shared:generateResourceAccessorsForNativeMain NO-SOURCE
-> Task :shared:prepareComposeResourcesTaskForAppleMain NO-SOURCE
-> Task :shared:generateResourceAccessorsForAppleMain NO-SOURCE
 > Task :shared:parseAndroidMainLocalResources FROM-CACHE
 > Task :shared:generateAndroidMainRFile FROM-CACHE
 > Task :shared:generateActualResourceCollectorsForIosArm64Main
 
-> Task :shared:downloadKotlinNativeDistribution
+> Task :shared:commonizeNativeDistribution
 Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-aarch64-2.3.21 is not empty. Native bundle files will be overwritten.
 
 > Task :shared:extractAndroidMainAnnotations FROM-CACHE
 > Task :shared:transformCommonMainDependenciesMetadata
-
-> Task :shared:compileCommonMainKotlinMetadata
-e: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/BottomSheet.kt:172:52 Unresolved reference 'isSnackbarVisible'.
+> Task :shared:downloadKotlinNativeDistribution
+> Task :shared:compileAndroidMain
 
 > Task :shared:compileCommonMainKotlinMetadata FAILED
-
-> Task :shared:compileAndroidMain FAILED
 e: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/BottomSheet.kt:172:52 Unresolved reference 'isSnackbarVisible'.
 
 > Task :shared:downloadKotlinNativeDistribution
 Downloading native dependencies (LLVM, sysroot etc). This is a one-time action performed only on the first run of the compiler.
 Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/19-aarch64-macos/llvm-19-aarch64-macos-essentials-81.tar.gz to /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz
+
+> Task :shared:compileAndroidMain FAILED
+e: file:///Users/runner/work/eazyCmp/eazyCmp/shared/src/commonMain/kotlin/com/aj/shared/ui/BottomSheet.kt:172:52 Unresolved reference 'isSnackbarVisible'.
+
+> Task :shared:downloadKotlinNativeDistribution
 Done.
 Extracting dependency: /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz into /Users/runner/.konan/dependencies
 Downloading dependency https://download.jetbrains.com/kotlin/native/libffi-3.3-1-macos-arm64.tar.gz to /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz
 Done.
 Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz into /Users/runner/.konan/dependencies
-
-> Task :shared:commonizeNativeDistribution
-gradle/actions: Writing build results to /Users/runner/work/_temp/.gradle-actions/build-results/__run-1784970872088.json
+gradle/actions: Writing build results to /Users/runner/work/_temp/.gradle-actions/build-results/__run-1784971412760.json
 
 FAILURE: Build completed with 2 failures.
 
@@ -126,6 +126,6 @@ Execution failed for task ':shared:compileAndroidMain'.
 > Get more help at https://help.gradle.org.
 ==============================================================================
 
-BUILD FAILED in 47s
+BUILD FAILED in 1m 22s
 30 actionable tasks: 25 executed, 5 from cache
 Configuration cache entry stored.
