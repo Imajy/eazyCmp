@@ -241,30 +241,53 @@ class EazySocketManager(
     }
 
     /**
-     * Send a structured event payload (serializable object or Map) to a WebSocket URL.
+     * Send a structured event payload (serializable object, Map, List, or primitive) to a WebSocket URL.
      */
-    suspend inline fun <reified T : Any> sendEvent(
+    suspend fun sendEvent(
         url: String,
         event: String,
-        payload: T,
+        payload: Any,
         extraHeaders: Map<String, String> = emptyMap()
     ) {
-        val jsonPayload = try {
-            json.encodeToString(payload)
-        } catch (_: Exception) {
-            payload.toString()
-        }
-
-        val eventObject = buildString {
-            if (jsonPayload.startsWith("{")) {
-                append("{\"event\":\"$event\",")
-                append(jsonPayload.drop(1))
-            } else {
-                append("{\"event\":\"$event\",\"data\":$jsonPayload}")
-            }
+        val payloadJson = encodePayloadToJson(payload)
+        val eventObject = if (payloadJson.startsWith("{") && payloadJson.endsWith("}")) {
+            "{\"event\":\"$event\"," + payloadJson.substring(1)
+        } else {
+            "{\"event\":\"$event\",\"data\":$payloadJson}"
         }
 
         send(url = url, message = eventObject, eventName = event, extraHeaders = extraHeaders)
+    }
+
+    /**
+     * Safely converts any object, Map, List, String, or primitive into valid JSON string.
+     */
+    fun encodePayloadToJson(payload: Any?): String {
+        if (payload == null) return "null"
+        return when (payload) {
+            is String -> {
+                val trimmed = payload.trim()
+                if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+                    trimmed
+                } else {
+                    json.encodeToString(payload)
+                }
+            }
+            is Number, is Boolean -> payload.toString()
+            is Map<*, *> -> {
+                val entries = payload.entries.joinToString(",") { (k, v) ->
+                    "\"${k.toString()}\":${encodePayloadToJson(v)}"
+                }
+                "{$entries}"
+            }
+            is List<*> -> {
+                val items = payload.joinToString(",") { encodePayloadToJson(it) }
+                "[$items]"
+            }
+            else -> {
+                runCatching { json.encodeToString(payload) }.getOrElse { json.encodeToString(payload.toString()) }
+            }
+        }
     }
 
     /**
