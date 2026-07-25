@@ -16,6 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -28,14 +31,14 @@ data class SocketMessage(
     val url: String,
     val event: String,
     val data: String,
-    val direction: String, // "SENT" or "RECEIVED"
+    val direction: String, // "SENT", "RECEIVED", "CONNECT", "DISCONNECT", "ERROR"
     val timestampMs: Long = kotlin.time.Clock.System.now().toEpochMilliseconds()
 )
 
 /**
  * Socket Manager for Kotlin Multiplatform applications.
  * Manages WebSocket connections, handles event sending & receiving, displays real-time console logs,
- * and maintains a 10MB persistent log file storing timestamps, URLs, events, requests, and responses.
+ * emits real-time events via SharedFlow / Flow streams, and maintains a 10MB persistent log file.
  */
 class EazySocketManager(
     private val client: HttpClient = HttpClientProvider.client,
@@ -48,6 +51,26 @@ class EazySocketManager(
 
     private val activeSessions = mutableMapOf<String, DefaultClientWebSocketSession>()
     private val messageFlows = mutableMapOf<String, MutableSharedFlow<SocketMessage>>()
+    private val globalSharedFlow = MutableSharedFlow<SocketMessage>(extraBufferCapacity = 256)
+
+    /**
+     * Observe all socket events across all connected URLs.
+     */
+    fun observeAll(): SharedFlow<SocketMessage> = globalSharedFlow.asSharedFlow()
+
+    /**
+     * Observe incoming and outgoing socket events for a specific socket URL.
+     */
+    fun observe(url: String): SharedFlow<SocketMessage> {
+        return getOrCreateFlow(url).asSharedFlow()
+    }
+
+    /**
+     * Observe specific named socket events (e.g. "chat_message", "profile_sync_event") for a socket URL.
+     */
+    fun observeEvent(url: String, eventName: String): Flow<SocketMessage> {
+        return observe(url).filter { it.event == eventName }
+    }
 
     /**
      * Connect to a WebSocket URL and observe incoming messages.
@@ -57,7 +80,7 @@ class EazySocketManager(
         url: String,
         extraHeaders: Map<String, String> = emptyMap()
     ): Flow<SocketMessage> = flow {
-        val sharedFlow = messageFlows.getOrPut(url) { MutableSharedFlow(extraBufferCapacity = 64) }
+        val sharedFlow = getOrCreateFlow(url)
 
         // Log connection start
         EazyLogger.logSocketEvent(
@@ -72,6 +95,15 @@ class EazySocketManager(
             direction = "CONNECT",
             requestData = if (extraHeaders.isNotEmpty()) json.encodeToString(extraHeaders) else null
         )
+
+        val connectMsg = SocketMessage(
+            url = url,
+            event = "CONNECT",
+            data = "Connected to $url",
+            direction = "CONNECT"
+        )
+        sharedFlow.emit(connectMsg)
+        globalSharedFlow.emit(connectMsg)
 
         try {
             client.webSocket(urlString = url, request = {
@@ -106,6 +138,7 @@ class EazySocketManager(
                             )
 
                             sharedFlow.emit(message)
+                            globalSharedFlow.emit(message)
                             emit(message)
                         }
                     }
@@ -121,6 +154,15 @@ class EazySocketManager(
                         event = "DISCONNECT",
                         direction = "DISCONNECT"
                     )
+
+                    val disconnectMsg = SocketMessage(
+                        url = url,
+                        event = "DISCONNECT",
+                        data = "Disconnected from $url",
+                        direction = "DISCONNECT"
+                    )
+                    sharedFlow.emit(disconnectMsg)
+                    globalSharedFlow.emit(disconnectMsg)
                 }
             }
         } catch (e: Exception) {
@@ -136,13 +178,22 @@ class EazySocketManager(
                 direction = "ERROR",
                 responseData = e.message
             )
+
+            val errorMsg = SocketMessage(
+                url = url,
+                event = "ERROR",
+                data = e.message ?: "Socket error",
+                direction = "ERROR"
+            )
+            sharedFlow.emit(errorMsg)
+            globalSharedFlow.emit(errorMsg)
             throw e
         }
     }
 
     /**
      * Send a raw string or frame to a WebSocket URL.
-     * Logs the sent event to console & 10MB log storage.
+     * Logs the sent event to console & 10MB log storage and emits to event flows.
      */
     suspend fun send(
         url: String,
@@ -165,6 +216,16 @@ class EazySocketManager(
             direction = "SENT",
             requestData = message
         )
+
+        val socketMsg = SocketMessage(
+            url = url,
+            event = event,
+            data = message,
+            direction = "SENT"
+        )
+        val sharedFlow = getOrCreateFlow(url)
+        sharedFlow.emit(socketMsg)
+        globalSharedFlow.emit(socketMsg)
 
         val session = activeSessions[url]
         if (session != null) {
@@ -255,6 +316,10 @@ class EazySocketManager(
      * Export all socket logs formatted as a plain text string.
      */
     fun exportLogsAsText(): String = logStorage.exportLogsAsText()
+
+    private fun getOrCreateFlow(url: String): MutableSharedFlow<SocketMessage> {
+        return messageFlows.getOrPut(url) { MutableSharedFlow(extraBufferCapacity = 128) }
+    }
 
     private fun extractEventName(raw: String): String {
         if (!raw.startsWith("{") || !raw.endsWith("}")) return "MESSAGE"
