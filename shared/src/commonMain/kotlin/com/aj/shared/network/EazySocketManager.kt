@@ -15,6 +15,7 @@ import io.ktor.websocket.readBytes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,8 +42,9 @@ data class SocketMessage(
 
 /**
  * Socket Manager for Kotlin Multiplatform applications.
- * Manages WebSocket connections, handles event sending & receiving, displays real-time console logs,
- * emits real-time events via SharedFlow / Flow streams, and maintains a 10MB persistent log file.
+ * Manages persistent WebSocket connections, handles auto-reconnection, event sending & receiving,
+ * displays real-time console logs, emits real-time events via SharedFlow / Flow streams,
+ * and maintains a 10MB persistent log file.
  */
 class EazySocketManager(
     private val client: HttpClient = HttpClientProvider.client,
@@ -56,6 +58,7 @@ class EazySocketManager(
     private val activeSessions = mutableMapOf<String, DefaultClientWebSocketSession>()
     private val messageFlows = mutableMapOf<String, MutableSharedFlow<SocketMessage>>()
     private val globalSharedFlow = MutableSharedFlow<SocketMessage>(extraBufferCapacity = 256)
+    private val manualDisconnects = mutableSetOf<String>()
 
     /**
      * Observe all socket events across all connected URLs.
@@ -78,125 +81,138 @@ class EazySocketManager(
 
     /**
      * Connect to a WebSocket URL and observe incoming messages.
-     * Logs the connection and all incoming frames to console & 10MB text log storage.
+     * Stays connected continuously until explicit disconnect(url) is called.
+     * Automatically reconnects if network drops or connection drops unexpectedly when autoReconnect = true.
      */
     fun connect(
         url: String,
-        extraHeaders: Map<String, String> = emptyMap()
+        extraHeaders: Map<String, String> = emptyMap(),
+        autoReconnect: Boolean = true,
+        reconnectDelayMs: Long = 3000L
     ): Flow<SocketMessage> = flow {
+        manualDisconnects.remove(url)
         val sharedFlow = getOrCreateFlow(url)
 
-        // Log connection start
-        EazyLogger.logSocketEvent(
-            url = url,
-            event = "CONNECT",
-            direction = "CONNECT",
-            requestData = if (extraHeaders.isNotEmpty()) json.encodeToString(extraHeaders) else null
-        )
-        logStorage.logEvent(
-            url = url,
-            event = "CONNECT",
-            direction = "CONNECT",
-            requestData = if (extraHeaders.isNotEmpty()) json.encodeToString(extraHeaders) else null
-        )
-
-        val connectMsg = SocketMessage(
-            url = url,
-            event = "CONNECT",
-            data = "Connected to $url",
-            direction = "CONNECT"
-        )
-        sharedFlow.emit(connectMsg)
-        globalSharedFlow.emit(connectMsg)
-
-        try {
-            client.webSocket(urlString = url, request = {
-                extraHeaders.forEach { (key, value) -> headers.append(key, value) }
-            }) {
-                activeSessions[url] = this
-                try {
-                    for (frame in incoming) {
-                        val rawText = when (frame) {
-                            is Frame.Text -> frame.readText()
-                            is Frame.Binary -> frame.readBytes().decodeToString()
-                            else -> null
-                        }
-
-                        if (rawText != null) {
-                            val eventName = extractEventName(rawText)
-
-                            val message = SocketMessage(
-                                url = url,
-                                event = eventName,
-                                data = rawText,
-                                direction = "RECEIVED"
-                            )
-
-                            // Display console log & persist to 10MB log storage
-                            EazyLogger.logSocketEvent(
-                                url = url,
-                                event = eventName,
-                                direction = "RECEIVED",
-                                responseData = rawText
-                            )
-                            logStorage.logEvent(
-                                url = url,
-                                event = eventName,
-                                direction = "RECEIVED",
-                                responseData = rawText
-                            )
-
-                            sharedFlow.emit(message)
-                            globalSharedFlow.emit(message)
-                            emit(message)
-                        }
-                    }
-                } finally {
-                    activeSessions.remove(url)
-                    EazyLogger.logSocketEvent(
-                        url = url,
-                        event = "DISCONNECT",
-                        direction = "DISCONNECT"
-                    )
-                    logStorage.logEvent(
-                        url = url,
-                        event = "DISCONNECT",
-                        direction = "DISCONNECT"
-                    )
-
-                    val disconnectMsg = SocketMessage(
-                        url = url,
-                        event = "DISCONNECT",
-                        data = "Disconnected from $url",
-                        direction = "DISCONNECT"
-                    )
-                    sharedFlow.emit(disconnectMsg)
-                    globalSharedFlow.emit(disconnectMsg)
-                }
-            }
-        } catch (e: Exception) {
+        var keepAlive = true
+        while (keepAlive && !manualDisconnects.contains(url) && currentCoroutineContext().isActive) {
+            // Log connection start
             EazyLogger.logSocketEvent(
                 url = url,
-                event = "ERROR",
-                direction = "ERROR",
-                error = e.message
+                event = "CONNECT",
+                direction = "CONNECT",
+                requestData = if (extraHeaders.isNotEmpty()) json.encodeToString(extraHeaders) else null
             )
             logStorage.logEvent(
                 url = url,
-                event = "ERROR",
-                direction = "ERROR",
-                responseData = e.message
+                event = "CONNECT",
+                direction = "CONNECT",
+                requestData = if (extraHeaders.isNotEmpty()) json.encodeToString(extraHeaders) else null
             )
 
-            val errorMsg = SocketMessage(
+            val connectMsg = SocketMessage(
                 url = url,
-                event = "ERROR",
-                data = e.message ?: "Socket error",
-                direction = "ERROR"
+                event = "CONNECT",
+                data = "Connected to $url",
+                direction = "CONNECT"
             )
-            sharedFlow.emit(errorMsg)
-            globalSharedFlow.emit(errorMsg)
-            throw e
+            sharedFlow.emit(connectMsg)
+            globalSharedFlow.emit(connectMsg)
+
+            try {
+                client.webSocket(urlString = url, request = {
+                    extraHeaders.forEach { (key, value) -> headers.append(key, value) }
+                }) {
+                    activeSessions[url] = this
+                    try {
+                        for (frame in incoming) {
+                            val rawText = when (frame) {
+                                is Frame.Text -> frame.readText()
+                                is Frame.Binary -> frame.readBytes().decodeToString()
+                                else -> null
+                            }
+
+                            if (rawText != null) {
+                                val eventName = extractEventName(rawText)
+
+                                val message = SocketMessage(
+                                    url = url,
+                                    event = eventName,
+                                    data = rawText,
+                                    direction = "RECEIVED"
+                                )
+
+                                // Display console log & persist to 10MB log storage
+                                EazyLogger.logSocketEvent(
+                                    url = url,
+                                    event = eventName,
+                                    direction = "RECEIVED",
+                                    responseData = rawText
+                                )
+                                logStorage.logEvent(
+                                    url = url,
+                                    event = eventName,
+                                    direction = "RECEIVED",
+                                    responseData = rawText
+                                )
+
+                                sharedFlow.emit(message)
+                                globalSharedFlow.emit(message)
+                                emit(message)
+                            }
+                        }
+                    } finally {
+                        activeSessions.remove(url)
+                        EazyLogger.logSocketEvent(
+                            url = url,
+                            event = "DISCONNECT",
+                            direction = "DISCONNECT"
+                        )
+                        logStorage.logEvent(
+                            url = url,
+                            event = "DISCONNECT",
+                            direction = "DISCONNECT"
+                        )
+
+                        val disconnectMsg = SocketMessage(
+                            url = url,
+                            event = "DISCONNECT",
+                            data = "Disconnected from $url",
+                            direction = "DISCONNECT"
+                        )
+                        sharedFlow.emit(disconnectMsg)
+                        globalSharedFlow.emit(disconnectMsg)
+                    }
+                }
+            } catch (e: Exception) {
+                EazyLogger.logSocketEvent(
+                    url = url,
+                    event = "ERROR",
+                    direction = "ERROR",
+                    error = e.message
+                )
+                logStorage.logEvent(
+                    url = url,
+                    event = "ERROR",
+                    direction = "ERROR",
+                    responseData = e.message
+                )
+
+                val errorMsg = SocketMessage(
+                    url = url,
+                    event = "ERROR",
+                    data = e.message ?: "Socket error",
+                    direction = "ERROR"
+                )
+                sharedFlow.emit(errorMsg)
+                globalSharedFlow.emit(errorMsg)
+            }
+
+            if (manualDisconnects.contains(url) || !autoReconnect) {
+                keepAlive = false
+            } else {
+                EazyLogger.d("🔄 Socket disconnected unexpectedly. Reconnecting in ${reconnectDelayMs}ms...")
+                delay(reconnectDelayMs)
+            }
         }
     }
 
@@ -321,9 +337,11 @@ class EazySocketManager(
     }
 
     /**
-     * Disconnect an active WebSocket URL session.
+     * Disconnect an active WebSocket URL session manually.
+     * Prevents automatic reconnection for this URL.
      */
     suspend fun disconnect(url: String) {
+        manualDisconnects.add(url)
         val session = activeSessions.remove(url)
         if (session != null) {
             try {
@@ -343,11 +361,19 @@ class EazySocketManager(
     }
 
     /**
-     * Disconnect all active socket sessions.
+     * Disconnect all active socket sessions manually.
      */
     suspend fun disconnectAll() {
         val urls = activeSessions.keys.toList()
         urls.forEach { disconnect(it) }
+    }
+
+    /**
+     * Check if a socket URL currently has an active connected session.
+     */
+    fun isConnected(url: String): Boolean {
+        val session = activeSessions[url]
+        return session != null && session.isActive
     }
 
     /**
