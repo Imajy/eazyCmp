@@ -11,20 +11,24 @@ import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
+import io.ktor.websocket.readBytes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlin.time.Clock
 
 @Serializable
 data class SocketMessage(
@@ -32,7 +36,7 @@ data class SocketMessage(
     val event: String,
     val data: String,
     val direction: String, // "SENT", "RECEIVED", "CONNECT", "DISCONNECT", "ERROR"
-    val timestampMs: Long = kotlin.time.Clock.System.now().toEpochMilliseconds()
+    val timestampMs: Long = Clock.System.now().toEpochMilliseconds()
 )
 
 /**
@@ -112,8 +116,13 @@ class EazySocketManager(
                 activeSessions[url] = this
                 try {
                     for (frame in incoming) {
-                        if (frame is Frame.Text) {
-                            val rawText = frame.readText()
+                        val rawText = when (frame) {
+                            is Frame.Text -> frame.readText()
+                            is Frame.Binary -> frame.readBytes().decodeToString()
+                            else -> null
+                        }
+
+                        if (rawText != null) {
                             val eventName = extractEventName(rawText)
 
                             val message = SocketMessage(
@@ -227,15 +236,36 @@ class EazySocketManager(
         sharedFlow.emit(socketMsg)
         globalSharedFlow.emit(socketMsg)
 
-        val session = activeSessions[url]
-        if (session != null) {
+        val session = getActiveSession(url)
+        if (session != null && session.isActive) {
             session.send(Frame.Text(message))
         } else {
-            // One-off send connection if not actively persistent
+            // One-off send connection if no persistent connection is active
             client.webSocket(urlString = url, request = {
                 extraHeaders.forEach { (key, value) -> headers.append(key, value) }
             }) {
                 send(Frame.Text(message))
+                for (frame in incoming) {
+                    val rawText = when (frame) {
+                        is Frame.Text -> frame.readText()
+                        is Frame.Binary -> frame.readBytes().decodeToString()
+                        else -> null
+                    }
+                    if (rawText != null) {
+                        val echoEvent = extractEventName(rawText)
+                        val echoMsg = SocketMessage(
+                            url = url,
+                            event = echoEvent,
+                            data = rawText,
+                            direction = "RECEIVED"
+                        )
+                        EazyLogger.logSocketEvent(url = url, event = echoEvent, direction = "RECEIVED", responseData = rawText)
+                        logStorage.logEvent(url = url, event = echoEvent, direction = "RECEIVED", responseData = rawText)
+                        sharedFlow.emit(echoMsg)
+                        globalSharedFlow.emit(echoMsg)
+                        break
+                    }
+                }
             }
         }
     }
@@ -339,6 +369,16 @@ class EazySocketManager(
      * Export all socket logs formatted as a plain text string.
      */
     fun exportLogsAsText(): String = logStorage.exportLogsAsText()
+
+    private suspend fun getActiveSession(url: String, timeoutMs: Long = 3000): DefaultClientWebSocketSession? {
+        val startTime = Clock.System.now().toEpochMilliseconds()
+        while (Clock.System.now().toEpochMilliseconds() - startTime < timeoutMs) {
+            val session = activeSessions[url]
+            if (session != null && session.isActive) return session
+            delay(100)
+        }
+        return activeSessions[url]
+    }
 
     private fun getOrCreateFlow(url: String): MutableSharedFlow<SocketMessage> {
         return messageFlows.getOrPut(url) { MutableSharedFlow(extraBufferCapacity = 128) }
