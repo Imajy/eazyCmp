@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-034",
+  "latest": "1.0.0.1-rc-035",
   "versions": [
+    "1.0.0.1-rc-035",
     "1.0.0.1-rc-034",
     "1.0.0.1-rc-033",
     "1.0.0.1-rc-032",
@@ -46,6 +47,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-035",
+      "message": "feat: implement persistent WebSocket event logging with automated size-based eviction using SocketLogStorage",
+      "publishedAt": "2026-07-26T01:12:07+05:30",
+      "commit": "8d83eab2afbe0b58025b2bf7c7e5f79db38dacbf"
+    },
     {
       "version": "1.0.0.1-rc-034",
       "message": "Optimize dropdown performance for large selections",
@@ -288,6 +295,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-25T09:39:12Z",
+  "updatedAt": "2026-07-25T19:46:01Z",
   "failures": []
 }
