@@ -4,6 +4,8 @@ import com.aj.shared.analytics.EazyAnalytics
 import com.aj.shared.analytics.EazyCrash
 import com.aj.shared.analytics.NoOpEazyAnalytics
 import com.aj.shared.analytics.NoOpEazyCrash
+import com.aj.shared.api.ApiClient
+import com.aj.shared.api.ApiConfig
 import com.aj.shared.api.EazyLogger
 import com.aj.shared.auth.AppleAuth
 import com.aj.shared.auth.GoogleAuth
@@ -78,6 +80,7 @@ object EazyCmp {
     val responseCache: ApiResponseCache by lazy { ApiResponseCache() }
 
     // --- Network & Sockets ---
+    val api: ApiClient by lazy { ApiClient() }
     val socket: EazySocketManager by lazy { EazySocketManager() }
     val offlineQueue: OfflineQueueManager by lazy { OfflineQueueManager() }
     val requestDeduplicator: RequestDeduplicator by lazy { RequestDeduplicator() }
@@ -120,12 +123,64 @@ object EazyCmp {
         "https://letterhead.ajmonic.com/loading.json"
     )
 
-    fun setDefaultApiLoadingPlaceholder(pathOrUrl: String) {
-        defaultApiLoadingPlaceholder = Placeholder.from(pathOrUrl)
+    fun setDefaultApiLoadingPlaceholder(source: Any) {
+        Placeholder.from(source)?.let {
+            defaultApiLoadingPlaceholder = it
+        }
     }
 
-    fun setDefaultImagePlaceholder(pathOrUrl: String) {
-        defaultImagePlaceholder = Placeholder.from(pathOrUrl)
+    fun setDefaultImagePlaceholder(source: Any) {
+        Placeholder.from(source)?.let {
+            defaultImagePlaceholder = it
+        }
+    }
+
+    fun setBaseUrl(
+        baseUrl: String,
+        token: String? = null,
+        tokenProvider: (() -> String?)? = null,
+        name: String = ApiConfig.DEFAULT_BASE_NAME,
+        headers: Map<String, String> = emptyMap(),
+        queryParams: Map<String, String> = emptyMap(),
+        bodyParams: Map<String, Any?> = emptyMap()
+    ) {
+        ApiConfig.registerBaseUrl(
+            name = name,
+            baseUrl = baseUrl,
+            token = token,
+            tokenProvider = tokenProvider,
+            defaultHeaders = headers,
+            defaultQueryParams = queryParams,
+            defaultBodyParams = bodyParams
+        )
+    }
+
+    fun setAuthToken(token: String, name: String = ApiConfig.DEFAULT_BASE_NAME) {
+        ApiConfig.updateToken(name, token)
+    }
+
+    fun setDebug(enabled: Boolean) {
+        isDebugEnabled = enabled
+    }
+
+    fun configure(block: EazyCmpConfigBuilder.() -> Unit) {
+        val builder = EazyCmpConfigBuilder().apply(block)
+
+        if (builder.baseUrl.isNotBlank()) {
+            setBaseUrl(
+                baseUrl = builder.baseUrl,
+                token = builder.token,
+                tokenProvider = builder.tokenProvider,
+                headers = builder.headers,
+                queryParams = builder.queryParams,
+                bodyParams = builder.bodyParams
+            )
+        }
+
+        builder.apiLoadingPlaceholder?.let { setDefaultApiLoadingPlaceholder(it) }
+        builder.imagePlaceholder?.let { setDefaultImagePlaceholder(it) }
+        builder.socketUrl?.let { socket.connect(it) }
+        isDebugEnabled = builder.isDebugEnabled
     }
 
     var isDebugEnabled: Boolean
@@ -135,6 +190,21 @@ object EazyCmp {
     fun init(context: Any? = null, settingsName: String = "eazy_cmp_prefs") {
         platformInit(context, settingsName)
     }
+}
+
+class EazyCmpConfigBuilder {
+    var baseUrl: String = ""
+    var token: String? = null
+    var tokenProvider: (() -> String?)? = null
+    var headers: Map<String, String> = emptyMap()
+    var queryParams: Map<String, String> = emptyMap()
+    var bodyParams: Map<String, Any?> = emptyMap()
+
+    var socketUrl: String? = null
+    var isDebugEnabled: Boolean = false
+
+    var apiLoadingPlaceholder: Any? = null
+    var imagePlaceholder: Any? = null
 }
 
 internal expect fun platformInit(context: Any?, settingsName: String)

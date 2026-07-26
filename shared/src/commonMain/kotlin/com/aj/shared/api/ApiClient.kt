@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.first
 
 class ApiClient(val client: HttpClient = HttpClientProvider.client) {
     inline fun <reified Req : Any, reified Res> request(
-        base: String,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
         endpoint: String,
         method: ApiMethod = ApiMethod.GET,
         body: Req? = null,
@@ -60,9 +60,88 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         )
     }
 
+    inline fun <reified Res> get(
+        endpoint: String,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
+        query: Map<String, String> = emptyMap(),
+        options: RequestOptions = RequestOptions()
+    ): Flow<Resource<Res>> = request<Unit, Res>(
+        base = base,
+        endpoint = endpoint,
+        method = ApiMethod.GET,
+        query = query,
+        options = options
+    )
+
+    inline fun <reified Req : Any, reified Res> post(
+        endpoint: String,
+        body: Req? = null,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
+        query: Map<String, String> = emptyMap(),
+        files: List<FilePart> = emptyList(),
+        bodyType: BodyType = BodyType.JSON,
+        options: RequestOptions = RequestOptions()
+    ): Flow<Resource<Res>> = request<Req, Res>(
+        base = base,
+        endpoint = endpoint,
+        method = ApiMethod.POST,
+        body = body,
+        query = query,
+        files = files,
+        bodyType = bodyType,
+        options = options
+    )
+
+    inline fun <reified Req : Any, reified Res> put(
+        endpoint: String,
+        body: Req? = null,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
+        query: Map<String, String> = emptyMap(),
+        files: List<FilePart> = emptyList(),
+        bodyType: BodyType = BodyType.JSON,
+        options: RequestOptions = RequestOptions()
+    ): Flow<Resource<Res>> = request<Req, Res>(
+        base = base,
+        endpoint = endpoint,
+        method = ApiMethod.PUT,
+        body = body,
+        query = query,
+        files = files,
+        bodyType = bodyType,
+        options = options
+    )
+
+    inline fun <reified Res> delete(
+        endpoint: String,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
+        query: Map<String, String> = emptyMap(),
+        options: RequestOptions = RequestOptions()
+    ): Flow<Resource<Res>> = request<Unit, Res>(
+        base = base,
+        endpoint = endpoint,
+        method = ApiMethod.DELETE,
+        query = query,
+        options = options
+    )
+
+    inline fun <reified Req : Any, reified Res> patch(
+        endpoint: String,
+        body: Req? = null,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
+        query: Map<String, String> = emptyMap(),
+        options: RequestOptions = RequestOptions()
+    ): Flow<Resource<Res>> = request<Req, Res>(
+        base = base,
+        endpoint = endpoint,
+        method = ApiMethod.PATCH,
+        body = body,
+        query = query,
+        options = options
+    )
+
     @PublishedApi
     internal inline fun <reified Req : Any, reified Res> requestFlow(
-        base: String,
+        base: String = ApiConfig.DEFAULT_BASE_NAME,
         endpoint: String,
         method: HttpMethod,
         body: Req?,

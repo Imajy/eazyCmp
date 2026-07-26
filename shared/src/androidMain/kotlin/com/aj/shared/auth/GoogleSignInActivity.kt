@@ -116,12 +116,27 @@ class GoogleSignInActivity : ComponentActivity() {
                 return@launch
             }
 
-            val finalToken = if (!realToken.isNullOrBlank()) realToken else "google_oauth_${selectedEmail}_${System.currentTimeMillis()}"
+            val isJwtToken = fallbackToken?.startsWith("eyJ") == true || realToken?.startsWith("eyJ") == true
+            val actualIdToken = if (fallbackToken?.startsWith("eyJ") == true) {
+                fallbackToken
+            } else if (realToken?.startsWith("eyJ") == true) {
+                realToken
+            } else {
+                null
+            }
+
+            val actualAccessToken = if (realToken?.startsWith("ya29") == true || realToken?.startsWith("oauth2") == true) {
+                realToken
+            } else if (fallbackToken == null && !realToken.isNullOrBlank() && !isJwtToken) {
+                realToken
+            } else {
+                null
+            }
 
             val authResult = SocialAuthResult(
                 provider = SocialAuthProviderType.GOOGLE,
-                idToken = finalToken,
-                accessToken = finalToken,
+                idToken = actualIdToken,
+                accessToken = actualAccessToken,
                 email = selectedEmail,
                 displayName = selectedEmail.substringBefore("@")
             )

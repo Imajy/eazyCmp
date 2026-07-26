@@ -6,43 +6,36 @@ import io.ktor.client.request.parameter
 import io.ktor.http.HttpHeaders
 
 fun HttpRequestBuilder.applyDefaults(
-    baseName: String
+    baseName: String = ApiConfig.DEFAULT_BASE_NAME
 ) {
-
     val config = ApiConfig.getConfig(baseName)
 
     config.defaultHeaders.forEach { entry ->
-        header(
-            entry.key,
-            entry.value
-        )
+        header(entry.key, entry.value)
     }
 
     config.defaultQueryParams.forEach { entry ->
-        parameter(
-            entry.key,
-            entry.value
-        )
+        parameter(entry.key, entry.value)
     }
 
-    config.token?.let { token ->
-
-        header(
-            HttpHeaders.Authorization,
-            "Bearer $token"
-        )
+    val activeToken = config.tokenProvider?.invoke() ?: config.token
+    activeToken?.let { token ->
+        val authValue = if (token.startsWith("Bearer ", ignoreCase = true)) token else "Bearer $token"
+        header(HttpHeaders.Authorization, authValue)
     }
 }
 
 fun buildUrl(
-    baseName: String,
+    baseName: String = ApiConfig.DEFAULT_BASE_NAME,
     endpoint: String
 ): String {
+    if (endpoint.startsWith("http://", ignoreCase = true) || endpoint.startsWith("https://", ignoreCase = true)) {
+        return endpoint
+    }
+
     val config = ApiConfig.getConfig(baseName)
-
     val cleanBase = config.baseUrl.trimEnd('/')
-
     val cleanEndpoint = endpoint.trimStart('/')
 
-    return "$cleanBase/$cleanEndpoint"
+    return if (cleanBase.isEmpty()) cleanEndpoint else "$cleanBase/$cleanEndpoint"
 }
