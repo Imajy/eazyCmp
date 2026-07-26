@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-040",
+  "latest": "1.0.0.1-rc-041",
   "versions": [
+    "1.0.0.1-rc-041",
     "1.0.0.1-rc-040",
     "1.0.0.1-rc-039",
     "1.0.0.1-rc-038",
@@ -52,6 +53,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-041",
+      "message": "api client convenience methods and configuration dsl added",
+      "publishedAt": "2026-07-26T17:15:43+05:30",
+      "commit": "d48246ba475f1f774f5c48dfedd6109ad4213641"
+    },
     {
       "version": "1.0.0.1-rc-040",
       "message": "feat: implement persistent WebSocket event logging with automated size-based eviction using SocketLogStorage",
@@ -330,6 +337,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-25T20:35:42Z",
+  "updatedAt": "2026-07-26T11:49:48Z",
   "failures": []
 }
