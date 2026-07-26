@@ -77,14 +77,18 @@ class GoogleSignInActivity : ComponentActivity() {
             var realToken: String? = fallbackToken
             var recoverableIntent: Intent? = null
 
-            if (realToken.isNullOrBlank()) {
+            var fetchedIdToken: String? = if (fallbackToken?.startsWith("eyJ") == true) fallbackToken else null
+            var fetchedAccessToken: String? = if (fallbackToken?.startsWith("ya29") == true) fallbackToken else null
+
+            if (fetchedIdToken.isNullOrBlank() && !webClientId.isNullOrBlank()) {
                 try {
-                    val scope = if (!webClientId.isNullOrBlank()) {
-                        "oauth2:server:client_id:$webClientId:api_scope:openid email profile"
-                    } else {
-                        "oauth2:https://www.googleapis.com/auth/userinfo.email openid profile"
+                    val idTokenScope = "oauth2:server:client_id:$webClientId"
+                    val tokenResult = GoogleAuthUtil.getToken(this@GoogleSignInActivity, selectedEmail, idTokenScope)
+                    if (tokenResult?.startsWith("eyJ") == true) {
+                        fetchedIdToken = tokenResult
+                    } else if (tokenResult?.startsWith("ya29") == true) {
+                        fetchedAccessToken = tokenResult
                     }
-                    realToken = GoogleAuthUtil.getToken(this@GoogleSignInActivity, selectedEmail, scope)
                 } catch (e: UserRecoverableAuthException) {
                     recoverableIntent = e.intent
                 } catch (e: Exception) {
@@ -94,15 +98,21 @@ class GoogleSignInActivity : ComponentActivity() {
                             recoverableIntent = getIntentMethod.invoke(e) as? Intent
                         } catch (_: Exception) {}
                     }
-                    if (recoverableIntent == null && !webClientId.isNullOrBlank()) {
-                        try {
-                            val altScope = "oauth2:https://www.googleapis.com/auth/userinfo.email openid profile"
-                            realToken = GoogleAuthUtil.getToken(this@GoogleSignInActivity, selectedEmail, altScope)
-                        } catch (e2: UserRecoverableAuthException) {
-                            recoverableIntent = e2.intent
-                        } catch (_: Exception) {}
-                    }
                 }
+            }
+
+            if (fetchedAccessToken.isNullOrBlank() && recoverableIntent == null) {
+                try {
+                    val accessTokenScope = "oauth2:https://www.googleapis.com/auth/userinfo.email openid profile"
+                    val tokenResult = GoogleAuthUtil.getToken(this@GoogleSignInActivity, selectedEmail, accessTokenScope)
+                    if (tokenResult?.startsWith("ya29") == true || tokenResult?.startsWith("oauth2") == true) {
+                        fetchedAccessToken = tokenResult
+                    } else if (fetchedIdToken == null && tokenResult?.startsWith("eyJ") == true) {
+                        fetchedIdToken = tokenResult
+                    }
+                } catch (e: UserRecoverableAuthException) {
+                    if (recoverableIntent == null) recoverableIntent = e.intent
+                } catch (_: Exception) {}
             }
 
             if (recoverableIntent != null) {
@@ -116,27 +126,10 @@ class GoogleSignInActivity : ComponentActivity() {
                 return@launch
             }
 
-            val isJwtToken = fallbackToken?.startsWith("eyJ") == true || realToken?.startsWith("eyJ") == true
-            val actualIdToken = if (fallbackToken?.startsWith("eyJ") == true) {
-                fallbackToken
-            } else if (realToken?.startsWith("eyJ") == true) {
-                realToken
-            } else {
-                null
-            }
-
-            val actualAccessToken = if (realToken?.startsWith("ya29") == true || realToken?.startsWith("oauth2") == true) {
-                realToken
-            } else if (fallbackToken == null && !realToken.isNullOrBlank() && !isJwtToken) {
-                realToken
-            } else {
-                null
-            }
-
             val authResult = SocialAuthResult(
                 provider = SocialAuthProviderType.GOOGLE,
-                idToken = actualIdToken,
-                accessToken = actualAccessToken,
+                idToken = fetchedIdToken,
+                accessToken = fetchedAccessToken,
                 email = selectedEmail,
                 displayName = selectedEmail.substringBefore("@")
             )
