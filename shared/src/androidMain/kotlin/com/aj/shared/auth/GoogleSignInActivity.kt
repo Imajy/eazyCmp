@@ -155,6 +155,14 @@ class GoogleSignInActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         webClientId = intent.getStringExtra(EXTRA_WEB_CLIENT_ID)
+        if (webClientId.isNullOrBlank()) {
+            try {
+                val resId = resources.getIdentifier("default_web_client_id", "string", packageName)
+                if (resId != 0) {
+                    webClientId = getString(resId)
+                }
+            } catch (_: Exception) {}
+        }
 
         val gsoBuilder = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
