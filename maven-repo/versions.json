@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-042",
+  "latest": "1.0.0.1-rc-043",
   "versions": [
+    "1.0.0.1-rc-043",
     "1.0.0.1-rc-042",
     "1.0.0.1-rc-041",
     "1.0.0.1-rc-040",
@@ -54,6 +55,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-043",
+      "message": "fix: update Google sign-in logic to explicitly fetch and distinguish between ID tokens and access tokens",
+      "publishedAt": "2026-07-26T17:35:54+05:30",
+      "commit": "5e0eef37633bb3a8f8e48499689d55c850ad044d"
+    },
     {
       "version": "1.0.0.1-rc-042",
       "message": "fix: update Google sign-in logic to explicitly fetch and distinguish between ID tokens and access tokens",
@@ -344,6 +351,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-07-26T12:00:43Z",
+  "updatedAt": "2026-07-26T12:09:32Z",
   "failures": []
 }
