@@ -59,6 +59,7 @@ fun GenericBottomSheet(
     titleStyle : TextStyle = MaterialTheme.typography.bodyMedium,
     skipPartiallyExpanded: Boolean = true,
     titleBackGround : Color = bottomSheetHeaderBackGround,
+    background : Color = whiteColor,
     onDismiss: () -> Unit,
     closeIcon : Any = Placeholder.VectorResource(Icons.Default.Close),
     content: @Composable () -> Unit
@@ -87,7 +88,7 @@ fun GenericBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = whiteColor,
+        containerColor = background,
         dragHandle = null,
         sheetGesturesEnabled = false,
         shape = RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp),
