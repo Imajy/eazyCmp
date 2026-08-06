@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-044",
+  "latest": "1.0.0.1-rc-045",
   "versions": [
+    "1.0.0.1-rc-045",
     "1.0.0.1-rc-044",
     "1.0.0.1-rc-043",
     "1.0.0.1-rc-042",
@@ -56,6 +57,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-045",
+      "message": "textField icons size changes",
+      "publishedAt": "2026-08-06T07:22:05+05:30",
+      "commit": "5816c5e3f76d6e735f4fdb52449b0540dedbe010"
+    },
     {
       "version": "1.0.0.1-rc-044",
       "message": "bottom sheet ui changes",
@@ -358,6 +365,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-08-05T15:57:12Z",
+  "updatedAt": "2026-08-06T01:54:36Z",
   "failures": []
 }
