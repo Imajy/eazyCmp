@@ -75,6 +75,8 @@ fun OutLinedSimpleTextField(
     leadingIconTine: Color? = grayColor,
     placeHolderFontWeight: FontWeight = FontWeight.W400,
     maxLines: Int = 1,
+    leadingIconSize: Int = 17,
+    trailingIconSize: Int = 20,
     error: String? = null,
     label: String? = null,
     columnPadding: PaddingValues = PaddingValues(0.dp),
@@ -150,7 +152,7 @@ fun OutLinedSimpleTextField(
                                     painter = leadingImage,
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(17.dp)
+                                        .size(leadingIconSize.dp)
                                         .clip(RoundedCornerShape(5.dp))
                                         .clickable(
                                             interactionSource = remember { MutableInteractionSource() },
@@ -166,7 +168,7 @@ fun OutLinedSimpleTextField(
                                     painter = leadingImage,
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(17.dp)
+                                        .size(leadingIconSize.dp)
                                         .clip(RoundedCornerShape(5.dp))
                                         .clickable(
                                             interactionSource = remember { MutableInteractionSource() },
@@ -184,7 +186,7 @@ fun OutLinedSimpleTextField(
                                         imageVector = leadingIcon,
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(17.dp)
+                                            .size(leadingIconSize.dp)
                                             .clip(RoundedCornerShape(5.dp))
                                             .clickable(
                                                 interactionSource = remember { MutableInteractionSource() },
@@ -200,7 +202,7 @@ fun OutLinedSimpleTextField(
                                         imageVector = leadingIcon,
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(17.dp)
+                                            .size(leadingIconSize.dp)
                                             .clip(RoundedCornerShape(5.dp))
                                             .clickable(
                                                 interactionSource = remember { MutableInteractionSource() },
@@ -268,7 +270,7 @@ fun OutLinedSimpleTextField(
                                 painter = trailingImage,
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(20.dp)
+                                    .size(trailingIconSize.dp)
                                     .clip(RoundedCornerShape(5.dp))
                                     .clickable(
                                         interactionSource = remember { MutableInteractionSource() },
@@ -284,7 +286,7 @@ fun OutLinedSimpleTextField(
                                 painter = trailingImage,
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(20.dp)
+                                    .size(trailingIconSize.dp)
                                     .clip(RoundedCornerShape(5.dp))
                                     .clickable(
                                         interactionSource = remember { MutableInteractionSource() },
@@ -302,7 +304,7 @@ fun OutLinedSimpleTextField(
                                     imageVector = trailingIcon,
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(20.dp)
+                                        .size(trailingIconSize.dp)
                                         .clip(RoundedCornerShape(5.dp))
                                         .clickable(
                                             interactionSource = remember { MutableInteractionSource() },
@@ -318,7 +320,7 @@ fun OutLinedSimpleTextField(
                                     imageVector = trailingIcon,
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(20.dp)
+                                        .size(trailingIconSize.dp)
                                         .clip(RoundedCornerShape(5.dp))
                                         .clickable(
                                             interactionSource = remember { MutableInteractionSource() },
