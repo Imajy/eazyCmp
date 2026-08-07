@@ -22,6 +22,7 @@ import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -72,6 +73,22 @@ fun GenericBottomSheet(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     var sheetY by remember { mutableStateOf(0f) }
+    var showPopup by remember { mutableStateOf(false) }
+
+    val bottomSheetSnackbarListener = remember {
+        { snackbar: AppSnackbar? ->
+            if (snackbar != null) {
+                showPopup = true
+            }
+        }
+    }
+
+    DisposableEffect(bottomSheetSnackbarListener) {
+        AppSnackbarManager.registerListener(bottomSheetSnackbarListener)
+        onDispose {
+            AppSnackbarManager.unregisterListener(bottomSheetSnackbarListener)
+        }
+    }
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -158,24 +175,31 @@ fun GenericBottomSheet(
             }
         }
 
-        androidx.compose.ui.window.Popup(
-            alignment = Alignment.TopCenter,
-            offset = IntOffset(x = 0, y = -sheetY.toInt()),
-            properties = androidx.compose.ui.window.PopupProperties(
-                focusable = false,
-                dismissOnBackPress = false,
-                dismissOnClickOutside = false
-            )
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(if (AppSnackbarManager.isSnackbarVisible) 120.dp else 0.dp)
+        if (showPopup) {
+             androidx.compose.ui.window.Popup(
+                alignment = Alignment.TopCenter,
+                offset = IntOffset(x = 0, y = -sheetY.toInt()),
+                properties = androidx.compose.ui.window.PopupProperties(
+                    focusable = false,
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false
+                )
             ) {
-                SnackBarBoxApp(
-                    brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Transparent))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
                 ) {
-                    // Empty content - SnackBarBoxApp manages displaying the snackbars internally
+                    SnackBarBoxApp(
+                        brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Transparent)),
+                        onVisibilityChanged = { isVisible ->
+                            if (!isVisible) {
+                                showPopup = false
+                            }
+                        }
+                    ) {
+                        // Empty content - SnackBarBoxApp manages displaying the snackbars internally
+                    }
                 }
             }
         }

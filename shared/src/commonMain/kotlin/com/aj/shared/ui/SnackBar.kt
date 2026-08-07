@@ -7,9 +7,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -147,11 +149,19 @@ val screenGradientColor = Brush.verticalGradient(
 )
 
 @Composable
-fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -> Unit) {
+fun SnackBarBoxApp(
+    brush: Brush = screenGradientColor,
+    onVisibilityChanged: ((Boolean) -> Unit)? = null,
+    content: @Composable () -> Unit
+) {
 
     val snackbarHostState = remember { SnackbarHostState() }
-    var showSnackbar by remember { mutableStateOf(false) }
-    var activeSnackbarData by remember { mutableStateOf<AppSnackbar?>(null) }
+    val transitionState = remember {
+        MutableTransitionState(AppSnackbarManager.activeSnackbarData != null).apply {
+            targetState = AppSnackbarManager.activeSnackbarData != null
+        }
+    }
+    var activeSnackbarData by remember { mutableStateOf<AppSnackbar?>(AppSnackbarManager.activeSnackbarData) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -160,9 +170,9 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         { snackbar: AppSnackbar? ->
             if (snackbar != null) {
                 activeSnackbarData = snackbar
-                showSnackbar = true
+                transitionState.targetState = true
             } else {
-                showSnackbar = false
+                transitionState.targetState = false
             }
         }
     }
@@ -179,6 +189,11 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         onSnackbarDataChange = {}
     )
 
+    val isVisibleOrAnimating = transitionState.currentState || transitionState.targetState
+    LaunchedEffect(isVisibleOrAnimating) {
+        onVisibilityChanged?.invoke(isVisibleOrAnimating)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -193,7 +208,7 @@ fun SnackBarBoxApp(brush: Brush = screenGradientColor, content: @Composable () -
         content()
 
         AnimatedVisibility(
-            visible = showSnackbar,
+            visibleState = transitionState,
             enter = slideInVertically(
                 initialOffsetY = { -it },
                 animationSpec = spring(
