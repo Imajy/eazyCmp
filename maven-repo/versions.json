@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-046",
+  "latest": "1.0.0.1-rc-047",
   "versions": [
+    "1.0.0.1-rc-047",
     "1.0.0.1-rc-046",
     "1.0.0.1-rc-045",
     "1.0.0.1-rc-044",
@@ -58,6 +59,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-047",
+      "message": "api queue implemented and chunks implemented also db for apis",
+      "publishedAt": "2026-08-08T22:29:34+05:30",
+      "commit": "5b5ca337cd8fd2e37312ceea8c8287297f0b1804"
+    },
     {
       "version": "1.0.0.1-rc-046",
       "message": "changes",
@@ -372,6 +379,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-08-07T08:36:22Z",
+  "updatedAt": "2026-08-08T17:05:15Z",
   "failures": []
 }
