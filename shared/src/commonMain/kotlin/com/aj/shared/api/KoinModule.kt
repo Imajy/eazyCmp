@@ -15,6 +15,7 @@ val coreModule = module {
     single { ApiClient() }
     single { SocketLogStorage() }
     single { EazyCmp.socket }
+    single { com.aj.shared.db.EazyCmpDatabase(provideSqlDriver()) }
 }
 var SETTINGS_NAME = "app_settings"
 

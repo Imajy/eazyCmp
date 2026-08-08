@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
     id("maven-publish")
+    alias(libs.plugins.sqldelight)
 }
 
 // JitPack runs on Linux — skip slow iOS native compile for fast publishes (~3-6 min).
@@ -99,6 +100,9 @@ kotlin {
 
             // Navigation (JetBrains KMP wrappers)
             api(libs.navigation.compose)
+
+            // Database
+            api(libs.sqldelight.coroutines.extensions)
         }
 
         jvmMain.dependencies {
@@ -108,6 +112,7 @@ kotlin {
             implementation(libs.webcam.capture)
             implementation(libs.pdfbox)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.sqldelight.sqlite.driver)
         }
 
         commonTest.dependencies {
@@ -117,6 +122,7 @@ kotlin {
         if (!skipIosTargets) {
             nativeMain.dependencies {
                 implementation(libs.ktor.client.darwin)
+                implementation(libs.sqldelight.native.driver)
             }
         }
 
@@ -130,6 +136,7 @@ kotlin {
             implementation(libs.play.review)
             implementation(libs.play.services.auth)
             implementation(libs.zxing.core)
+            implementation(libs.sqldelight.android.driver)
         }
     }
 }
@@ -137,6 +144,14 @@ kotlin {
 compose.resources {
     publicResClass = true
     packageOfResClass = "com.github.imajy.shared.generated.resources"
+}
+
+sqldelight {
+    databases {
+        create("EazyCmpDatabase") {
+            packageName.set("com.aj.shared.db")
+        }
+    }
 }
 
 tasks.withType<Copy>().configureEach {

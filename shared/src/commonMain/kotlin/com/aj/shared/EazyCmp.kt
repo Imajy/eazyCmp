@@ -45,6 +45,7 @@ import com.aj.shared.ui.Placeholder
 import com.aj.shared.update.UpdateChecker
 import com.aj.shared.upload.UploadManager
 import com.aj.shared.upload.UploadQueueManager
+import org.koin.core.component.inject
 
 import com.aj.shared.internal.EazyCmpBuildInfo
 

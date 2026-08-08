@@ -41,3 +41,7 @@ actual fun provideSettings(): Settings {
     val delegate = NSUserDefaults(suiteName = SETTINGS_NAME) ?: NSUserDefaults.standardUserDefaults
     return NSUserDefaultsSettings(delegate)
 }
+
+actual fun provideSqlDriver(): app.cash.sqldelight.db.SqlDriver {
+    return com.aj.shared.db.DatabaseDriverFactory().createDriver()
+}

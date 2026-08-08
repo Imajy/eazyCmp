@@ -46,3 +46,7 @@ actual fun provideSettings() : Settings {
     val delegate = Preferences.userRoot().node(SETTINGS_NAME)
     return PreferencesSettings(delegate)
 }
+
+actual fun provideSqlDriver(): app.cash.sqldelight.db.SqlDriver {
+    return com.aj.shared.db.DatabaseDriverFactory().createDriver()
+}

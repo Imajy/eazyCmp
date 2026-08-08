@@ -73,3 +73,10 @@ actual fun provideSettings(): Settings {
 
     return SharedPreferencesSettings(pref)
 }
+
+actual fun provideSqlDriver(): app.cash.sqldelight.db.SqlDriver {
+    if (!::appContext.isInitialized) {
+        error("Call EazyCmp.init(context) in Application.onCreate() before using DB on Android.")
+    }
+    return com.aj.shared.db.DatabaseDriverFactory(appContext).createDriver()
+}

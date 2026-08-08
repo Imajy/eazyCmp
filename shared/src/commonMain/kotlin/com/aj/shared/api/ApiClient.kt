@@ -29,6 +29,7 @@ import kotlin.time.Clock
 import com.aj.shared.EazyCmp
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import com.aj.shared.picker.toBase64Image
 
 
 class ApiClient(val client: HttpClient = HttpClientProvider.client) {
@@ -170,6 +171,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
 
         val startTime = Clock.System.now()
         val cacheKey = "${method.value}:$url"
+        val mergedBody = mergeRequestBody<Req>(base, body)
         try {
             if (!EazyCmp.network.isOnline) {
                 if (options.retryOnConnection) {
@@ -187,13 +189,14 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                     }
                     emit(Resource.Error("No internet"))
                     return@flow
+                } else if (method in listOf(HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch, HttpMethod.Delete)) {
+                    throw Exception("No internet - queueing mutation")
                 } else {
                     emit(Resource.Error("No internet"))
                     return@flow
                 }
             }
 
-            val mergedBody = mergeRequestBody<Req>(base, body)
             var capturedReqBody: String? = null
 
             val response = client.request(buildUrl(base, endpoint)) {
@@ -308,7 +311,46 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
                 }
             }
 
+            if (method in listOf(HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch, HttpMethod.Delete)) {
+                // Encode files
+                val queuedFiles = files.mapNotNull { part ->
+                    part.file?.let { file ->
+                        com.aj.shared.network.QueuedFilePart(
+                            name = part.name,
+                            fileName = file.fileName,
+                            mimeType = file.mimeType,
+                            bytesBase64 = file.toBase64Image()
+                        )
+                    }
+                }
+                
+                val bodyString = if (mergedBody != null) {
+                    try { json.encodeToString(mergedBody) } catch (e: Exception) { null }
+                } else null
+
+                val payload = com.aj.shared.network.ApiQueuePayload(
+                    bodyString = bodyString,
+                    files = queuedFiles,
+                    queryParams = query,
+                    bodyType = bodyType.name
+                )
+
+                EazyCmp.offlineQueue.enqueue(
+                    com.aj.shared.network.QueuedRequest(
+                        tag = "offline_mutation",
+                        payloadJson = json.encodeToString(payload),
+                        endpoint = endpoint,
+                        method = method.value,
+                        headers = emptyMap() // Can include reqHeaders if needed
+                    )
+                )
+
+                emit(Resource.Error("Offline: Request queued for later"))
+                return@flow
+            }
+
             emit(Resource.Error(e.message ?: "unknown error"))
+
         }
     }
     @PublishedApi
