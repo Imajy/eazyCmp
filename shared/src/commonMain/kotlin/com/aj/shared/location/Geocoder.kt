@@ -30,6 +30,7 @@ object Geocoder {
 
     var baseUrl: String = "https://nominatim.openstreetmap.org"
     var userAgent: String = "EazyCmp/1.0"
+    var language: String = "en"
 
     suspend fun search(query: String): GeocoderResult<List<PlaceResult>> {
         if (query.isBlank()) return GeocoderResult.Success(emptyList())
@@ -40,6 +41,7 @@ object Geocoder {
                 parameter("format", "json")
                 parameter("limit", "5")
                 parameter("addressdetails", "1")
+                parameter("accept-language", language)
             }.bodyAsText()
 
             val array = json.parseToJsonElement(responseText).jsonArray
@@ -75,6 +77,7 @@ object Geocoder {
                 parameter("lon", lon.toString())
                 parameter("format", "json")
                 parameter("addressdetails", "1")
+                parameter("accept-language", language)
             }.bodyAsText()
 
             val obj = json.parseToJsonElement(responseText).jsonObject
