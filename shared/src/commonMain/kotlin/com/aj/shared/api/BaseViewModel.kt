@@ -29,6 +29,7 @@ abstract class BaseViewModel : ViewModel() {
         scope: CoroutineScope,
         showError : Boolean = true,
         showLoading : Boolean = true,
+        onError: (String?) -> Unit = {},
         onSuccess: (T?) -> Unit = {}
     ) {
         onEach { result ->
@@ -45,6 +46,7 @@ abstract class BaseViewModel : ViewModel() {
                         setLoading(false)
                         setError(result.message)
                     }
+                    onError(result.message)
                 }
 
                 is Resource.Success -> {
