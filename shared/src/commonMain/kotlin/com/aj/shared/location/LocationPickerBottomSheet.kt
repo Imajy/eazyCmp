@@ -23,8 +23,7 @@ import com.aj.shared.permission.PermissionManager
 import com.aj.shared.permission.PermissionStatus
 import com.aj.shared.ui.CommonButton
 import com.aj.shared.ui.CommonWebView
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
+import com.aj.shared.ui.GenericBottomSheet
 import com.aj.shared.ui.OutLinedSimpleTextField
 import com.aj.shared.theme.borderBGColor
 import com.aj.shared.theme.grayColor
@@ -40,12 +39,15 @@ fun LocationPickerBottomSheet(
     show: Boolean,
     onDismiss: () -> Unit,
     onLocationPicked: (PlaceResult) -> Unit,
-    initialLatLng: LatLng? = null
+    initialLatLng: LatLng? = null,
+    permissionManager: PermissionManager? = null
 ) {
     val scope = rememberCoroutineScope()
-    val permissionManager = remember { PermissionManager() }
+    val localPermissionManager = permissionManager ?: remember { PermissionManager() }
 
-    permissionManager.RegisterPermissionLauncher()
+    if (permissionManager == null) {
+        localPermissionManager.RegisterPermissionLauncher()
+    }
 
     var searchQuery by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf<List<PlaceResult>>(emptyList()) }
@@ -106,12 +108,11 @@ fun LocationPickerBottomSheet(
         isSearching = false
     }
 
-    if (!show) return
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState
+    GenericBottomSheet(
+        show = show,
+        title = "Pick Location",
+        onDismiss = onDismiss,
+        skipPartiallyExpanded = true
     ) {
         Column(
             modifier = Modifier
@@ -230,7 +231,9 @@ fun LocationPickerBottomSheet(
                             .clickable {
                                 isLocating = true
                                 scope.launch {
-                                    permissionManager.requestPermissions(listOf(AppPermission.LOCATION)) { results ->
+                                    localPermissionManager.requestPermissions(
+                                        permissions = listOf(AppPermission.LOCATION)
+                                    ) { results ->               
                                         val granted = results.firstOrNull { it.permission == AppPermission.LOCATION }?.status == PermissionStatus.GRANTED
                                         if (granted) {
                                             scope.launch {
