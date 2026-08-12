@@ -386,7 +386,8 @@ fun FormBuilder.appendFile(
             )
             append(
                 HttpHeaders.ContentDisposition,
-                "filename=\"${file.fileName ?: "file"}\""
+                 //"filename=\"${file.fileName ?: "file"}\""
+                "form-data; name=\"$key\"; filename=\"${file.fileName ?: "file"}\""
             )
         }
     )
