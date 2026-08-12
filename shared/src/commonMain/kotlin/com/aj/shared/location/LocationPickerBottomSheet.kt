@@ -23,7 +23,8 @@ import com.aj.shared.permission.PermissionManager
 import com.aj.shared.permission.PermissionStatus
 import com.aj.shared.ui.CommonButton
 import com.aj.shared.ui.CommonWebView
-import com.aj.shared.ui.GenericBottomSheet
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import com.aj.shared.ui.OutLinedSimpleTextField
 import com.aj.shared.theme.borderBGColor
 import com.aj.shared.theme.grayColor
@@ -105,11 +106,12 @@ fun LocationPickerBottomSheet(
         isSearching = false
     }
 
-    GenericBottomSheet(
-        show = show,
-        title = "Pick Location",
-        onDismiss = onDismiss,
-        skipPartiallyExpanded = true
+    if (!show) return
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier
