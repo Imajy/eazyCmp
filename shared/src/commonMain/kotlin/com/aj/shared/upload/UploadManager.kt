@@ -141,6 +141,7 @@ class UploadManager(
         file: PickedFile,
         config: ChunkedUploadConfig = ChunkedUploadConfig(),
         uploadId: String = generateUploadId(),
+        extraFields: Map<String, String> = emptyMap(),
         onProgress: ((UploadProgress) -> Unit)? = null,
     ): Flow<Resource<UploadResponse>> = flow {
         if (!canUpload()) {
@@ -186,6 +187,7 @@ class UploadManager(
                                 chunkBytes = chunkBytes,
                                 fileName = file.fileName ?: "chunk",
                                 mimeType = file.mimeType ?: "application/octet-stream",
+                                extraFields = extraFields,
                                 maxRetries = config.maxRetriesPerChunk,
                             )
                             chunkIndex to chunkBytes.size
@@ -221,6 +223,7 @@ class UploadManager(
         chunkBytes: ByteArray,
         fileName: String,
         mimeType: String,
+        extraFields: Map<String, String>,
         maxRetries: Int,
     ) {
         var attempt = 0
@@ -233,6 +236,7 @@ class UploadManager(
                     setBody(
                         MultiPartFormDataContent(
                             formData {
+                                extraFields.forEach { (key, value) -> append(key, value) }
                                 append(config.uploadIdField, uploadId)
                                 append(config.chunkIndexField, chunkIndex.toString())
                                 append(config.totalChunksField, totalChunks.toString())
@@ -276,6 +280,7 @@ class UploadManager(
         file: PickedFile,
         compression: CompressionConfig = CompressionConfig(),
         fieldName: String = "file",
+        extraFields: Map<String, String> = emptyMap(),
         onProgress: ((UploadProgress) -> Unit)? = null,
     ): Flow<Resource<UploadResponse>> = flow {
         val compressed = compress(file, compression)
@@ -285,6 +290,7 @@ class UploadManager(
                 endpoint = endpoint,
                 file = compressed.file,
                 fieldName = fieldName,
+                extraFields = extraFields,
                 onProgress = onProgress,
             ),
         )
