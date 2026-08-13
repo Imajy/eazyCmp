@@ -53,6 +53,26 @@ sealed interface Placeholder {
     data class PainterResource(val painter: Painter) : Placeholder
     data class VectorResource(val imageVector: ImageVector) : Placeholder
     data class ImageUrl(val url: String) : Placeholder
+
+    companion object {
+        fun from(source: Any): Placeholder? {
+            return when (source) {
+                is String -> {
+                    if (source.endsWith(".json", ignoreCase = true)) {
+                        if (source.startsWith("http", ignoreCase = true)) LottieUrl(source) else LottieJson(source)
+                    } else if (source.startsWith("http", ignoreCase = true)) {
+                        ImageUrl(source)
+                    } else {
+                        ImageUrl(source)
+                    }
+                }
+                is ByteArray -> LottieBytes(source)
+                is Painter -> PainterResource(source)
+                is ImageVector -> VectorResource(source)
+                else -> null
+            }
+        }
+    }
 }
 
 @Composable
@@ -366,7 +386,7 @@ private fun LottiePlaceholderFallback(modifier: Modifier) {
     Box(
         modifier = modifier.background(Color.LightGray.copy(alpha = 0.15f)),
         contentAlignment = Alignment.Center,
-    )
+    ) {}
 }
 
 @Composable

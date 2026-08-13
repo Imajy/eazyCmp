@@ -42,7 +42,7 @@ fun CustomLoading(
     onDismiss: () -> Unit = {}
 ) {
     CustomLoading(
-        loading = Placeholder.from(loadingPathOrUrl),
+        loading = Placeholder.from(loadingPathOrUrl) ?: EazyCmp.defaultApiLoadingPlaceholder,
         dismissOnBackPress = dismissOnBackPress,
         onDismiss = onDismiss
     )
