@@ -95,7 +95,6 @@ fun <T> CommonDropDown(
             trailingIcon != null -> 64.dp
             else -> 48.dp
         }
-
         val availableWidthPx = with(density) {
             when {
                 maxWidth == Dp.Unspecified || maxWidth == Dp.Infinity -> null
@@ -142,6 +141,7 @@ fun <T> CommonDropDown(
                 return MultiSelectDisplay(allJoined, "")
             }
 
+            // Prefer the largest prefix that fits with +N badge (no mid-label ellipsis when possible).
             var bestFit: MultiSelectDisplay? = null
             for (visibleCount in 1 until labels.size) {
                 val hiddenCount = labels.size - visibleCount
@@ -319,6 +319,9 @@ fun <T> CommonDropDown(
 
             if (showDialog) {
                 val hasSearch = showSearch || showSearchForcefully
+                val useCompactDialog = compactDialogBelowItemCount > 0 &&
+                    !hasSearch &&
+                    filteredItems.size < compactDialogBelowItemCount
                 val dialogScrollState = rememberScrollState()
                 Dialog(
                     onDismissRequest = {
@@ -329,7 +332,7 @@ fun <T> CommonDropDown(
                     properties = DialogProperties(
                         dismissOnBackPress = true,
                         dismissOnClickOutside = true,
-                        usePlatformDefaultWidth = true
+                        usePlatformDefaultWidth = false
                     )
                 ) {
                     Box(
@@ -346,10 +349,10 @@ fun <T> CommonDropDown(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f)
                                 .then(
-                                    if (hasSearch) {
-                                        Modifier.heightIn(min = 250.dp, max = 600.dp)
+                                    if (useCompactDialog) {
+                                        Modifier.wrapContentHeight()
                                     } else {
-                                        Modifier.heightIn(max = 600.dp)
+                                        Modifier.heightIn(min = 250.dp, max = 600.dp)
                                     }
                                 )
                                 .background(whiteColor, RoundedCornerShape(12.dp))
@@ -359,10 +362,10 @@ fun <T> CommonDropDown(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .then(
-                                        if (hasSearch) {
-                                            Modifier.fillMaxHeight()
-                                        } else {
+                                        if (useCompactDialog) {
                                             Modifier.wrapContentHeight()
+                                        } else {
+                                            Modifier.fillMaxHeight()
                                         }
                                     )
                                     .padding(16.dp)
@@ -379,7 +382,7 @@ fun <T> CommonDropDown(
 
                                 if (hasSearch) {
 
-                                    Spacer(Modifier.height(8.dp))
+                                    Spacer(modifier.height(8.dp))
 
                                     OutLinedSimpleTextField(
                                         value = searchText,
@@ -393,27 +396,25 @@ fun <T> CommonDropDown(
                                     )
                                 }
 
-                                Spacer(Modifier.height(8.dp))
+                                Spacer(modifier.height(8.dp))
 
                                 Box(
-                                    modifier = if (hasSearch) {
-                                        Modifier
-                                            .weight(1f)
-                                            .fillMaxWidth()
+                                    modifier = if (useCompactDialog) {
+                                        Modifier.fillMaxWidth()
                                     } else {
                                         Modifier
-                                            .weight(1f, fill = false)
+                                            .weight(1f)
                                             .fillMaxWidth()
                                     }
                                 ) {
                                     Column(
-                                        modifier = if (hasSearch) {
+                                        modifier = if (useCompactDialog) {
                                             Modifier
-                                                .fillMaxSize()
+                                                .fillMaxWidth()
                                                 .verticalScroll(dialogScrollState)
                                         } else {
                                             Modifier
-                                                .fillMaxWidth()
+                                                .fillMaxSize()
                                                 .verticalScroll(dialogScrollState)
                                         }
                                     ) {
@@ -462,7 +463,7 @@ fun <T> CommonDropDown(
                                                             }
                                                         }
                                                     )
-                                                    Spacer(Modifier.width(12.dp))
+                                                    Spacer(modifier.width(12.dp))
                                                     Text(
                                                         text = if (isAllSelected) "Unselect All" else "Select All",
                                                         style = MaterialTheme.typography.bodyMedium.copy(
@@ -471,7 +472,7 @@ fun <T> CommonDropDown(
                                                         )
                                                     )
                                                 }
-                                                Spacer(Modifier.height(8.dp))
+                                                Spacer(modifier.height(8.dp))
                                             }
 
                                             filteredItems.forEachIndexed { index, item ->
@@ -529,7 +530,7 @@ fun <T> CommonDropDown(
                                                             }
                                                         )
 
-                                                        Spacer(Modifier.width(8.dp))
+                                                        Spacer(modifier.width(8.dp))
                                                     }
 
                                                     Text(
@@ -552,11 +553,11 @@ fun <T> CommonDropDown(
                                     }
                                 }
 
-                                Spacer(Modifier.height(12.dp))
+                                Spacer(modifier.height(12.dp))
 
                                 HorizontalDivider()
 
-                                Spacer(Modifier.height(8.dp))
+                                Spacer(modifier.height(8.dp))
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -594,7 +595,7 @@ fun <T> CommonDropDown(
 
                                     } else {
 
-                                        Spacer(Modifier)
+                                        Spacer(modifier)
                                     }
 
                                     Row {
