@@ -412,22 +412,21 @@ fun LottiePlaceholder(
 
         if (composition == null) {
             LottiePlaceholderFallback(modifier)
-            return@key
-        }
-
-        val progress by animateLottieCompositionAsState(
-            composition = composition,
-            iterations = Int.MAX_VALUE,
-        )
-
-        Image(
-            painter = rememberLottiePainter(
+        } else {
+            val progress by animateLottieCompositionAsState(
                 composition = composition,
-                progress = { progress },
-            ),
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = contentScale,
-        )
+                iterations = Int.MAX_VALUE,
+            )
+
+            Image(
+                painter = rememberLottiePainter(
+                    composition = composition,
+                    progress = { progress },
+                ),
+                contentDescription = null,
+                modifier = modifier,
+                contentScale = contentScale,
+            )
+        }
     }
 }
