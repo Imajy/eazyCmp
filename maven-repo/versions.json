@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-055",
+  "latest": "1.0.0.1-rc-056",
   "versions": [
+    "1.0.0.1-rc-056",
     "1.0.0.1-rc-055",
     "1.0.0.1-rc-054",
     "1.0.0.1-rc-053",
@@ -67,6 +68,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-056",
+      "message": "CustomImage optimize",
+      "publishedAt": "2026-08-13T18:10:40+05:30",
+      "commit": "d55982f43a672234227a7dcf8b2630e5d871cc09"
+    },
     {
       "version": "1.0.0.1-rc-055",
       "message": "CustomImage optimize",
@@ -435,6 +442,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-08-13T12:11:13Z",
+  "updatedAt": "2026-08-13T12:44:04Z",
   "failures": []
 }
