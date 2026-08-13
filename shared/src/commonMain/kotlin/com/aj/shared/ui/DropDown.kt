@@ -87,7 +87,8 @@ fun <T> CommonDropDown(
     dropDownBackGround : Color = whiteColor,
     labelColor :Color = blackColor
 ) {
-    BoxWithConstraints(modifier = modifier) {
+    val rootModifier = modifier
+    BoxWithConstraints(modifier = rootModifier) {
         val density = LocalDensity.current
         val textMeasurer = rememberTextMeasurer()
         val trailingReserve = when {
@@ -332,7 +333,8 @@ fun <T> CommonDropDown(
                     properties = DialogProperties(
                         dismissOnBackPress = true,
                         dismissOnClickOutside = true,
-                        usePlatformDefaultWidth = false
+                        // Match pre-merge dialog width; false + fillMaxWidth(0.9f) made rows look broken
+                        usePlatformDefaultWidth = true
                     )
                 ) {
                     Box(
@@ -349,10 +351,10 @@ fun <T> CommonDropDown(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f)
                                 .then(
-                                    if (useCompactDialog) {
-                                        Modifier.wrapContentHeight()
-                                    } else {
+                                    if (hasSearch || !useCompactDialog) {
                                         Modifier.heightIn(min = 250.dp, max = 600.dp)
+                                    } else {
+                                        Modifier.heightIn(max = 600.dp)
                                     }
                                 )
                                 .background(whiteColor, RoundedCornerShape(12.dp))
@@ -362,10 +364,10 @@ fun <T> CommonDropDown(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .then(
-                                        if (useCompactDialog) {
-                                            Modifier.wrapContentHeight()
-                                        } else {
+                                        if (hasSearch || !useCompactDialog) {
                                             Modifier.fillMaxHeight()
+                                        } else {
+                                            Modifier.wrapContentHeight()
                                         }
                                     )
                                     .padding(16.dp)
@@ -382,7 +384,7 @@ fun <T> CommonDropDown(
 
                                 if (hasSearch) {
 
-                                    Spacer(modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(8.dp))
 
                                     OutLinedSimpleTextField(
                                         value = searchText,
@@ -396,25 +398,27 @@ fun <T> CommonDropDown(
                                     )
                                 }
 
-                                Spacer(modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
 
                                 Box(
-                                    modifier = if (useCompactDialog) {
-                                        Modifier.fillMaxWidth()
-                                    } else {
+                                    modifier = if (hasSearch || !useCompactDialog) {
                                         Modifier
                                             .weight(1f)
+                                            .fillMaxWidth()
+                                    } else {
+                                        Modifier
+                                            .weight(1f, fill = false)
                                             .fillMaxWidth()
                                     }
                                 ) {
                                     Column(
-                                        modifier = if (useCompactDialog) {
+                                        modifier = if (hasSearch || !useCompactDialog) {
                                             Modifier
-                                                .fillMaxWidth()
+                                                .fillMaxSize()
                                                 .verticalScroll(dialogScrollState)
                                         } else {
                                             Modifier
-                                                .fillMaxSize()
+                                                .fillMaxWidth()
                                                 .verticalScroll(dialogScrollState)
                                         }
                                     ) {
@@ -463,7 +467,7 @@ fun <T> CommonDropDown(
                                                             }
                                                         }
                                                     )
-                                                    Spacer(modifier.width(12.dp))
+                                                    Spacer(modifier = Modifier.width(12.dp))
                                                     Text(
                                                         text = if (isAllSelected) "Unselect All" else "Select All",
                                                         style = MaterialTheme.typography.bodyMedium.copy(
@@ -472,7 +476,7 @@ fun <T> CommonDropDown(
                                                         )
                                                     )
                                                 }
-                                                Spacer(modifier.height(8.dp))
+                                                Spacer(modifier = Modifier.height(8.dp))
                                             }
 
                                             filteredItems.forEachIndexed { index, item ->
@@ -513,6 +517,7 @@ fun <T> CommonDropDown(
                                                             }
                                                         }
                                                         .padding(14.dp),
+                                                    horizontalArrangement = Arrangement.Start,
                                                     verticalAlignment = Alignment.CenterVertically
                                                 ) {
 
@@ -530,7 +535,7 @@ fun <T> CommonDropDown(
                                                             }
                                                         )
 
-                                                        Spacer(modifier.width(8.dp))
+                                                        Spacer(modifier = Modifier.width(8.dp))
                                                     }
 
                                                     Text(
@@ -553,11 +558,11 @@ fun <T> CommonDropDown(
                                     }
                                 }
 
-                                Spacer(modifier.height(12.dp))
+                                Spacer(modifier = Modifier.height(12.dp))
 
                                 HorizontalDivider()
 
-                                Spacer(modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -595,10 +600,20 @@ fun <T> CommonDropDown(
 
                                     } else {
 
-                                        Spacer(modifier)
+                                        Spacer(modifier = Modifier)
                                     }
 
                                     Row {
+
+                                        Text(
+                                            text = "Cancel",
+                                            color = Color.Gray,
+                                            modifier = Modifier
+                                                .clickable {
+                                                    showDialog = false
+                                                }
+                                                .padding(8.dp)
+                                        )
 
                                         if (isMultiSelect) {
 
@@ -621,16 +636,6 @@ fun <T> CommonDropDown(
                                                     .padding(8.dp)
                                             )
                                         }
-
-                                        Text(
-                                            text = "Cancel",
-                                            color = Color.Gray,
-                                            modifier = Modifier
-                                                .clickable {
-                                                    showDialog = false
-                                                }
-                                                .padding(8.dp)
-                                        )
                                     }
                                 }
                             }
