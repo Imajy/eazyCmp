@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-057",
+  "latest": "1.0.0.1-rc-058",
   "versions": [
+    "1.0.0.1-rc-058",
     "1.0.0.1-rc-057",
     "1.0.0.1-rc-056",
     "1.0.0.1-rc-055",
@@ -69,6 +70,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-058",
+      "message": "feat: add remote kill-switch, debug-only logging, and performance optimizations",
+      "publishedAt": "2026-09-25T12:12:13+05:30",
+      "commit": "b4a707f3f85f97efd428695f600aba425f07abef"
+    },
     {
       "version": "1.0.0.1-rc-057",
       "message": "CustomImage optimize",
@@ -449,6 +456,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-08-13T13:20:18Z",
+  "updatedAt": "2026-09-25T06:47:58Z",
   "failures": []
 }
