@@ -148,20 +148,8 @@ fun CustomImage(
     }
 
     val context = LocalPlatformContext.current
-
-    val imageLoader = remember {
-        ImageLoader.Builder(context)
-            .components {
-                add(KtorNetworkFetcherFactory())
-                add(SvgDecoder.Factory())
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(getCacheDir().toPath())
-                    .maxSizeBytes(50L * 1024L * 1024L) // 50MB
-                    .build()
-            }
-            .build()
+    val imageLoader = remember(context) {
+        EazyImageLoader.get(context)
     }
 
     val showPlaceholder: @Composable () -> Unit = {
@@ -430,3 +418,27 @@ fun LottiePlaceholder(
         }
     }
 }
+
+object EazyImageLoader {
+    private var instance: ImageLoader? = null
+
+    fun get(context: coil3.PlatformContext): ImageLoader {
+        val existing = instance
+        if (existing != null) return existing
+        val created = ImageLoader.Builder(context)
+            .components {
+                add(KtorNetworkFetcherFactory())
+                add(SvgDecoder.Factory())
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(getCacheDir().toPath())
+                    .maxSizeBytes(50L * 1024L * 1024L) // 50MB
+                    .build()
+            }
+            .build()
+        instance = created
+        return created
+    }
+}
+

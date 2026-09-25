@@ -67,6 +67,7 @@ object EazyCmp {
     val theme: ThemeManager by lazy { ThemeManager() }
 
     // --- Security ---
+    val killSwitch: com.aj.shared.security.EazyCmpKillSwitch = com.aj.shared.security.EazyCmpKillSwitch
     val appLock: AppLockManager by lazy { AppLockManager() }
     val sessionTimeout: SessionTimeoutManager by lazy { SessionTimeoutManager() }
     val backgroundLock: BackgroundLockManager by lazy { BackgroundLockManager() }

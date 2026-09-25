@@ -102,12 +102,14 @@ class OfflineQueueManager internal constructor() : KoinComponent {
         }
     }
 
+    private val scope = CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Default)
+
     init {
         startAutoFlush()
     }
 
     private fun startAutoFlush() {
-        kotlinx.coroutines.GlobalScope.launch {
+        scope.launch {
             EazyCmp.network.connectivityFlow.collect { online ->
                 if (!online) return@collect
                 val queue = pending()

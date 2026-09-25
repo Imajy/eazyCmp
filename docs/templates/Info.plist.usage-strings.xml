@@ -7,29 +7,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- Camera -->
-    <!--
-    <key>NSCameraUsageDescription</key>
-    <string>We need camera access to capture your KYC documents.</string>
-    -->
-
-    <!-- Location (when-in-use only — EazyCmp does not request Always) -->
-    <!--
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We use your location to show nearby branches.</string>
-    -->
-
-    <!-- Contacts -->
-    <!--
-    <key>NSContactsUsageDescription</key>
-    <string>We use contacts to help you add nominees.</string>
-    -->
-
-    <!-- Microphone -->
-    <!--
-    <key>NSMicrophoneUsageDescription</key>
-    <string>We need microphone access for voice notes.</string>
-    -->
 
     <!-- Standard HTTPS only — exempt from export compliance -->
     <key>ITSAppUsesNonExemptEncryption</key>

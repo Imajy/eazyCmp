@@ -152,6 +152,7 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         options: RequestOptions
     ): Flow<Resource<Res>> = flow {
 
+        com.aj.shared.security.EazyCmpKillSwitch.assertNotBlocked()
         val config = ApiConfig.getConfig(base)
 
         val url = buildUrl(base, endpoint)

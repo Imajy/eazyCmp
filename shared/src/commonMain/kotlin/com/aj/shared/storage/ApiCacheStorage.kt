@@ -38,13 +38,15 @@ class ApiCacheStorage(
     private val defaultTtl: Duration? = null,
     val maxCacheSizeBytes: Long = 10 * 1024 * 1024L // 10 MB Limit
 ) {
-    private val singleCacheFilePath = "${CacheFileIO.cacheDirectory()}/api_response_cache.json"
+    private val singleCacheFilePath by lazy { "${CacheFileIO.cacheDirectory()}/api_response_cache.json" }
 
-    private val prettyJson = Json {
-        prettyPrint = true
+    private val compactJson = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
     }
+
+    // In-memory cache to avoid reading from disk on every get()
+    private var inMemoryContainer: ApiCacheContainer? = null
 
     fun get(key: String): ApiCacheItem? {
         val container = loadContainer()
@@ -130,6 +132,7 @@ class ApiCacheStorage(
     }
 
     fun clearAll() {
+        inMemoryContainer = null
         CacheFileIO.delete(singleCacheFilePath)
     }
 
@@ -145,18 +148,22 @@ class ApiCacheStorage(
         if (rawText.isNullOrBlank()) return null
         val trimmed = rawText.trim()
         if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
-            return runCatching { prettyJson.parseToJsonElement(trimmed) }.getOrNull() ?: JsonPrimitive(rawText)
+            return runCatching { compactJson.parseToJsonElement(trimmed) }.getOrNull() ?: JsonPrimitive(rawText)
         }
         return JsonPrimitive(rawText)
     }
 
     private fun loadContainer(): ApiCacheContainer {
-        val raw = CacheFileIO.read(singleCacheFilePath) ?: return ApiCacheContainer()
-        return runCatching { prettyJson.decodeFromString<ApiCacheContainer>(raw) }.getOrDefault(ApiCacheContainer())
+        inMemoryContainer?.let { return it }
+        val raw = CacheFileIO.read(singleCacheFilePath) ?: return ApiCacheContainer().also { inMemoryContainer = it }
+        val loaded = runCatching { compactJson.decodeFromString<ApiCacheContainer>(raw) }.getOrDefault(ApiCacheContainer())
+        inMemoryContainer = loaded
+        return loaded
     }
 
     private fun saveContainer(container: ApiCacheContainer) {
-        val raw = prettyJson.encodeToString(container)
+        inMemoryContainer = container
+        val raw = compactJson.encodeToString(container)
         CacheFileIO.write(singleCacheFilePath, raw)
     }
 

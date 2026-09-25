@@ -1,0 +1,7 @@
+{
+  "description": "Blacklisted package names for EazyCmp library. Apps with these package names will be blocked from using the library.",
+  "version": 1,
+  "blockedPackages": [
+    "com.example.blockedapp"
+  ]
+}
