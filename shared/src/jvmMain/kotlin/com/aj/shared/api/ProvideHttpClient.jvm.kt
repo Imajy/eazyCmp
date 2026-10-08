@@ -13,10 +13,18 @@ import kotlinx.serialization.json.Json
 import java.util.prefs.Preferences
 
 import io.ktor.client.plugins.websocket.WebSockets
-
 actual fun provideHttpClient(): HttpClient {
-
     return HttpClient(CIO) {
+        engine {
+            maxConnectionsCount = 1000
+            endpoint {
+                maxConnectionsPerRoute = 100
+                pipelineMaxSize = 20
+                keepAliveTime = 5000
+                connectTimeout = 15000
+                connectAttempts = 3
+            }
+        }
 
         install(WebSockets)
 

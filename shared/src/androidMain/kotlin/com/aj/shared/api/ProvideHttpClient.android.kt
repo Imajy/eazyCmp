@@ -23,6 +23,8 @@ actual fun provideHttpClient(): HttpClient {
                 connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
                 readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
                 writeTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+                retryOnConnectionFailure(true)
+                connectionPool(okhttp3.ConnectionPool(10, 5, java.util.concurrent.TimeUnit.MINUTES))
             }
         }
 

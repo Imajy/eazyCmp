@@ -53,65 +53,68 @@ object EazyCmp {
     val VERSION: String get() = EazyCmpBuildInfo.VERSION
 
     // --- Core platform services ---
-    val location: LocationManager by lazy { LocationManager() }
-    val permission: PermissionManager by lazy { PermissionManager() }
-    val media: PlatformMediaPicker by lazy { PlatformMediaPicker() }
-    val network: ConnectivityObserver by lazy { ConnectivityObserver() }
-    val storage: SecureStorage by lazy { SecureStorage() }
-    val haptics: HapticManager by lazy { HapticManager() }
-    val share: ShareManager by lazy { ShareManager() }
+    val location: LocationManager by lazy(LazyThreadSafetyMode.PUBLICATION) { LocationManager() }
+    val permission: PermissionManager by lazy(LazyThreadSafetyMode.PUBLICATION) { PermissionManager() }
+    val media: PlatformMediaPicker by lazy(LazyThreadSafetyMode.PUBLICATION) { PlatformMediaPicker() }
+    val network: ConnectivityObserver by lazy(LazyThreadSafetyMode.PUBLICATION) { ConnectivityObserver() }
+    val storage: SecureStorage by lazy(LazyThreadSafetyMode.PUBLICATION) { SecureStorage() }
+    val haptics: HapticManager by lazy(LazyThreadSafetyMode.PUBLICATION) { HapticManager() }
+    val share: ShareManager by lazy(LazyThreadSafetyMode.PUBLICATION) { ShareManager() }
     val geocoder: Geocoder = Geocoder
+    val gpsSmoother: com.aj.shared.location.GpsLocationSmoother by lazy(LazyThreadSafetyMode.PUBLICATION) { com.aj.shared.location.GpsLocationSmoother() }
 
     // --- Display & theme ---
-    val display: DisplaySettingsManager by lazy { DisplaySettingsManager() }
-    val theme: ThemeManager by lazy { ThemeManager() }
+    val display: DisplaySettingsManager by lazy(LazyThreadSafetyMode.PUBLICATION) { DisplaySettingsManager() }
+    val theme: ThemeManager by lazy(LazyThreadSafetyMode.PUBLICATION) { ThemeManager() }
 
-    // --- Security ---
+    // --- Security & Crypto ---
+    val crypto: com.aj.shared.security.EazyCrypto = com.aj.shared.security.EazyCrypto
     val killSwitch: com.aj.shared.security.EazyCmpKillSwitch = com.aj.shared.security.EazyCmpKillSwitch
-    val appLock: AppLockManager by lazy { AppLockManager() }
-    val sessionTimeout: SessionTimeoutManager by lazy { SessionTimeoutManager() }
-    val backgroundLock: BackgroundLockManager by lazy { BackgroundLockManager() }
-    val consent: ConsentManager by lazy { ConsentManager() }
+    val appLock: AppLockManager by lazy(LazyThreadSafetyMode.PUBLICATION) { AppLockManager() }
+    val sessionTimeout: SessionTimeoutManager by lazy(LazyThreadSafetyMode.PUBLICATION) { SessionTimeoutManager() }
+    val backgroundLock: BackgroundLockManager by lazy(LazyThreadSafetyMode.PUBLICATION) { BackgroundLockManager() }
+    val consent: ConsentManager by lazy(LazyThreadSafetyMode.PUBLICATION) { ConsentManager() }
 
     // --- Storage & drafts ---
-    val formDrafts: FormDraftManager by lazy { FormDraftManager() }
-    val preferences: PreferencesStore by lazy { PreferencesStore() }
-    val apiCache: ApiCacheStorage by lazy { ApiCacheStorage() }
-    val socketLogCache: SocketLogStorage by lazy { SocketLogStorage() }
-    val localStore: LocalDataStore by lazy { LocalDataStore("default") }
-    val responseCache: ApiResponseCache by lazy { ApiResponseCache() }
+    val formDrafts: FormDraftManager by lazy(LazyThreadSafetyMode.PUBLICATION) { FormDraftManager() }
+    val preferences: PreferencesStore by lazy(LazyThreadSafetyMode.PUBLICATION) { PreferencesStore() }
+    val cart: com.aj.shared.storage.CartStateStore by lazy(LazyThreadSafetyMode.PUBLICATION) { com.aj.shared.storage.CartStateStore(preferences = preferences) }
+    val apiCache: ApiCacheStorage by lazy(LazyThreadSafetyMode.PUBLICATION) { ApiCacheStorage() }
+    val socketLogCache: SocketLogStorage by lazy(LazyThreadSafetyMode.PUBLICATION) { SocketLogStorage() }
+    val localStore: LocalDataStore by lazy(LazyThreadSafetyMode.PUBLICATION) { LocalDataStore("default") }
+    val responseCache: ApiResponseCache by lazy(LazyThreadSafetyMode.PUBLICATION) { ApiResponseCache() }
 
     // --- Network & Sockets ---
-    val api: ApiClient by lazy { ApiClient() }
-    val socket: EazySocketManager by lazy { EazySocketManager() }
-    val offlineQueue: OfflineQueueManager by lazy { OfflineQueueManager() }
-    val requestDeduplicator: RequestDeduplicator by lazy { RequestDeduplicator() }
+    val api: ApiClient by lazy(LazyThreadSafetyMode.PUBLICATION) { ApiClient() }
+    val socket: EazySocketManager by lazy(LazyThreadSafetyMode.PUBLICATION) { EazySocketManager() }
+    val offlineQueue: OfflineQueueManager by lazy(LazyThreadSafetyMode.PUBLICATION) { OfflineQueueManager() }
+    val requestDeduplicator: RequestDeduplicator by lazy(LazyThreadSafetyMode.PUBLICATION) { RequestDeduplicator() }
 
     // --- Upload (compress + fast upload) ---
-    val upload: UploadManager by lazy { UploadManager() }
-    val uploadQueue: UploadQueueManager by lazy { UploadQueueManager() }
+    val upload: UploadManager by lazy(LazyThreadSafetyMode.PUBLICATION) { UploadManager() }
+    val uploadQueue: UploadQueueManager by lazy(LazyThreadSafetyMode.PUBLICATION) { UploadQueueManager() }
 
     // --- Navigation & deep links ---
-    val deepLinks: DeepLinkHandler by lazy { DeepLinkHandler() }
+    val deepLinks: DeepLinkHandler by lazy(LazyThreadSafetyMode.PUBLICATION) { DeepLinkHandler() }
 
     // --- Updates ---
-    val updates: UpdateChecker by lazy { UpdateChecker() }
+    val updates: UpdateChecker by lazy(LazyThreadSafetyMode.PUBLICATION) { UpdateChecker() }
 
     // --- Platform utilities ---
-    val clipboard: ClipboardManager by lazy { ClipboardManager() }
-    val deviceInfo: DeviceInfoProvider by lazy { DeviceInfoProvider() }
-    val qrGenerator: QrGenerator by lazy { QrGenerator() }
-    val qrScanner: QrScanner by lazy { QrScanner() }
+    val clipboard: ClipboardManager by lazy(LazyThreadSafetyMode.PUBLICATION) { ClipboardManager() }
+    val deviceInfo: DeviceInfoProvider by lazy(LazyThreadSafetyMode.PUBLICATION) { DeviceInfoProvider() }
+    val qrGenerator: QrGenerator by lazy(LazyThreadSafetyMode.PUBLICATION) { QrGenerator() }
+    val qrScanner: QrScanner by lazy(LazyThreadSafetyMode.PUBLICATION) { QrScanner() }
 
     // --- Auth ---
-    val googleAuth: GoogleAuth by lazy { GoogleAuth() }
-    val appleAuth: AppleAuth by lazy { AppleAuth() }
-    val accounts: MultiAccountManager by lazy { MultiAccountManager() }
-    val guestMode: GuestModeManager by lazy { GuestModeManager() }
+    val googleAuth: GoogleAuth by lazy(LazyThreadSafetyMode.PUBLICATION) { GoogleAuth() }
+    val appleAuth: AppleAuth by lazy(LazyThreadSafetyMode.PUBLICATION) { AppleAuth() }
+    val accounts: MultiAccountManager by lazy(LazyThreadSafetyMode.PUBLICATION) { MultiAccountManager() }
+    val guestMode: GuestModeManager by lazy(LazyThreadSafetyMode.PUBLICATION) { GuestModeManager() }
 
     // --- Notifications ---
-    val pushToken: PushTokenManager by lazy { PushTokenManager() }
-    val notifications: InAppNotificationStore by lazy { InAppNotificationStore() }
+    val pushToken: PushTokenManager by lazy(LazyThreadSafetyMode.PUBLICATION) { PushTokenManager() }
+    val notifications: InAppNotificationStore by lazy(LazyThreadSafetyMode.PUBLICATION) { InAppNotificationStore() }
 
     // --- Analytics (host provides implementation) ---
     var analytics: EazyAnalytics = NoOpEazyAnalytics
