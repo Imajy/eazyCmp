@@ -1,0 +1,304 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "web",
+    "version": "1.0.0.1-rc-059",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadataApiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-json",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-datetime",
+          "version": {
+            "requires": "0.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "web-metadata-1.0.0.1-rc-059.jar",
+          "url": "web-1.0.0.1-rc-059.jar",
+          "size": 6390,
+          "sha512": "c48e4804dd3d0d2dda1819bcaf9bd1318a173cde2ab7745f1c3ad68b3377b21084ecc56b3086da8e2ff0ef3dc941251f6b797c6af3c1660a3dd2bfdceb888d10",
+          "sha256": "67da93e54620b345142ce69aaf530f880ec83c4e9434fe1c9fe4c9ac6e412d5d",
+          "sha1": "243c180aaf8a4d70657f8c00c94005a8e6af2a02",
+          "md5": "f52db0b6d4bf30d507e2d4e2951bf14b"
+        }
+      ]
+    },
+    {
+      "name": "metadataSourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "files": [
+        {
+          "name": "web-kotlin-1.0.0.1-rc-059-sources.jar",
+          "url": "web-1.0.0.1-rc-059-sources.jar",
+          "size": 5589,
+          "sha512": "30ff5a0d13c9a6bc5e3639e1357ff30086154a11f20efdfeb11450da5a8ea73fe634be9bc500052f11d69521f9ca2225eb08bd68b93194ff685e98ac5fb2ebb1",
+          "sha256": "3af8e9001518bf89791d5cc7e38b587992019c23b2a890931aa554f6482ae301",
+          "sha1": "4f4f8f1b78160b130a84611c9e094b98f099cf83",
+          "md5": "c0669f11e870361eb069f036ec49884c"
+        }
+      ]
+    },
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../web-js/1.0.0.1-rc-059/web-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../web-js/1.0.0.1-rc-059/web-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "jsSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../web-js/1.0.0.1-rc-059/web-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "jsResourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.libraryelements": "kotlin-multiplatformresourcesjs",
+        "org.gradle.usage": "kotlin-multiplatformresourcesjs",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../web-js/1.0.0.1-rc-059/web-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../web-jvm/1.0.0.1-rc-059/web-jvm-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-jvm",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../web-jvm/1.0.0.1-rc-059/web-jvm-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-jvm",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../web-jvm/1.0.0.1-rc-059/web-jvm-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-jvm",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "wasmJsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "available-at": {
+        "url": "../../web-wasm-js/1.0.0.1-rc-059/web-wasm-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-wasm-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "wasmJsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "available-at": {
+        "url": "../../web-wasm-js/1.0.0.1-rc-059/web-wasm-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-wasm-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "wasmJsSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "available-at": {
+        "url": "../../web-wasm-js/1.0.0.1-rc-059/web-wasm-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-wasm-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    },
+    {
+      "name": "wasmJsResourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.libraryelements": "kotlin-multiplatformresourcesjs",
+        "org.gradle.usage": "kotlin-multiplatformresourcesjs",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "available-at": {
+        "url": "../../web-wasm-js/1.0.0.1-rc-059/web-wasm-js-1.0.0.1-rc-059.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "web-wasm-js",
+        "version": "1.0.0.1-rc-059"
+      }
+    }
+  ]
+}
