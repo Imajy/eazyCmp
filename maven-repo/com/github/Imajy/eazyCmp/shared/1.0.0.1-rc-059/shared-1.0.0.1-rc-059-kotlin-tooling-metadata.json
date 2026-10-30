@@ -15,6 +15,7 @@
       "platformType": "androidJvm"
     },
     {
+<<<<<<< HEAD
       "target": "org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget",
       "platformType": "native",
       "extras": {
@@ -37,6 +38,8 @@
       }
     },
     {
+=======
+>>>>>>> 20f2dee (changes)
       "target": "org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget",
       "platformType": "jvm",
       "extras": {
