@@ -21,10 +21,12 @@
 
 **EazyCMP** is a Kotlin Multiplatform toolkit for Android, iOS, Desktop (JVM), and Web (JS / Wasm). Use the full `shared` umbrella, or pick light modules (`core` / `ui` / `platform` / `web`). Host apps can replace any stubbed service via the Plugin SPI (`EazyCmp.install`).
 
+> **Live Version Catalog & Interactive Setup Guide:** [https://imajy.github.io/eazyCmp/](https://imajy.github.io/eazyCmp/)
+
 ## Table of Contents
 1. [Installation](#1-installation)
 2. [Platform Compatibility & Target Configuration](#2-platform-compatibility--target-configuration)
-3. [Setup & Dependency Injection](#3-setup--dependency-injection)
+3. [Setup, Initialization & Plugin SPI](#3-setup-initialization--plugin-spi)
 4. [EazyCmp Facade — All Services](#4-eazycmp-facade--all-services)
 5. [Networking (`api`)](#5-networking-module-api)
 6. [Upload — Compress & Fast Upload](#6-upload--compress--fast-upload)
@@ -40,6 +42,7 @@
 16. [Auth, State & Notifications](#16-auth-state--notifications)
 17. [Platform Utilities](#17-platform-utilities)
 18. [PDF, Modifiers & Extensions](#18-pdf-modifiers--extensions)
+19. [Development & Local Testing](#19-development--local-testing)
 
 ---
 
@@ -48,7 +51,7 @@
 This library is hosted on a custom GitHub Pages Maven repository. Follow these steps to configure your project.
 
 ### Step 1: Add the Maven Repository
-Declare the custom Maven repository URL in your project's `settings.gradle.kts` file under the `dependencyResolutionManagement` section:
+Declare the custom Maven repository URL in your project's `settings.gradle.kts` file under `dependencyResolutionManagement`:
 
 ```kotlin
 dependencyResolutionManagement {
@@ -56,91 +59,54 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         // Custom EazyCmp Repository
-        maven("https://imajy.github.io/eazyCmp/maven-repo/")
+        maven { url = uri("https://imajy.github.io/eazyCmp/maven-repo/") }
     }
 }
 ```
 
-### Step 2: Add Dependencies (modular)
+### Step 2: Add Dependencies (Full Umbrella or Light Modules)
 
-Latest version: **`1.0.0.1-rc-060`** (see `version.properties` / `versions.json`).
+Latest version: **`1.0.0.1-rc-060`** (see [`version.properties`](version.properties) / [`versions.json`](versions.json) and the [live version catalog](https://imajy.github.io/eazyCmp/)).
 
 ```kotlin
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Option A — full toolkit (core + ui + platform + plugin SPI)
+            // Option A — full toolkit (core + platform + ui + plugin SPI)
             implementation("com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-060")
 
-            // Option B — light / pick what you need
-            // implementation("com.github.Imajy.eazyCmp:core:1.0.0.1-rc-060")       // API, storage, networking
-            // implementation("com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-060")   // permissions, media, auth
-            // implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-060")         // Compose UI kit
-            // implementation("com.github.Imajy.eazyCmp:web:1.0.0.1-rc-060")        // JS / Wasm helpers
+            // Option B — light / pick only what you need
+            // implementation("com.github.Imajy.eazyCmp:core:1.0.0.1-rc-060")       // API, SQLDelight, storage, networking, validators
+            // implementation("com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-060")   // permissions, media picker, GPS, auth, PDF, adapters
+            // implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-060")         // Compose UI kit, theme, snackbars, Coil/SVG/Lottie
+            // implementation("com.github.Imajy.eazyCmp:web:1.0.0.1-rc-060")        // JS / WasmJs helpers (WebEazyCmp)
         }
     }
 }
 ```
 
-### Plugin SPI — host can wire anything
-
-```kotlin
-EazyCmp.bootstrap(context = this) {
-    baseUrl = "https://api.example.com"
-}
-
-EazyCmp.install {
-    analytics = MyFirebaseAnalytics()
-    qrScanner = MyMlKitQrScanner()
-    pushToken = MyFcmPushToken()
-    otpAutoRead = MySmsOtpReader()
-    secureStorage = MyKeychainStorage() // optional override
-    register("payments", MyPaymentsPlugin())
-}
-
-// Read capability matrix (FULL / HOST_REQUIRED / …)
-EazyCmp.serviceCatalog().forEach { println("${it.name}: ${it.capability}") }
-```
-
-Built-in adapters (prefer these over stubs):
-
-```kotlin
-// Android
-EazyCmp.install {
-    qrScanner = AndroidCameraXQrScanner(activity)   // Play Code Scanner / CameraX
-    pushToken = FcmPushTokenService()               // reflection; needs firebase-messaging in host
-    otpAutoRead = SmsRetrieverOtpAutoRead(activity) // no SMS permission
-}
-
-// Desktop JVM
-EazyCmp.install { qrScanner = DesktopZxingQrScanner() }
-
-// iOS
-EazyCmp.install { pushToken = ApnsPushTokenService.shared }
-```
-
-Web (`:web` artifact):
-
-```kotlin
-WebEazyCmp.storage.putString("token", "…")
-WebEazyCmp.media.pick(WebPickerType.IMAGE) { file -> /* bytes */ }
-WebEazyCmp.install { register("analytics", myAnalytics) }
-```
+| Artifact | Contents | When to use |
+|----------|----------|-------------|
+| `shared` | Umbrella (`core` + `platform` + `ui` + `EazyCmp` facade) | Most apps wanting everything with one dependency |
+| `core` | Ktor `ApiClient`, `ApiCacheStorage`, `OfflineQueueManager`, `SecureStorage`, SQLDelight, validators | Headless / business-logic-only modules |
+| `platform` | `PermissionManager`, `PlatformMediaPicker`, `LocationManager`, `BiometricAuth`, `PdfManager`, adapters | Native device features without UI kit |
+| `ui` | Material 3 theme, `CustomScaffold`, `CustomImage`, `SnackBarBoxApp`, UI kit widgets | Shared Compose screens |
+| `web` | `WebEazyCmp` (`WebSecureStorage`, `WebMediaPicker`, plugin registry) | Compose Web (`js` / `wasmJs`) apps |
 
 ---
 
 ## 2. Platform Compatibility & Target Configuration
 
 ### Supported Platforms
-* **Android** (minSdk 24, compileSdk 36)
-* **JVM / Desktop** — AES-GCM secure storage; file/camera pickers; realistic permission statuses
+* **Android** (`minSdk = 24`, `compileSdk = 36`)
+* **JVM / Desktop** — AES-GCM encrypted storage (`~/.eazycmp/secure.key`); file/camera pickers; realistic permission statuses
 * **iOS**: `iosArm64`, `iosSimulatorArm64`
-* **Web**: JS + WasmJs via artifact `com.github.Imajy.eazyCmp:web`
+* **Web**: `js(IR)` + `wasmJs` via `com.github.Imajy.eazyCmp:web`
 
 ### IMPORTANT: Apple x86_64 (`iosX64`) Simulator Target Not Supported
 Starting from **Compose Multiplatform 1.11.1+** (which this library is built on), support for the Apple x86_64 target architecture (`iosX64`) has been **fully removed** due to deprecation upstream.
 
-Because of this, if your consumer application targets `iosX64`, dependency resolution will fail. **To resolve this, you must remove `iosX64()` from your targets in your consumer project's `build.gradle.kts`**:
+Because of this, if your consumer application targets `iosX64`, dependency resolution will fail. **To resolve this, remove `iosX64()` from your targets in your consumer project's `build.gradle.kts`**:
 
 ```diff
  kotlin {
@@ -153,63 +119,131 @@ Because of this, if your consumer application targets `iosX64`, dependency resol
  }
 ```
 
-*Note: Since Intel Macs are deprecated for modern simulator runs in Compose Multiplatform, using `iosSimulatorArm64` (for Apple Silicon) and `iosArm64` (for physical devices) is the standard target configuration.*
+*Note: Using `iosSimulatorArm64()` (for Apple Silicon simulators) and `iosArm64()` (for physical devices) is the standard target configuration.*
 
 ---
 
-## 3. Development & Local Testing
+## 3. Setup, Initialization & Plugin SPI
 
-### Local Publish (Test before Tag)
-```bash
-./gradlew publishAllPublicationsToMavenLocal -Peazycmp.skip.ios=true -x test --parallel --build-cache
-```
+EazyCMP uses **Koin** internally for Dependency Injection and **Multiplatform Settings** for local storage. Always initialize `EazyCmp` **before** calling `startKoin`.
 
-Publishes `core`, `platform`, `ui`, `shared`, and `web`. Add `mavenLocal()` in the consumer project to test.
+### Step 1: Initialize & Register Koin per Platform
 
----
-
----
-
-## 3. Setup & Dependency Injection
-
-EazyCMP uses **Koin** internally for Dependency Injection and **Multiplatform Settings** for local storage.
-
-### Android: Initialize Context First (Required)
-On Android, call `EazyCmp.init()` **before** `startKoin()`:
+#### Android (`Application.onCreate`)
 ```kotlin
+import android.app.Application
 import com.aj.shared.EazyCmp
 import com.aj.shared.api.eazyModule
+import com.aj.shared.plugin.adapters.FcmPushTokenService
 import org.koin.core.context.startKoin
 
 class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        EazyCmp.init(context = this, settingsName = "my_custom_app_pref")
+
+        // One-liner bootstrap (calls init + configure)
+        EazyCmp.bootstrap(context = this, settingsName = "my_custom_app_pref") {
+            baseUrl = "https://api.example.com"
+            isDebugEnabled = BuildConfig.DEBUG
+        }
+
+        // Optional: plug in built-in or custom host services
+        EazyCmp.install {
+            pushToken = FcmPushTokenService()
+        }
+
+        // Register Koin dependencies (ApiClient, SharedViewModel, Settings, etc.)
         startKoin { modules(eazyModule()) }
     }
 }
 ```
+> Declare only the permissions your app uses in `AndroidManifest.xml` — see [`docs/templates/AndroidManifest.permissions.xml`](docs/templates/AndroidManifest.permissions.xml) and [`docs/STORE_COMPLIANCE.md`](docs/STORE_COMPLIANCE.md).
 
-### iOS / Desktop: Initialize Settings Name
-On iOS and JVM, configure the settings name before Koin:
+#### iOS (`MainViewController` / KMP entry)
 ```kotlin
 import com.aj.shared.EazyCmp
-
-EazyCmp.init(settingsName = "my_custom_app_pref")
-```
-
-### Configure Koin
-To register the library's core dependencies, load `eazyModule()` inside your app's dependency injection startup:
-```kotlin
 import com.aj.shared.api.eazyModule
+import com.aj.shared.plugin.adapters.ApnsPushTokenService
 import org.koin.core.context.startKoin
 
-startKoin {
-    modules(
-        eazyModule() // Registers ApiClient, SharedViewModel, Settings, etc.
-    )
+fun initEazyCmpIos() {
+    EazyCmp.bootstrap(settingsName = "my_custom_app_pref") {
+        baseUrl = "https://api.example.com"
+    }
+    EazyCmp.install {
+        pushToken = ApnsPushTokenService.shared
+    }
+    startKoin { modules(eazyModule()) }
 }
 ```
+> Add required iOS privacy usage keys in `iosApp/Info.plist` — see [`docs/templates/Info.plist.usage-strings.xml`](docs/templates/Info.plist.usage-strings.xml).
+
+#### Desktop (JVM)
+```kotlin
+import com.aj.shared.EazyCmp
+import com.aj.shared.api.eazyModule
+import com.aj.shared.plugin.adapters.DesktopZxingQrScanner
+import org.koin.core.context.startKoin
+
+fun main() {
+    EazyCmp.bootstrap(settingsName = "my_custom_app_pref") {
+        baseUrl = "https://api.example.com"
+    }
+    EazyCmp.install {
+        qrScanner = DesktopZxingQrScanner()
+    }
+    startKoin { modules(eazyModule()) }
+}
+```
+
+#### Web (`js` / `wasmJs` via `:web` artifact)
+```kotlin
+import com.aj.shared.web.WebEazyCmp
+import com.aj.shared.web.WebPickerType
+
+WebEazyCmp.storage.putString("token", "…")
+WebEazyCmp.media.pick(WebPickerType.IMAGE) { file -> /* bytes */ }
+WebEazyCmp.install { register("analytics", myAnalytics) }
+```
+
+### Step 2: Wrap Your Compose App Root (for `ui` / `shared`)
+```kotlin
+import androidx.compose.runtime.Composable
+import com.aj.shared.display.EazyCmpDisplayHost
+import com.aj.shared.theme.EazyCmpTheme
+import com.aj.shared.ui.SnackBarBoxApp
+
+@Composable
+fun App() {
+    SnackBarBoxApp {
+        EazyCmpDisplayHost {
+            EazyCmpTheme {
+                // Your navigation & screens
+            }
+        }
+    }
+}
+```
+
+### Step 3: Plugin SPI — Override Stubs or Register Custom Services
+Host apps can replace any stubbed service (`@HostRequired`) or plug in third-party SDKs (Firebase, ML Kit, Sentry, Mixpanel):
+
+```kotlin
+EazyCmp.install {
+    analytics = MyFirebaseAnalytics()
+    crashReporter = MyCrashlyticsReporter()
+    qrScanner = AndroidCameraXQrScanner(activity)   // Play Code Scanner / CameraX
+    pushToken = FcmPushTokenService()               // reflection; needs firebase-messaging in host
+    otpAutoRead = SmsRetrieverOtpAutoRead(activity) // no SMS permission required
+    secureStorage = MyKeychainStorage()             // optional override
+    register("payments", MyPaymentsPlugin())
+}
+
+// Inspect service readiness (FULL / PARTIAL / HOST_REQUIRED)
+EazyCmp.serviceCatalog().forEach { println("${it.name}: ${it.capability}") }
+```
+
+> See a complete copy-paste starter in [`docs/samples/HostAppIntegration.md`](docs/samples/HostAppIntegration.md).
 
 ---
 
@@ -870,6 +904,22 @@ SnackBarBoxApp { EazyCmpDisplayHost { EazyCmpTheme { AppNavigation() } } }
 ```
 
 > **Full feature list (317):** [docs/EazyCmp-Feature-Catalog.md](docs/EazyCmp-Feature-Catalog.md)
+
+---
+
+## 19. Development & Local Testing
+
+### Local Publish (Test before Release)
+```bash
+./gradlew publishAllPublicationsToMavenLocal -Peazycmp.skip.ios=true -x test --parallel --build-cache
+```
+
+Publishes `core`, `platform`, `ui`, `shared`, and `web` to `~/.m2/repository`. Add `mavenLocal()` in your consumer project's `settings.gradle.kts` to test locally.
+
+### Push & Trigger Release Pipeline
+```bash
+./scripts/push.sh "Your commit message"
+```
 
 ---
 

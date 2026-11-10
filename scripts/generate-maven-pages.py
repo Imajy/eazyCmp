@@ -180,8 +180,173 @@ def main() -> None:
     failures = data.get("failures") or []
     failures_html = render_failures(failures)
     
-    setup_repo_snippet = f'maven {{ url = uri("{MAVEN_REPO_URL}") }}'
-    setup_dep_snippet = f'implementation("{GROUP_ID}:{ARTIFACT_ID}:{latest or "VERSION"}")'
+    ver = latest or "1.0.0.1-rc-060"
+    setup_repo_snippet = f"""dependencyResolutionManagement {{
+    repositories {{
+        google()
+        mavenCentral()
+        maven {{ url = uri("{MAVEN_REPO_URL}") }}
+    }}
+}}"""
+    setup_dep_snippet = f"""kotlin {{
+    sourceSets {{
+        commonMain.dependencies {{
+            // Option A — Full umbrella (core + platform + ui + plugin SPI)
+            implementation("{GROUP_ID}:{ARTIFACT_ID}:{ver}")
+
+            // Option B — Modular / light (pick only what you need)
+            // implementation("{GROUP_ID}:core:{ver}")
+            // implementation("{GROUP_ID}:platform:{ver}")
+            // implementation("{GROUP_ID}:ui:{ver}")
+            // implementation("{GROUP_ID}:web:{ver}")
+        }}
+    }}
+}}"""
+
+    android_setup_snippet = """// MyApp.kt (Android Application)
+import android.app.Application
+import com.aj.shared.EazyCmp
+import com.aj.shared.api.eazyModule
+import com.aj.shared.plugin.adapters.FcmPushTokenService
+import org.koin.core.context.startKoin
+
+class MyApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // 1. Initialize & configure EazyCmp BEFORE startKoin
+        EazyCmp.bootstrap(context = this, settingsName = "my_app_prefs") {
+            baseUrl = "https://api.example.com"
+            isDebugEnabled = BuildConfig.DEBUG
+        }
+        // 2. Wire optional host plugins (built-in or custom)
+        EazyCmp.install {
+            pushToken = FcmPushTokenService()
+        }
+        // 3. Register Koin module
+        startKoin { modules(eazyModule()) }
+    }
+}"""
+
+    ios_setup_snippet = """// Common KMP iOS entry (e.g. MainViewController.kt)
+import com.aj.shared.EazyCmp
+import com.aj.shared.api.eazyModule
+import com.aj.shared.plugin.adapters.ApnsPushTokenService
+import org.koin.core.context.startKoin
+
+fun initEazyCmpIos() {
+    EazyCmp.bootstrap(settingsName = "my_app_prefs") {
+        baseUrl = "https://api.example.com"
+    }
+    EazyCmp.install {
+        pushToken = ApnsPushTokenService.shared
+    }
+    startKoin { modules(eazyModule()) }
+}
+// Note: Add required privacy usage strings to iosApp/Info.plist
+// (see docs/templates/Info.plist.usage-strings.xml in repo)."""
+
+    desktop_setup_snippet = """// Desktop JVM main()
+import com.aj.shared.EazyCmp
+import com.aj.shared.api.eazyModule
+import com.aj.shared.plugin.adapters.DesktopZxingQrScanner
+import org.koin.core.context.startKoin
+
+fun main() {
+    EazyCmp.bootstrap(settingsName = "my_app_prefs") {
+        baseUrl = "https://api.example.com"
+    }
+    EazyCmp.install {
+        qrScanner = DesktopZxingQrScanner()
+    }
+    startKoin { modules(eazyModule()) }
+    // SecureStorage uses AES-GCM with key stored at ~/.eazycmp/secure.key
+}"""
+
+    web_setup_snippet = f"""// build.gradle.kts -> commonMain.dependencies:
+// implementation("{GROUP_ID}:web:{ver}")
+
+import com.aj.shared.web.WebEazyCmp
+import com.aj.shared.web.WebPickerType
+
+fun initWeb() {{
+    WebEazyCmp.storage.putString("token", "jwt_token")
+    WebEazyCmp.media.pick(WebPickerType.IMAGE) {{ file ->
+        println("Picked: ${{file.name}} (${{file.bytes.size}} bytes)")
+    }}
+    WebEazyCmp.install {{
+        register("analytics", myWebAnalytics)
+    }}
+}}"""
+
+    usage_root_snippet = """// App.kt — Compose Multiplatform root wrapper
+import androidx.compose.runtime.Composable
+import com.aj.shared.display.EazyCmpDisplayHost
+import com.aj.shared.theme.EazyCmpTheme
+import com.aj.shared.ui.SnackBarBoxApp
+
+@Composable
+fun App() {
+    SnackBarBoxApp {
+        EazyCmpDisplayHost {
+            EazyCmpTheme {
+                // Your app navigation & screens
+            }
+        }
+    }
+}"""
+
+    usage_api_snippet = """import com.aj.shared.EazyCmp
+import com.aj.shared.api.Resource
+
+// 1. Register extra base URLs or update auth token anytime
+EazyCmp.setBaseUrl(baseUrl = "https://api.example.com", token = "jwt_token")
+
+// 2. Make typed API calls via EazyCmp.api
+EazyCmp.api.get<UserProfile>("users/me").collect { res ->
+    when (res) {
+        is Resource.Loading -> { /* show loader */ }
+        is Resource.Success -> println(res.data)
+        is Resource.Error -> println(res.message)
+    }
+}
+
+// 3. Pick, compress & upload files
+EazyCmp.upload.pickCompressUpload(base = "default", endpoint = "/upload", file = pickedFile)"""
+
+    usage_storage_snippet = """import com.aj.shared.EazyCmp
+import com.aj.shared.permission.AppPermission
+import com.aj.shared.permission.PermissionCallback
+import com.aj.shared.validation.isValidEmail
+import com.aj.shared.validation.isValidPan
+
+// Encrypted storage & non-sensitive prefs
+EazyCmp.storage.putString("auth_token", "secret_jwt")
+val token = EazyCmp.storage.getString("auth_token")
+EazyCmp.preferences.putBoolean("onboarding_done", true)
+
+// Permissions, clipboard & Indian/common validators
+EazyCmp.permission.requestPermissions(listOf(AppPermission.CAMERA), PermissionCallback { results ->
+    println("Camera status: ${results[AppPermission.CAMERA]}")
+})
+EazyCmp.clipboard.copy("Copied!")
+val okEmail = isValidEmail("user@example.com")
+val okPan = isValidPan("ABCDE1234F")"""
+
+    usage_spi_snippet = """import com.aj.shared.EazyCmp
+
+// Override stubs or plug your own SDKs (Firebase, ML Kit, Sentry, etc.)
+EazyCmp.install {
+    analytics = MyFirebaseAnalytics()
+    crashReporter = MyCrashlyticsReporter()
+    qrScanner = AndroidCameraXQrScanner(activity)
+    otpAutoRead = SmsRetrieverOtpAutoRead(activity)
+    register("payments", MyPaymentsPlugin())
+}
+
+// Inspect service readiness (FULL / PARTIAL / HOST_REQUIRED)
+EazyCmp.serviceCatalog().forEach { status ->
+    println("${status.name}: ${status.capability} (${status.hostHint})")
+}"""
 
     index_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -523,6 +688,234 @@ def main() -> None:
       border-color: rgba(255, 255, 255, 0.2);
     }}
 
+    /* Top Install & Setup Guide */
+    .guide-section {{
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(11, 21, 40, 0.72));
+      border: 1px solid rgba(6, 182, 212, 0.22);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 20px 50px -15px rgba(6, 182, 212, 0.12), var(--card-shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }}
+
+    .guide-header {{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+    }}
+
+    .guide-badge {{
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      margin-bottom: 0.6rem;
+    }}
+
+    .guide-title {{
+      margin: 0 0 0.35rem;
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }}
+
+    .guide-subtitle {{
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      max-width: 720px;
+    }}
+
+    .header-nav {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }}
+
+    .nav-pill {{
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }}
+
+    .nav-pill:hover {{
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border-color);
+    }}
+
+    .guide-steps {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }}
+
+    .step-card {{
+      background: rgba(3, 7, 18, 0.55);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }}
+
+    .step-title-row {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }}
+
+    .step-num {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: #030712;
+      font-weight: 800;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }}
+
+    .step-heading {{
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }}
+
+    .step-note {{
+      margin: 0;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }}
+
+    .module-pills {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 0.65rem;
+      margin-bottom: 1.5rem;
+    }}
+
+    .module-pill {{
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+    }}
+
+    .module-pill code {{
+      color: var(--accent-cyan);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }}
+
+    .module-pill p {{
+      margin: 0.25rem 0 0;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }}
+
+    .guide-tabs {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }}
+
+    .tab-btn {{
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }}
+
+    .tab-btn:hover {{
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+    }}
+
+    .tab-btn.active {{
+      color: #030712;
+      background: linear-gradient(135deg, var(--accent-cyan), #38bdf8);
+      border-color: transparent;
+    }}
+
+    .tab-panel {{
+      display: none;
+    }}
+
+    .tab-panel.active {{
+      display: block;
+    }}
+
+    .code-block-wrap {{
+      position: relative;
+    }}
+
+    .code-block-wrap .btn-copy-abs {{
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      z-index: 2;
+    }}
+
+    .callout-warn {{
+      margin-top: 1.25rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: rgba(249, 115, 22, 0.08);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      color: #fdba74;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }}
+
+    .callout-warn code {{
+      color: #fed7aa;
+    }}
+
+    @media(max-width: 768px) {{
+      .guide-section {{ padding: 1.25rem; }}
+      .guide-steps {{ grid-template-columns: 1fr; }}
+    }}
+
     .failures-dashboard {{
       background: rgba(239, 68, 68, 0.02);
       border: 1px dashed rgba(239, 68, 68, 0.15);
@@ -756,15 +1149,143 @@ def main() -> None:
         <span class="logo-dot"></span>
         <span class="logo-text">EazyCmp</span>
       </div>
+      <nav class="header-nav">
+        <a href="#install-guide" class="nav-pill">Install &amp; Setup</a>
+        <a href="#dashboard" class="nav-pill">Dashboard</a>
+        <a href="#versions" class="nav-pill">Versions</a>
+        <a href="{GITHUB_REPO}" target="_blank" class="github-btn-link">GitHub &rarr;</a>
+      </nav>
     </div>
   </header>
 
   <main>
     <section class="hero-section">
-      <h1 class="hero-title">Release Dashboard</h1>
-      <p class="hero-desc">Kotlin Multiplatform (KMP) toolkit for Android, iOS &amp; JVM. Hosted live on GitHub Pages.</p>
+      <h1 class="hero-title">EazyCmp Maven &amp; Setup Guide</h1>
+      <p class="hero-desc">Kotlin Multiplatform (KMP) toolkit for Android, iOS, Desktop (JVM) &amp; Web (JS / Wasm). Hosted live on GitHub Pages.</p>
     </section>
 
+    <!-- Top Install & Complete Setup Guide -->
+    <section id="install-guide" class="guide-section">
+      <div class="guide-header">
+        <div>
+          <span class="guide-badge">Quick Start &bull; v{html.escape(ver)}</span>
+          <h2 class="guide-title">How to Install &amp; Use EazyCmp</h2>
+          <p class="guide-subtitle">Add the repository, pick either the full <code>shared</code> bundle or light modules, initialize per platform, and call any feature from <code>EazyCmp</code>.</p>
+        </div>
+      </div>
+
+      <!-- Step 1 & Step 2 -->
+      <div class="guide-steps">
+        <div class="step-card">
+          <div class="step-title-row">
+            <span class="step-heading"><span class="step-num">1</span>Add Maven Repository (<code>settings.gradle.kts</code>)</span>
+            <button class="btn-copy" onclick="copyCode('code-repo')" data-copy-id="code-repo">Copy</button>
+          </div>
+          <p class="step-note">Register EazyCmp's GitHub Pages Maven repository inside <code>dependencyResolutionManagement</code>.</p>
+          <pre><code id="code-repo">{html.escape(setup_repo_snippet)}</code></pre>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title-row">
+            <span class="step-heading"><span class="step-num">2</span>Add Dependency (<code>build.gradle.kts</code>)</span>
+            <button class="btn-copy" onclick="copyCode('code-dep')" data-copy-id="code-dep">Copy</button>
+          </div>
+          <p class="step-note">Use <code>shared</code> for everything, or pick individual modules for smaller app binaries.</p>
+          <pre><code id="code-dep">{html.escape(setup_dep_snippet)}</code></pre>
+        </div>
+      </div>
+
+      <!-- Available Modules Overview -->
+      <div class="module-pills">
+        <div class="module-pill">
+          <code>:shared</code>
+          <p>Full umbrella (re-exports <code>core</code> + <code>platform</code> + <code>ui</code> + <code>EazyCmp</code> facade).</p>
+        </div>
+        <div class="module-pill">
+          <code>:core</code>
+          <p>Ktor API client, SQLDelight, cache, offline queue, AES-GCM storage &amp; validators.</p>
+        </div>
+        <div class="module-pill">
+          <code>:platform</code>
+          <p>Permissions, media picker, GPS, biometrics, QR, PDF, deep links &amp; adapters.</p>
+        </div>
+        <div class="module-pill">
+          <code>:ui</code>
+          <p>Compose UI kit, Material 3 theme, snackbars, bottom sheets, Coil/SVG/Lottie images.</p>
+        </div>
+        <div class="module-pill">
+          <code>:web</code>
+          <p>Lightweight JS &amp; WasmJs helpers (<code>WebEazyCmp</code> storage, picker, plugin registry).</p>
+        </div>
+      </div>
+
+      <!-- Step 3: Platform Initialization -->
+      <div class="step-card" style="margin-bottom: 1.25rem;">
+        <div class="step-title-row">
+          <span class="step-heading"><span class="step-num">3</span>Initialize Per Platform (Before <code>startKoin</code>)</span>
+        </div>
+        <div class="guide-tabs" data-tab-group="platform">
+          <button class="tab-btn active" onclick="switchTab('platform', 'android', this)">Android</button>
+          <button class="tab-btn" onclick="switchTab('platform', 'ios', this)">iOS</button>
+          <button class="tab-btn" onclick="switchTab('platform', 'desktop', this)">Desktop (JVM)</button>
+          <button class="tab-btn" onclick="switchTab('platform', 'web', this)">Web (JS / Wasm)</button>
+        </div>
+
+        <div id="tab-platform-android" class="tab-panel active code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-init-android')" data-copy-id="code-init-android">Copy</button>
+          <pre><code id="code-init-android">{html.escape(android_setup_snippet)}</code></pre>
+        </div>
+        <div id="tab-platform-ios" class="tab-panel code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-init-ios')" data-copy-id="code-init-ios">Copy</button>
+          <pre><code id="code-init-ios">{html.escape(ios_setup_snippet)}</code></pre>
+        </div>
+        <div id="tab-platform-desktop" class="tab-panel code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-init-desktop')" data-copy-id="code-init-desktop">Copy</button>
+          <pre><code id="code-init-desktop">{html.escape(desktop_setup_snippet)}</code></pre>
+        </div>
+        <div id="tab-platform-web" class="tab-panel code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-init-web')" data-copy-id="code-init-web">Copy</button>
+          <pre><code id="code-init-web">{html.escape(web_setup_snippet)}</code></pre>
+        </div>
+      </div>
+
+      <!-- Step 4: How to Use in Your App -->
+      <div class="step-card">
+        <div class="step-title-row">
+          <span class="step-heading"><span class="step-num">4</span>Use Features in Common Code</span>
+        </div>
+        <div class="guide-tabs" data-tab-group="usage">
+          <button class="tab-btn active" onclick="switchTab('usage', 'root', this)">Compose Root &amp; Theme</button>
+          <button class="tab-btn" onclick="switchTab('usage', 'api', this)">API &amp; File Upload</button>
+          <button class="tab-btn" onclick="switchTab('usage', 'storage', this)">Storage &amp; Permissions</button>
+          <button class="tab-btn" onclick="switchTab('usage', 'spi', this)">Plugin SPI &amp; Adapters</button>
+        </div>
+
+        <div id="tab-usage-root" class="tab-panel active code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-use-root')" data-copy-id="code-use-root">Copy</button>
+          <pre><code id="code-use-root">{html.escape(usage_root_snippet)}</code></pre>
+        </div>
+        <div id="tab-usage-api" class="tab-panel code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-use-api')" data-copy-id="code-use-api">Copy</button>
+          <pre><code id="code-use-api">{html.escape(usage_api_snippet)}</code></pre>
+        </div>
+        <div id="tab-usage-storage" class="tab-panel code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-use-storage')" data-copy-id="code-use-storage">Copy</button>
+          <pre><code id="code-use-storage">{html.escape(usage_storage_snippet)}</code></pre>
+        </div>
+        <div id="tab-usage-spi" class="tab-panel code-block-wrap">
+          <button class="btn-copy btn-copy-abs" onclick="copyCode('code-use-spi')" data-copy-id="code-use-spi">Copy</button>
+          <pre><code id="code-use-spi">{html.escape(usage_spi_snippet)}</code></pre>
+        </div>
+      </div>
+
+      <div class="callout-warn">
+        <strong>iOS Target Note:</strong> Built with Compose Multiplatform 1.11.1+, so <code>iosX64()</code> is not supported. Use <code>iosArm64()</code> and <code>iosSimulatorArm64()</code> in your consumer app's <code>build.gradle.kts</code>.
+        For Play Store / App Store permission compliance, see <a href="{GITHUB_REPO}/blob/master/docs/STORE_COMPLIANCE.md" target="_blank" style="color: #fed7aa; font-weight: 600;">STORE_COMPLIANCE.md</a>.
+      </div>
+    </section>
+
+    <h2 id="dashboard" class="section-title"><span class="section-title-icon"></span>Release Dashboard</h2>
     <section class="dashboard-grid">
       <!-- Card 1: Latest Version -->
       <div class="card card-latest">
@@ -839,30 +1360,8 @@ def main() -> None:
       </div>
     </div>
 
-    <!-- Quick Integration -->
-    <h2 class="section-title"><span class="section-title-icon"></span>Gradle Integration</h2>
-    <div class="setup-grid">
-      <!-- Box 1: Repo -->
-      <div class="setup-box">
-        <div class="setup-box-header">
-          <span class="setup-title">1. Add Repository URL</span>
-          <button class="btn-copy" onclick="copyCode('code-repo')" data-copy-id="code-repo">Copy</button>
-        </div>
-        <pre><code id="code-repo">{html.escape(setup_repo_snippet)}</code></pre>
-      </div>
-
-      <!-- Box 2: Dependency -->
-      <div class="setup-box">
-        <div class="setup-box-header">
-          <span class="setup-title">2. Declare Dependency</span>
-          <button class="btn-copy" onclick="copyCode('code-dep')" data-copy-id="code-dep">Copy</button>
-        </div>
-        <pre><code id="code-dep">{html.escape(setup_dep_snippet)}</code></pre>
-      </div>
-    </div>
-
     <!-- Version History -->
-    <h2 class="section-title"><span class="section-title-icon"></span>Version History</h2>
+    <h2 id="versions" class="section-title"><span class="section-title-icon"></span>Version History</h2>
     <div class="table-container">
       <table>
         <thead>
@@ -881,10 +1380,21 @@ def main() -> None:
   </main>
 
   <footer>
-    <p>&copy; {datetime.now().year} EazyCmp. Hosted via GitHub Pages. Manifest: <a href="versions.json" target="_blank">versions.json</a></p>
+    <p>&copy; {datetime.now().year} EazyCmp. Hosted via GitHub Pages. Manifest: <a href="versions.json" target="_blank">versions.json</a> &bull; Docs: <a href="{GITHUB_REPO}#readme" target="_blank">README</a></p>
   </footer>
 
   <script>
+    function switchTab(group, tabId, btn) {{
+      const groupButtons = document.querySelectorAll(`[data-tab-group="${{group}}"] .tab-btn`);
+      groupButtons.forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+
+      const prefix = `tab-${{group}}-`;
+      document.querySelectorAll(`[id^="${{prefix}}"]`).forEach(panel => {{
+        panel.classList.toggle("active", panel.id === `${{prefix}}${{tabId}}`);
+      }});
+    }}
+
     function copyCode(id) {{
       const code = document.getElementById(id).innerText;
       navigator.clipboard.writeText(code).then(() => {{
