@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- This module was also published with a richer model, Gradle metadata,  -->
+  <!-- which should be used instead. Do not delete the following line which  -->
+  <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
+  <!-- that they should prefer consuming it instead. -->
+  <!-- do_not_remove: published-with-gradle-metadata -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.Imajy.eazyCmp</groupId>
+  <artifactId>ui-android</artifactId>
+  <version>1.0.0.1-rc-060</version>
+  <packaging>aar</packaging>
+  <name>EazyCmp UI</name>
+  <description>EazyCmp UI — Compose Multiplatform components and theme</description>
+  <url>https://github.com/Imajy/eazyCmp</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>com.github.Imajy.eazyCmp</groupId>
+      <artifactId>core-android</artifactId>
+      <version>1.0.0.1-rc-060</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.Imajy.eazyCmp</groupId>
+      <artifactId>platform-android</artifactId>
+      <version>1.0.0.1-rc-060</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.runtime</groupId>
+      <artifactId>runtime</artifactId>
+      <version>1.11.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.foundation</groupId>
+      <artifactId>foundation</artifactId>
+      <version>1.11.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.material3</groupId>
+      <artifactId>material3</artifactId>
+      <version>1.11.0-alpha07</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.material</groupId>
+      <artifactId>material-icons-core</artifactId>
+      <version>1.7.3</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.components</groupId>
+      <artifactId>components-resources-android</artifactId>
+      <version>1.11.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.alexzhirkevich</groupId>
+      <artifactId>compottie-android</artifactId>
+      <version>2.2.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-compose-android</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-network-ktor3-android</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-android</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-svg-android</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.androidx.navigation</groupId>
+      <artifactId>navigation-compose</artifactId>
+      <version>2.9.0-beta05</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+      <version>2.3.21</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

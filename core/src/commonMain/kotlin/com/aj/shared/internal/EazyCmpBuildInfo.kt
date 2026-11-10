@@ -1,5 +1,5 @@
 package com.aj.shared.internal
 
 object EazyCmpBuildInfo {
-    const val VERSION: String = "1.0.0.1-rc-060"
+    const val VERSION: String = "1.0.0.1-rc-061"
 }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- This module was also published with a richer model, Gradle metadata,  -->
+  <!-- which should be used instead. Do not delete the following line which  -->
+  <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
+  <!-- that they should prefer consuming it instead. -->
+  <!-- do_not_remove: published-with-gradle-metadata -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.Imajy.eazyCmp</groupId>
+  <artifactId>ui-jvm</artifactId>
+  <version>1.0.0.1-rc-060</version>
+  <name>EazyCmp UI</name>
+  <description>EazyCmp UI — Compose Multiplatform components and theme</description>
+  <url>https://github.com/Imajy/eazyCmp</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>com.github.Imajy.eazyCmp</groupId>
+      <artifactId>core-jvm</artifactId>
+      <version>1.0.0.1-rc-060</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.Imajy.eazyCmp</groupId>
+      <artifactId>platform-jvm</artifactId>
+      <version>1.0.0.1-rc-060</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.runtime</groupId>
+      <artifactId>runtime-desktop</artifactId>
+      <version>1.11.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.foundation</groupId>
+      <artifactId>foundation-desktop</artifactId>
+      <version>1.11.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.material3</groupId>
+      <artifactId>material3-desktop</artifactId>
+      <version>1.11.0-alpha07</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.material</groupId>
+      <artifactId>material-icons-core-desktop</artifactId>
+      <version>1.7.3</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.compose.components</groupId>
+      <artifactId>components-resources-desktop</artifactId>
+      <version>1.11.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.alexzhirkevich</groupId>
+      <artifactId>compottie-desktop</artifactId>
+      <version>2.2.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-compose-jvm</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-network-ktor3-jvm</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-jvm</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.coil-kt.coil3</groupId>
+      <artifactId>coil-svg-jvm</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.androidx.navigation</groupId>
+      <artifactId>navigation-compose-desktop</artifactId>
+      <version>2.9.0-beta05</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+      <version>2.3.21</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-coroutines-swing</artifactId>
+      <version>1.11.0</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

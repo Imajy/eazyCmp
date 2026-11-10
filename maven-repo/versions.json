@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-059",
+  "latest": "1.0.0.1-rc-060",
   "versions": [
+    "1.0.0.1-rc-060",
     "1.0.0.1-rc-059",
     "1.0.0.1-rc-058",
     "1.0.0.1-rc-057",
@@ -71,6 +72,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-060",
+      "message": "Restore corrupted rc-059 maven-repo metadata and trigger rc-060 publish",
+      "publishedAt": "2026-11-10T14:16:34+05:30",
+      "commit": "27321c890f9c9fd7b4823dfff0fe30f9787a65a0"
+    },
     {
       "version": "1.0.0.1-rc-059",
       "message": "improvements",
@@ -463,13 +470,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-11-10T08:34:38Z",
-  "failures": [
-    {
-      "version": "1.0.0.1-rc-060",
-      "commit": "af48bf824b8517e8a58294e83c6bc359363a38d6",
-      "publishedAt": "2026-11-10T08:34:38Z",
-      "logFile": "logs/build-1.0.0.1-rc-060-failed.log"
-    }
-  ]
+  "updatedAt": "2026-11-10T08:50:33Z",
+  "failures": []
 }
