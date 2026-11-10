@@ -232,7 +232,6 @@
           "version": {
             "requires": "2.0.2"
           }
-<<<<<<< HEAD
         },
         {
           "group": "io.ktor",
@@ -247,27 +246,17 @@
           "version": {
             "requires": "2.0.2"
           }
-=======
->>>>>>> 20f2dee (changes)
         }
       ],
       "files": [
         {
           "name": "shared-metadata-1.0.0.1-rc-059.jar",
           "url": "shared-1.0.0.1-rc-059.jar",
-<<<<<<< HEAD
           "size": 146592,
           "sha512": "aa3444ef1d2a022b936311edc382f6e72bbf6ac5b6f6691851021f4a386b4e83a52a511887fb282c9154ff220aa26ef6fae1979184e0ea775965ec9270667014",
           "sha256": "61e7883ee15cd681ae42a6d755a4e457184831ea7bc1c525b1c004398ad7f67a",
           "sha1": "c9356fdc9f1a9e0fa0b1b6f687d137eeb2d77f9e",
           "md5": "30775b21eb70111a27593ba0a8142e48"
-=======
-          "size": 1009,
-          "sha512": "004a7fc15fb082bc29b508565e92a01afd3597f7a32e5160b98e8ee76cf11b5a8aab16f67466e3b73ae03c3cf0e1449133c77e93d2fde5617dcd8b4f8d6ded10",
-          "sha256": "c4ceb35f058deaeea4fb65163c6d6fb43516af985eb0ee315e5835e5a097ab3f",
-          "sha1": "b8e1351fee5d1abe96ebb2dd9762eb5fd45ad7c5",
-          "md5": "6f976fd9b4d39852e17c98920a70f7b2"
->>>>>>> 20f2dee (changes)
         }
       ]
     },
@@ -285,19 +274,11 @@
         {
           "name": "shared-kotlin-1.0.0.1-rc-059-sources.jar",
           "url": "shared-1.0.0.1-rc-059-sources.jar",
-<<<<<<< HEAD
           "size": 201903,
           "sha512": "475c47eb2254e26943880a7fc3d4ccf8352cab44ef2ac2ece912660c65db3b7bb123a9019ad08c6959ea299225ee6a1960e2f29d2bc8e633b81b579a6262d555",
           "sha256": "011547cf9e217f29e4da7937c048574fffa348e3e5351c5117b9599b282dacdb",
           "sha1": "097ba612dfbf839173fe03b5c26991f680716504",
           "md5": "78746b00ec89b026a6960e3ead8efa69"
-=======
-          "size": 173748,
-          "sha512": "1d411fbae596b33360436b67558e3e2d44a6d4099d323353e16f7f2e8983885373ac3fd94ce99895f3e6d0a66b9406e59737d58dcbfcad39d68e153fb822f0d1",
-          "sha256": "26d0d5dbf71ccb2c39437830e7ae5a62b40aa12d4d7467a45242eaf37e170915",
-          "sha1": "da6796316882d7be400b8e3ecc9897b1d84ea4e1",
-          "md5": "2cb259142c207ec6b5e3f61d7a8fe097"
->>>>>>> 20f2dee (changes)
         }
       ]
     },
@@ -352,7 +333,6 @@
       }
     },
     {
-<<<<<<< HEAD
       "name": "iosArm64ApiElements-published",
       "attributes": {
         "org.gradle.category": "library",
@@ -489,8 +469,6 @@
       }
     },
     {
-=======
->>>>>>> 20f2dee (changes)
       "name": "jvmApiElements-published",
       "attributes": {
         "org.gradle.category": "library",
