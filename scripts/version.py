@@ -11,7 +11,7 @@ from pathlib import Path
 CHANNELS = ("rc", "beta")
 MAX_CHANNEL_BUILD = 100
 DEFAULT_VERSION = "1.0.0.1-rc-001"
-BUILD_INFO_RELATIVE = Path("shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt")
+BUILD_INFO_RELATIVE = Path("core/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt")
 VERSION_PATTERN = re.compile(
     r"^(?P<base>\d+\.\d+\.\d+\.(?P<build>\d+))-(?P<channel>rc|beta)-(?P<num>\d{1,3})$"
 )
@@ -83,7 +83,7 @@ def write_build_info(root: Path, version: str) -> None:
     path.write_text(
         f"""package com.aj.shared.internal
 
-internal object EazyCmpBuildInfo {{
+object EazyCmpBuildInfo {{
     const val VERSION: String = "{version}"
 }}
 """

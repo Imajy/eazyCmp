@@ -51,12 +51,12 @@ jobs:
           echo "Library changed: $library_changed"
           echo "library_changed=$library_changed" >> "$GITHUB_OUTPUT"
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         if: steps.check_changes.outputs.library_changed == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: 'oracle'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Gradle
         if: steps.check_changes.outputs.library_changed == 'true'
@@ -158,18 +158,18 @@ jobs:
           python3 scripts/version.py bump
           NEXT=$(python3 scripts/version.py current)
 
-          BUILD_INFO="shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt"
+          BUILD_INFO="core/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt"
           mkdir -p "$(dirname "$BUILD_INFO")"
           {
             echo "package com.aj.shared.internal"
             echo ""
-            echo "internal object EazyCmpBuildInfo {"
+            echo "object EazyCmpBuildInfo {"
             echo "    const val VERSION: String = \"$NEXT\""
             echo "}"
           } > "$BUILD_INFO"
 
           git add maven-repo/ index.html versions.json .nojekyll version.properties \
-            shared/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt
+            core/src/commonMain/kotlin/com/aj/shared/internal/EazyCmpBuildInfo.kt
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
