@@ -1,0 +1,2 @@
+# Use local Android Studio JBR (Java 25). Avoids Foojay JDK-21 download.
+toolchainVersion=25

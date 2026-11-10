@@ -2,7 +2,7 @@
 
 This document explains how EazyCmp is designed to avoid common **app rejection** reasons on Google Play and Apple App Store.
 
-**Version:** 1.0.03-alpha-11
+**Version:** 1.0.0.1-rc-060
 
 ---
 

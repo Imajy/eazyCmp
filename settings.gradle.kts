@@ -32,5 +32,8 @@ dependencyResolutionManagement {
     }
 }
 
+include(":core")
+include(":platform")
+include(":ui")
 include(":shared")
 include(":web")

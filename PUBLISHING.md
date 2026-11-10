@@ -1,102 +1,25 @@
-# Maven Central Publish Checklist
+# Publishing EazyCmp
 
-## Requirements
+## Coordinates
 
-Sonatype account
-GPG key
-GitHub repository
-Library version ready
+| Artifact | Gradle dependency |
+|----------|-------------------|
+| Umbrella | `com.github.Imajy.eazyCmp:shared:<version>` |
+| Core | `com.github.Imajy.eazyCmp:core:<version>` |
+| UI | `com.github.Imajy.eazyCmp:ui:<version>` |
+| Platform | `com.github.Imajy.eazyCmp:platform:<version>` |
+| Web | `com.github.Imajy.eazyCmp:web:<version>` |
 
----
+Version source: `version.properties` (current: **1.0.0.1-rc-060**).
 
-## Step 1 - group id
+Repository: `https://imajy.github.io/eazyCmp/maven-repo/`
 
-Published via JitPack:
+## Local publish
 
-group: `com.github.Imajy`
+```bash
+./gradlew publishAllPublicationsToMavenLocal -Peazycmp.skip.ios=true -x test --parallel
+```
 
-artifact: `eazyCmp`
+## CI publish
 
----
-
-## Step 2 - gradle config
-
-group = "com.github.Imajy"
-
-version = "1.0.03-alpha-11"
-
----
-
-## Step 3 - add plugins
-
-plugins {
-
-id("maven-publish")
-
-id("signing")
-
-}
-
----
-
-## Step 4 - configure publishing
-
-publishing {
-
-publications {
-
-create<MavenPublication>("release") {
-
-groupId = "com.aj"
-
-artifactId = "eazycmp"
-
-version = "1.0.0"
-
-}
-
-}
-
-}
-
----
-
-## Step 5 - sign artifacts
-
-signing {
-
-sign(publishing.publications)
-
-}
-
----
-
-## Step 6 - publish
-
-./gradlew publish
-
----
-
-## Step 7 - release in Sonatype
-
-login:
-
-https://central.sonatype.com
-
-release repository
-
----
-
-## Step 8 - verify dependency
-
-implementation("com.aj:eazycmp:1.0.0")
-
----
-
-Checklist
-
-[ ] version updated
-[ ] changelog updated
-[ ] readme updated
-[ ] build successful
-[ ] sample tested
+`.github/workflows/publish.yml` publishes when `core/`, `ui/`, `platform/`, `shared/`, `web/`, or Gradle config changes.

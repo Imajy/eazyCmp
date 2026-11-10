@@ -43,7 +43,7 @@ jobs:
           echo "Changed files:"
           echo "$files"
           for file in $files; do
-            if [[ "$file" =~ ^shared/ ]] || [[ "$file" == "build.gradle.kts" ]] || [[ "$file" == "settings.gradle.kts" ]] || [[ "$file" == "gradle.properties" ]] || [[ "$file" == "version.properties" ]] || [[ "$file" =~ ^gradle/ ]]; then
+            if [[ "$file" =~ ^(shared|core|ui|platform|web)/ ]] || [[ "$file" == "build.gradle.kts" ]] || [[ "$file" == "settings.gradle.kts" ]] || [[ "$file" == "gradle.properties" ]] || [[ "$file" == "version.properties" ]] || [[ "$file" =~ ^gradle/ ]]; then
               library_changed="true"
               break
             fi

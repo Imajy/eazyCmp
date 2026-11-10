@@ -15,9 +15,3 @@ internal actual fun platformInit(context: Any?, settingsName: String) {
     }
 }
 
-internal actual fun getCacheDir(): String {
-    check(isAppContextInitialized()) {
-        "Call EazyCmp.init(context) in Application.onCreate() before using cache APIs on Android."
-    }
-    return appContext.cacheDir.absolutePath + "/image_cache"
-}

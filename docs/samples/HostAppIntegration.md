@@ -6,7 +6,19 @@ Copy-paste template to integrate EazyCmp without store-policy mistakes.
 
 ```kotlin
 commonMain.dependencies {
-    implementation("com.github.Imajy:eazyCmp:1.0.03-alpha-11")
+    // Full umbrella
+    implementation("com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-060")
+    // Or light: core / platform / ui / web
+}
+```
+
+## Plugin SPI (optional)
+
+```kotlin
+EazyCmp.install {
+    qrScanner = MyQrScanner()
+    pushToken = MyPushToken()
+    analytics = MyAnalytics()
 }
 ```
 

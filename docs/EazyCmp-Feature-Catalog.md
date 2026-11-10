@@ -1,22 +1,21 @@
 # EazyCmp — Complete Feature Catalog (Numbered)
 
 **Library:** EazyCmp · Kotlin Multiplatform  
-**Version:** 1.0.03-alpha-11 · **Group:** com.github.imajy  
-**Targets:** Android · iOS · JVM/Desktop · **Updated:** June 2026
+**Version:** 1.0.0.1-rc-060 · **Group:** `com.github.Imajy.eazyCmp`  
+**Targets:** Android · iOS · JVM/Desktop · Web (JS/Wasm) · **Updated:** Nov 2026  
+**Artifacts:** `shared` (umbrella) · `core` · `ui` · `platform` · `web`
 
 ---
 
 ## Summary Count
 
-| Status | Count | ID Range |
-|--------|------:|----------|
-| ✅ **Implemented** | **317** | IMP-001 → IMP-317 |
-| ⏳ **Planned (Pending)** | **0** | — |
-| **Total** | **317** | — |
+| Status | Count | Notes |
+|--------|------:|-------|
+| ✅ **Implemented** | **317+** | Including Plugin SPI + modular artifacts |
+| 🔌 **Host-required** | **3** | QR scanner, push token, OTP auto-read — wire via `EazyCmp.install` |
+| 📦 **Modules** | **5** | `core` / `ui` / `platform` / `web` / `shared` |
 
-**Progress: 317 / 317 = 100% complete**
-
-> **Store compliance:** See `docs/STORE_COMPLIANCE.md`. Library manifest does not merge sensitive permissions. SQLDelight replaced by `LocalDataStore` + `SchemaMigrationHelper`. Auth/QR scanner remain host-wirable stubs (no store-risk permissions).
+> **Store compliance:** See `docs/STORE_COMPLIANCE.md`. Host-wirable stubs are intentional (no store-risk permissions bundled). Desktop SecureStorage uses AES-GCM.
 
 ---
 

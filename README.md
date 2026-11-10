@@ -13,13 +13,13 @@
   <img src="https://img.shields.io/badge/Compose-Multiplatform-green" alt="Compose" />
   <img src="https://img.shields.io/badge/Ktor-Client-orange" alt="Ktor" />
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License" />
-  <img src="https://img.shields.io/badge/version-1.0.03--alpha--11-purple" alt="Version" />
-  <img src="https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Desktop-blue" alt="Platform" />
+  <img src="https://img.shields.io/badge/version-1.0.0.1--rc--060-purple" alt="Version" />
+  <img src="https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Desktop%20%7C%20Web-blue" alt="Platform" />
 </div>
 
 ---
 
-**EazyCMP** is a comprehensive Kotlin Multiplatform (KMP) toolkit designed to eliminate boilerplate code when building mobile (Android & iOS) and desktop applications. It provides unified, out-of-the-box abstractions for networking, storage, permission handling, file picking, and premium Compose Multiplatform UI components.
+**EazyCMP** is a Kotlin Multiplatform toolkit for Android, iOS, Desktop (JVM), and Web (JS / Wasm). Use the full `shared` umbrella, or pick light modules (`core` / `ui` / `platform` / `web`). Host apps can replace any stubbed service via the Plugin SPI (`EazyCmp.install`).
 
 ## Table of Contents
 1. [Installation](#1-installation)
@@ -61,17 +61,70 @@ dependencyResolutionManagement {
 }
 ```
 
-### Step 2: Add the Dependency
-Add the library dependency to your shared module's `build.gradle.kts` (usually under `commonMain` dependencies):
+### Step 2: Add Dependencies (modular)
+
+Latest version: **`1.0.0.1-rc-060`** (see `version.properties` / `versions.json`).
 
 ```kotlin
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("com.github.Imajy.eazyCmp:shared:1.0.0.001-rc-001") // Replace with the latest version
+            // Option A — full toolkit (core + ui + platform + plugin SPI)
+            implementation("com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-060")
+
+            // Option B — light / pick what you need
+            // implementation("com.github.Imajy.eazyCmp:core:1.0.0.1-rc-060")       // API, storage, networking
+            // implementation("com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-060")   // permissions, media, auth
+            // implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-060")         // Compose UI kit
+            // implementation("com.github.Imajy.eazyCmp:web:1.0.0.1-rc-060")        // JS / Wasm helpers
         }
     }
 }
+```
+
+### Plugin SPI — host can wire anything
+
+```kotlin
+EazyCmp.bootstrap(context = this) {
+    baseUrl = "https://api.example.com"
+}
+
+EazyCmp.install {
+    analytics = MyFirebaseAnalytics()
+    qrScanner = MyMlKitQrScanner()
+    pushToken = MyFcmPushToken()
+    otpAutoRead = MySmsOtpReader()
+    secureStorage = MyKeychainStorage() // optional override
+    register("payments", MyPaymentsPlugin())
+}
+
+// Read capability matrix (FULL / HOST_REQUIRED / …)
+EazyCmp.serviceCatalog().forEach { println("${it.name}: ${it.capability}") }
+```
+
+Built-in adapters (prefer these over stubs):
+
+```kotlin
+// Android
+EazyCmp.install {
+    qrScanner = AndroidCameraXQrScanner(activity)   // Play Code Scanner / CameraX
+    pushToken = FcmPushTokenService()               // reflection; needs firebase-messaging in host
+    otpAutoRead = SmsRetrieverOtpAutoRead(activity) // no SMS permission
+}
+
+// Desktop JVM
+EazyCmp.install { qrScanner = DesktopZxingQrScanner() }
+
+// iOS
+EazyCmp.install { pushToken = ApnsPushTokenService.shared }
+```
+
+Web (`:web` artifact):
+
+```kotlin
+WebEazyCmp.storage.putString("token", "…")
+WebEazyCmp.media.pick(WebPickerType.IMAGE) { file -> /* bytes */ }
+WebEazyCmp.install { register("analytics", myAnalytics) }
 ```
 
 ---
@@ -79,10 +132,10 @@ kotlin {
 ## 2. Platform Compatibility & Target Configuration
 
 ### Supported Platforms
-EazyCmp is fully compatible with the following target platforms:
 * **Android** (minSdk 24, compileSdk 36)
-* **JVM / Desktop**
-* **iOS (Apple Silicon / Devices)**: `iosArm64` and `iosSimulatorArm64`
+* **JVM / Desktop** — AES-GCM secure storage; file/camera pickers; realistic permission statuses
+* **iOS**: `iosArm64`, `iosSimulatorArm64`
+* **Web**: JS + WasmJs via artifact `com.github.Imajy.eazyCmp:web`
 
 ### IMPORTANT: Apple x86_64 (`iosX64`) Simulator Target Not Supported
 Starting from **Compose Multiplatform 1.11.1+** (which this library is built on), support for the Apple x86_64 target architecture (`iosX64`) has been **fully removed** due to deprecation upstream.
@@ -107,12 +160,11 @@ Because of this, if your consumer application targets `iosX64`, dependency resol
 ## 3. Development & Local Testing
 
 ### Local Publish (Test before Tag)
-To publish a test version of the library to your machine's local Maven repository (`mavenLocal`):
 ```bash
-./gradlew :shared:publishToMavenLocal -x test --parallel --build-cache
+./gradlew publishAllPublicationsToMavenLocal -Peazycmp.skip.ios=true -x test --parallel --build-cache
 ```
 
-Then add `mavenLocal()` to your consumer project's repositories to test the build.
+Publishes `core`, `platform`, `ui`, `shared`, and `web`. Add `mavenLocal()` in the consumer project to test.
 
 ---
 

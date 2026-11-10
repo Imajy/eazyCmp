@@ -1,71 +1,22 @@
 # EazyCMP Roadmap
 
-## 1.0.0
+## Done (1.0.0.1-rc-060)
 
-initial release
+- Modular artifacts: `core` / `ui` / `platform` / `web` / `shared`
+- Plugin SPI + host-wirable services
+- Desktop AES secure storage + realistic permissions
+- Host-required stubs clearly marked
+- Web artifact publish path
 
-features:
+## Next
 
-api client
-compose ui kit
-media picker
-permission manager
-shared settings
-base viewmodel
+- Complete QR scanner defaults (CameraX / AVFoundation) where store-safe
+- Push token helpers with optional Firebase/APNs adapters (separate optional artifact)
+- GraphQL client helpers
+- More Wasm/JS expect/actual coverage for media & secure storage
+- Expand automated tests per module
 
----
+## Long term
 
-## 1.1.0
-
-improvements:
-
-dropdown improvements
-date picker enhancements
-loading ui updates
-
----
-
-## 1.2.0
-
-network:
-
-retry mechanism
-request timeout config
-logging improvements
-
----
-
-## 1.3.0
-
-security:
-
-token refresh interceptor
-secure storage option
-
----
-
-## 1.4.0
-
-ui:
-
-form validation helpers
-input masks
-image cropper
-
----
-
-## 2.0.0
-
-major:
-
-offline cache layer
-paging support
-plugin architecture
-
----
-
-long term
-
-compose navigation helpers
-graphql support
-web target support
+- Official sample apps (Android / iOS / Desktop / Web)
+- Optional social-auth adapters as separate modules

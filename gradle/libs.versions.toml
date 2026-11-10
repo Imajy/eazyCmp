@@ -28,6 +28,11 @@ playServicesAuth = "21.2.0"
 navigationCompose = "2.9.0-beta05"
 zxing = "3.5.3"
 sqldelight = "2.0.2"
+camerax = "1.4.2"
+mlkitBarcode = "17.3.0"
+playServicesCodeScanner = "16.1.0"
+playAuthApiPhone = "18.1.0"
+firebaseMessaging = "24.1.1"
 
 
 [libraries]
@@ -48,6 +53,13 @@ play-review = { module = "com.google.android.play:review", version.ref = "playRe
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
+mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkitBarcode" }
+play-services-code-scanner = { module = "com.google.android.gms:play-services-code-scanner", version.ref = "playServicesCodeScanner" }
+play-services-auth-api-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "playAuthApiPhone" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
