@@ -7,26 +7,28 @@ Type-safe project accessors is an incubating feature.
 > Task :core:generateExpectResourceCollectorsForCommonMain SKIPPED
 > Task :core:androidPreBuild UP-TO-DATE
 > Task :core:preAndroidMainBuild UP-TO-DATE
-> Task :core:convertXmlValueResourcesForCommonMain NO-SOURCE
-> Task :core:convertXmlValueResourcesForAndroidMain NO-SOURCE
-> Task :core:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
 > Task :core:copyNonXmlValueResourcesForCommonMain NO-SOURCE
-> Task :core:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :core:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :core:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :core:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
 > Task :core:prepareComposeResourcesTaskForCommonMain NO-SOURCE
-> Task :core:generateResourceAccessorsForAndroidMain SKIPPED
 > Task :core:generateResourceAccessorsForCommonMain SKIPPED
+> Task :core:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :core:generateResourceAccessorsForAndroidMain SKIPPED
 > Task :core:generateActualResourceCollectorsForAndroidMain SKIPPED
-> Task :core:mergeAndroidMainJniLibFolders
-> Task :core:mergeAndroidMainNativeLibs NO-SOURCE
-> Task :core:copyAndroidMainJniLibsProjectOnly
+> Task :core:generateCommonMainEazyCmpDatabaseInterface FROM-CACHE
+> Task :core:androidSourcesJar
 > Task :core:generateAndroidMainEmptyResourceFiles
 > Task :core:prepareAndroidMainArtProfile
 > Task :core:prepareLintJarForPublish
-> Task :core:checkAndroidMainAarMetadata
+> Task :core:processAndroidMainManifest FROM-CACHE
 > Task :core:kmpPartiallyResolvedDependenciesChecker
 > Task :core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:mergeAndroidMainJniLibFolders
+> Task :core:mergeAndroidMainNativeLibs NO-SOURCE
+> Task :core:copyAndroidMainJniLibsProjectOnly
+> Task :core:checkAndroidMainAarMetadata
 > Task :core:writeAndroidMainAarMetadata
-> Task :core:processAndroidMainManifest
 > Task :core:checkIosArm64MainComposeLibrariesCompatibility
 > Task :core:generatePomFileForAndroidPublication
 > Task :core:convertXmlValueResourcesForAppleMain NO-SOURCE
@@ -39,6 +41,8 @@ Type-safe project accessors is an incubating feature.
 > Task :core:generateResourceAccessorsForIosArm64Main SKIPPED
 > Task :core:convertXmlValueResourcesForIosMain NO-SOURCE
 > Task :core:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :core:compileAndroidMain FROM-CACHE
+> Task :core:processAndroidMainJavaRes
 > Task :core:prepareComposeResourcesTaskForIosMain NO-SOURCE
 > Task :core:generateResourceAccessorsForIosMain SKIPPED
 > Task :core:convertXmlValueResourcesForNativeMain NO-SOURCE
@@ -46,67 +50,17 @@ Type-safe project accessors is an incubating feature.
 > Task :core:prepareComposeResourcesTaskForNativeMain NO-SOURCE
 > Task :core:generateResourceAccessorsForNativeMain SKIPPED
 > Task :core:generateActualResourceCollectorsForIosArm64Main SKIPPED
-> Task :core:generateCommonMainEazyCmpDatabaseInterface
-> Task :core:androidSourcesJar
-> Task :core:extractAndroidMainAnnotations
-> Task :core:transformCommonMainDependenciesMetadata
+> Task :core:extractAndroidMainAnnotations FROM-CACHE
 
-> Task :core:compileCommonMainKotlinMetadata
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:4:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:32:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:21:26 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:24:16 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:87:18 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:100:26 'expect val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:101:24 'expect val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:50 'expect val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:68 'expect val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/ConnectivityObserver.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/SseClient.kt:29:36 'suspend fun ByteReadChannel.readUTF8Line(max: Int = ...): String?' is deprecated. Use readLineStrict or readLine instead. See deprecation notes for more details.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/CacheFileIO.kt:3:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/SecureStorage.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+> Task :core:downloadKotlinNativeDistribution
+Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-aarch64-2.3.21 is not empty. Native bundle files will be overwritten.
 
-> Task :core:metadataCommonMainProcessResources NO-SOURCE
-> Task :core:metadataCommonMainClasses
-
-> Task :core:compileAndroidMain
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:7:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/network/ConnectivityObserver.android.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/CacheFileIO.android.kt:6:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:4:8 'class EncryptedSharedPreferences : Any, SharedPreferences' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:5:8 'class MasterKeys : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:9:34 'class MasterKeys : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:9:57 'class MasterKeys : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:9:68 'static field AES256_GCM_SPEC: KeyGenParameterSpec' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:10:37 'class EncryptedSharedPreferences : Any, SharedPreferences' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:10:64 'static fun create(p0: String, p1: String, p2: Context, p3: EncryptedSharedPreferences.PrefKeyEncryptionScheme, p4: EncryptedSharedPreferences.PrefValueEncryptionScheme): SharedPreferences' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:14:9 'class EncryptedSharedPreferences : Any, SharedPreferences' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:14:36 'enum class PrefKeyEncryptionScheme : Enum<EncryptedSharedPreferences.PrefKeyEncryptionScheme!>' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:15:9 'class EncryptedSharedPreferences : Any, SharedPreferences' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/androidMain/kotlin/com/aj/shared/storage/SecureStorage.android.kt:15:36 'enum class PrefValueEncryptionScheme : Enum<EncryptedSharedPreferences.PrefValueEncryptionScheme!>' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:4:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:32:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:21:26 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:24:16 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:87:18 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:100:26 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:101:24 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:50 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:68 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/ConnectivityObserver.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/SseClient.kt:29:36 'suspend fun ByteReadChannel.readUTF8Line(max: Int = ...): String?' is deprecated. Use readLineStrict or readLine instead. See deprecation notes for more details.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/CacheFileIO.kt:3:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/SecureStorage.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-
-> Task :core:processAndroidMainJavaRes
 > Task :core:mergeAndroidMainJavaResource
-> Task :core:syncAndroidMainLibJars
+> Task :core:syncAndroidMainLibJars FROM-CACHE
 > Task :core:bundleAndroidMainAar
 > Task :core:generateMetadataFileForAndroidPublication
 > Task :core:publishAndroidPublicationToMavenRepository
+> Task :core:metadataCommonMainProcessResources NO-SOURCE
 > Task :core:metadataNativeMainProcessResources NO-SOURCE
 > Task :core:metadataAppleMainProcessResources NO-SOURCE
 > Task :core:metadataIosMainProcessResources NO-SOURCE
@@ -132,25 +86,21 @@ w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/s
 > Task :core:prepareComposeResourcesTaskForJvmMain NO-SOURCE
 > Task :core:generateResourceAccessorsForJvmMain SKIPPED
 > Task :core:generateActualResourceCollectorsForJvmMain SKIPPED
-
-> Task :core:downloadKotlinNativeDistribution
-Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos-aarch64-2.3.21 is not empty. Native bundle files will be overwritten.
-
-> Task :core:transformNativeMainDependenciesMetadata
-> Task :core:transformAppleMainDependenciesMetadata
-> Task :core:transformIosMainDependenciesMetadata
+> Task :core:compileKotlinJvm FROM-CACHE
+> Task :core:compileJvmMainJava NO-SOURCE
 > Task :core:assembleJvmMainResources
 > Task :core:jvmProcessResources
 > Task :core:processJvmMainResources SKIPPED
+> Task :core:jvmMainClasses
+> Task :core:jvmJar
 > Task :core:jvmSourcesJar
+> Task :core:generateMetadataFileForJvmPublication
 > Task :core:generatePomFileForJvmPublication
+> Task :core:publishJvmPublicationToMavenRepository
 > Task :core:generateProjectStructureMetadata
-> Task :core:allMetadataJar
 > Task :core:buildKotlinToolingMetadata
 > Task :core:sourcesJar
-> Task :core:generateMetadataFileForKotlinMultiplatformPublication
 > Task :core:generatePomFileForKotlinMultiplatformPublication
-> Task :core:publishKotlinMultiplatformPublicationToMavenRepository
 > Task :platform:convertXmlValueResourcesForAndroidMain NO-SOURCE
 > Task :platform:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
 > Task :platform:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
@@ -165,172 +115,46 @@ Kotlin/Native bundle directory /Users/runner/.konan/kotlin-native-prebuilt-macos
 > Task :platform:androidSourcesJar
 > Task :platform:androidPreBuild UP-TO-DATE
 > Task :platform:preAndroidMainBuild UP-TO-DATE
+> Task :core:transformCommonMainDependenciesMetadata
+> Task :core:compileCommonMainKotlinMetadata FROM-CACHE
+> Task :core:metadataCommonMainClasses UP-TO-DATE
 > Task :platform:checkAndroidMainAarMetadata
+> Task :core:allMetadataJar
+> Task :core:generateMetadataFileForKotlinMultiplatformPublication
+> Task :core:publishKotlinMultiplatformPublicationToMavenRepository
 > Task :platform:mergeAndroidMainJniLibFolders
 > Task :platform:mergeAndroidMainNativeLibs NO-SOURCE
 > Task :platform:copyAndroidMainJniLibsProjectOnly
 > Task :core:bundleAndroidMainClassesToCompileJar
 > Task :platform:generateAndroidMainEmptyResourceFiles
 > Task :platform:copyAndroidMainComposeResourcesToAndroidAssets
-> Task :platform:packageAndroidMainResources
-> Task :platform:parseAndroidMainLocalResources
-> Task :platform:generateAndroidMainRFile
-> Task :platform:extractAndroidMainAnnotations
+> Task :platform:packageAndroidMainResources FROM-CACHE
+> Task :platform:parseAndroidMainLocalResources FROM-CACHE
+> Task :platform:generateAndroidMainRFile FROM-CACHE
+> Task :platform:extractAndroidMainAnnotations FROM-CACHE
 > Task :platform:generateAndroidMainAssets UP-TO-DATE
 > Task :platform:mergeAndroidMainAssets
 > Task :platform:prepareAndroidMainArtProfile
 > Task :platform:prepareLintJarForPublish
-> Task :platform:processAndroidMainManifest
+> Task :platform:processAndroidMainManifest FROM-CACHE
 > Task :platform:kmpPartiallyResolvedDependenciesChecker
 > Task :platform:checkKotlinGradlePluginConfigurationErrors SKIPPED
-
-> Task :core:compileKotlinJvm
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:4:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:32:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:21:26 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:24:16 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:87:18 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:100:26 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:101:24 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:50 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:68 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/ConnectivityObserver.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/SseClient.kt:29:36 'suspend fun ByteReadChannel.readUTF8Line(max: Int = ...): String?' is deprecated. Use readLineStrict or readLine instead. See deprecation notes for more details.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/CacheFileIO.kt:3:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/SecureStorage.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/jvmMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:7:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/jvmMain/kotlin/com/aj/shared/network/ConnectivityObserver.jvm.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/jvmMain/kotlin/com/aj/shared/storage/CacheFileIO.jvm.kt:5:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/jvmMain/kotlin/com/aj/shared/storage/SecureStorage.jvm.kt:13:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-
-> Task :core:compileJvmMainJava NO-SOURCE
-> Task :core:jvmMainClasses
-> Task :core:jvmJar
-> Task :core:generateMetadataFileForJvmPublication
-> Task :core:publishJvmPublicationToMavenRepository
+> Task :platform:compileAndroidMain FROM-CACHE
+> Task :platform:processAndroidMainJavaRes
+> Task :platform:mergeAndroidMainJavaResource
+> Task :platform:syncAndroidMainLibJars FROM-CACHE
 > Task :platform:writeAndroidMainAarMetadata
+> Task :platform:bundleAndroidMainAar
+> Task :platform:generateMetadataFileForAndroidPublication
 > Task :core:exportTargetPublicationCoordinatesForAndroidApiElements
 > Task :core:exportTargetPublicationCoordinatesForAndroidRuntimeElements
 > Task :platform:generatePomFileForAndroidPublication
+> Task :platform:publishAndroidPublicationToMavenRepository
 > Task :core:exportCrossCompilationMetadataForIosArm64ApiElements
 > Task :platform:checkIosArm64MainComposeLibrariesCompatibility
-> Task :core:commonizeNativeDistribution
-
-> Task :platform:compileAndroidMain
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.android.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.android.kt:10:67 'static fun obtain(): AccessibilityEvent!' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.android.kt:11:71 'static field TYPE_ANNOUNCEMENT: Int' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/AppleAuth.android.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleAuth.android.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleAuth.android.kt:37:62 'class GoogleSignInOptions : AbstractSafeParcelable, Api.ApiOptions.Optional, ReflectedParcelable' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleAuth.android.kt:38:65 'class GoogleSignIn : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:11:8 'class GoogleSignIn : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:12:8 'class GoogleSignInOptions : AbstractSafeParcelable, Api.ApiOptions.Optional, ReflectedParcelable' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:37:24 'class GoogleSignIn : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:86:54 'static fun getToken(p0: Context, p1: String, p2: String): String' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:87:36 Unnecessary safe call on a non-null receiver of type 'String'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:89:43 Unnecessary safe call on a non-null receiver of type 'String'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:107:54 'static fun getToken(p0: Context, p1: String, p2: String): String' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:108:36 Unnecessary safe call on a non-null receiver of type 'String'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:108:79 Unnecessary safe call on a non-null receiver of type 'String'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:110:69 Unnecessary safe call on a non-null receiver of type 'String'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:114:25 Condition is always 'true'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:167:26 'class GoogleSignInOptions : AbstractSafeParcelable, Api.ApiOptions.Optional, ReflectedParcelable' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:167:54 'class GoogleSignInOptions : AbstractSafeParcelable, Api.ApiOptions.Optional, ReflectedParcelable' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/GoogleSignInActivity.kt:175:22 'class GoogleSignIn : Any' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/OtpAutoReader.android.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/auth/OtpAutoReader.android.kt:10:1 Annotation `@HostRequired(reason = "Default OtpAutoReader is unavailable until SMS Retriever adapter is installed.", wireVia = <null>)` is missing on actual declaration.
-All annotations from expect `com.aj.shared.auth.OtpAutoReader` must be present with the same arguments on actual `com.aj.shared.auth.OtpAutoReader`, otherwise they might behave incorrectly.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/haptic/HapticManager.android.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/location/LocationManager.android.kt:17:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/location/LocationManager.android.kt:45:29 'fun requestSingleUpdate(p0: String, p1: LocationListener, p2: Looper?): Unit' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/location/LocationManager.android.kt:51:34 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/location/LocationManager.android.kt:77:26 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.android.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/notification/PushTokenManager.android.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/notification/PushTokenManager.android.kt:9:1 Annotation `@HostRequired(reason = "Default PushTokenManager returns null until FCM or APNs is integrated in the host.", wireVia = <null>)` is missing on actual declaration.
-All annotations from expect `com.aj.shared.notification.PushTokenManager` must be present with the same arguments on actual `com.aj.shared.notification.PushTokenManager`, otherwise they might behave incorrectly.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/permission/PermissionManager.android.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.android.kt:13:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/platform/ClipboardManager.android.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/platform/DeviceInfo.android.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/platform/QrGenerator.android.kt:25:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/platform/QrScanner.android.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/platform/QrScanner.android.kt:11:1 Annotation `@HostRequired(reason = "Default QrScanner is a stub until CameraX, ZXing, or AVFoundation adapter is installed.", wireVia = <null>)` is missing on actual declaration.
-All annotations from expect `com.aj.shared.platform.QrScanner` must be present with the same arguments on actual `com.aj.shared.platform.QrScanner`, otherwise they might behave incorrectly.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/plugin/adapters/SmsRetrieverOtpAutoRead.kt:49:37 'fun get(p0: String!): Any?' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/security/BiometricAuth.android.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/share/ShareManager.android.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/update/UpdateChecker.android.kt:27:21 'fun startUpdateFlowForResult(p0: AppUpdateInfo, p1: Int, p2: Activity, p3: Int): Boolean' is deprecated. Deprecated in Java.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/androidMain/kotlin/com/aj/shared/upload/FileCompressor.android.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/AppleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/GoogleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/OtpAutoReader.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/haptic/HapticManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/location/LocationManager.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.kt:12:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/PushTokenManager.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/permission/PermissionManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/ClipboardManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/DeviceInfo.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrGenerator.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrScanner.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/AppLockManager.kt:66:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:30:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:38:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/share/ShareManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/upload/FileCompressor.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-
-> Task :platform:processAndroidMainJavaRes
-
-> Task :platform:downloadKotlinNativeDistribution
-Downloading native dependencies (LLVM, sysroot etc). This is a one-time action performed only on the first run of the compiler.
-Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/19-aarch64-macos/llvm-19-aarch64-macos-essentials-81.tar.gz to /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz
-
-> Task :platform:mergeAndroidMainJavaResource
-> Task :platform:syncAndroidMainLibJars
-> Task :platform:bundleAndroidMainAar
-> Task :platform:generateMetadataFileForAndroidPublication
-> Task :platform:publishAndroidPublicationToMavenRepository
+> Task :core:transformNativeMainDependenciesMetadata
+> Task :core:transformAppleMainDependenciesMetadata
+> Task :core:transformIosMainDependenciesMetadata
 > Task :platform:convertXmlValueResourcesForAppleMain NO-SOURCE
 > Task :platform:copyNonXmlValueResourcesForAppleMain NO-SOURCE
 > Task :platform:prepareComposeResourcesTaskForAppleMain NO-SOURCE
@@ -350,8 +174,14 @@ Downloading dependency https://download.jetbrains.com/kotlin/native/resources/ll
 > Task :platform:generateActualResourceCollectorsForIosArm64Main
 
 > Task :platform:downloadKotlinNativeDistribution
+Downloading native dependencies (LLVM, sysroot etc). This is a one-time action performed only on the first run of the compiler.
+Downloading dependency https://download.jetbrains.com/kotlin/native/resources/llvm/19-aarch64-macos/llvm-19-aarch64-macos-essentials-81.tar.gz to /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz
 Done.
 Extracting dependency: /Users/runner/.konan/dependencies/cache/llvm-19-aarch64-macos-essentials-81.tar.gz into /Users/runner/.konan/dependencies
+
+> Task :core:commonizeNativeDistribution
+
+> Task :platform:downloadKotlinNativeDistribution
 Downloading dependency https://download.jetbrains.com/kotlin/native/libffi-3.3-1-macos-arm64.tar.gz to /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz
 Done.
 Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.3-1-macos-arm64.tar.gz into /Users/runner/.konan/dependencies
@@ -359,9 +189,9 @@ Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.3-1-maco
 > Task :platform:commonizeNativeDistribution
 > Task :core:compileNativeMainKotlinMetadata NO-SOURCE
 > Task :core:metadataNativeMainClasses UP-TO-DATE
-> Task :platform:metadataCommonMainProcessResources NO-SOURCE
 > Task :core:compileAppleMainKotlinMetadata NO-SOURCE
 > Task :core:metadataAppleMainClasses UP-TO-DATE
+> Task :platform:metadataCommonMainProcessResources NO-SOURCE
 > Task :platform:metadataNativeMainProcessResources NO-SOURCE
 > Task :platform:metadataAppleMainProcessResources NO-SOURCE
 > Task :platform:metadataIosMainProcessResources NO-SOURCE
@@ -390,87 +220,7 @@ Extracting dependency: /Users/runner/.konan/dependencies/cache/libffi-3.3-1-maco
 > Task :platform:prepareComposeResourcesTaskForJvmMain NO-SOURCE
 > Task :platform:generateResourceAccessorsForJvmMain NO-SOURCE
 > Task :platform:generateActualResourceCollectorsForJvmMain
-
-> Task :platform:compileKotlinJvm
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/AppleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/GoogleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/OtpAutoReader.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/haptic/HapticManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/location/LocationManager.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.kt:12:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/PushTokenManager.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/permission/PermissionManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/ClipboardManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/DeviceInfo.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrGenerator.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrScanner.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/AppLockManager.kt:66:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:30:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:38:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/share/ShareManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/upload/FileCompressor.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.jvm.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/auth/AppleAuth.jvm.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/auth/GoogleAuth.jvm.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/auth/OtpAutoReader.jvm.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/auth/OtpAutoReader.jvm.kt:9:1 Annotation `@HostRequired(reason = "Default OtpAutoReader is unavailable until SMS Retriever adapter is installed.", wireVia = <null>)` is missing on actual declaration.
-All annotations from expect `com.aj.shared.auth.OtpAutoReader` must be present with the same arguments on actual `com.aj.shared.auth.OtpAutoReader`, otherwise they might behave incorrectly.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/haptic/HapticManager.jvm.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/location/LocationManager.jvm.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.jvm.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/notification/PushTokenManager.jvm.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/notification/PushTokenManager.jvm.kt:9:1 Annotation `@HostRequired(reason = "Default PushTokenManager returns null until FCM or APNs is integrated in the host.", wireVia = <null>)` is missing on actual declaration.
-All annotations from expect `com.aj.shared.notification.PushTokenManager` must be present with the same arguments on actual `com.aj.shared.notification.PushTokenManager`, otherwise they might behave incorrectly.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/permission/PermissionManager.jvm.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.jvm.kt:22:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/platform/ClipboardManager.jvm.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/platform/DeviceInfo.jvm.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/platform/QrGenerator.jvm.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/platform/QrScanner.jvm.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/platform/QrScanner.jvm.kt:11:1 Annotation `@HostRequired(reason = "Default QrScanner is a stub until CameraX, ZXing, or AVFoundation adapter is installed.", wireVia = <null>)` is missing on actual declaration.
-All annotations from expect `com.aj.shared.platform.QrScanner` must be present with the same arguments on actual `com.aj.shared.platform.QrScanner`, otherwise they might behave incorrectly.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/security/BiometricAuth.jvm.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/share/ShareManager.jvm.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/shared/upload/FileCompressor.jvm.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-
+> Task :platform:compileKotlinJvm FROM-CACHE
 > Task :platform:compileJvmMainJava NO-SOURCE
 > Task :platform:assembleJvmMainResources
 > Task :platform:jvmProcessResources
@@ -509,7 +259,11 @@ w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/
 > Task :shared:mergeAndroidMainJniLibFolders
 > Task :shared:mergeAndroidMainNativeLibs NO-SOURCE
 > Task :shared:copyAndroidMainJniLibsProjectOnly
+> Task :core:compileIosMainKotlinMetadata FROM-CACHE
+> Task :core:metadataIosMainClasses UP-TO-DATE
+> Task :core:iosArm64MetadataElements
 > Task :platform:bundleAndroidMainClassesToCompileJar
+> Task :core:exportCommonSourceSetsMetadataLocationsForMetadataApiElements
 > Task :ui:kmpPartiallyResolvedDependenciesChecker
 > Task :ui:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :ui:convertXmlValueResourcesForAndroidMain NO-SOURCE
@@ -517,130 +271,37 @@ w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/jvmMain/kotlin/com/aj/
 > Task :ui:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
 > Task :ui:generateResourceAccessorsForAndroidMain NO-SOURCE
 > Task :ui:convertXmlValueResourcesForCommonMain NO-SOURCE
+> Task :core:iosSimulatorArm64MetadataElements
 > Task :ui:copyNonXmlValueResourcesForCommonMain
 > Task :ui:prepareComposeResourcesTaskForCommonMain
 > Task :ui:generateResourceAccessorsForCommonMain
 > Task :ui:generateActualResourceCollectorsForAndroidMain
 > Task :ui:generateComposeResClass
 > Task :ui:generateExpectResourceCollectorsForCommonMain
-
-> Task :core:compileIosMainKotlinMetadata
-w: KLIB resolver: The same 'unique_name=annotation_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.annotation-annotation-1.9.1-commonMain-WmoUwA.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/nativeMain/org.jetbrains.compose.annotation-internal-annotation-1.10.0-commonMain-jG1XTg.klib
-w: KLIB resolver: The same 'unique_name=collection_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.collection-collection-1.5.0-commonMain-j7f1lg.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/nativeMain/org.jetbrains.compose.collection-internal-collection-1.10.0-commonMain-PdmhIQ.klib
-w: KLIB resolver: The same 'unique_name=lifecycle-common_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.lifecycle-lifecycle-common-2.11.0-beta01-commonMain-5YDLUQ.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.lifecycle-lifecycle-common-2.11.0-beta01-commonMain-EI9wYA.klib
-w: KLIB resolver: The same 'unique_name=lifecycle-runtime-compose_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.lifecycle-lifecycle-runtime-compose-2.11.0-beta01-commonMain-eU6EPg.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.lifecycle-lifecycle-runtime-compose-2.11.0-beta01-commonMain-yp-0Dw.klib
-w: KLIB resolver: The same 'unique_name=lifecycle-runtime_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.lifecycle-lifecycle-runtime-2.11.0-beta01-commonMain-u4l1lg.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.lifecycle-lifecycle-runtime-2.11.0-beta01-commonMain-k-vysA.klib
-w: KLIB resolver: The same 'unique_name=lifecycle-viewmodel-savedstate_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.lifecycle-lifecycle-viewmodel-savedstate-2.11.0-beta01-commonMain-CbWqTw.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-savedstate-2.11.0-beta01-commonMain-ojkRhA.klib
-w: KLIB resolver: The same 'unique_name=lifecycle-viewmodel_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.lifecycle-lifecycle-viewmodel-2.11.0-beta01-commonMain-Qjv5zA.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-2.11.0-beta01-commonMain-3e0Sww.klib
-w: KLIB resolver: The same 'unique_name=runtime-saveable_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.compose.runtime-runtime-saveable-1.11.2-commonMain-z_Dmcw.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.compose.runtime-runtime-saveable-1.11.1-commonMain-SLfCsg.klib
-w: KLIB resolver: The same 'unique_name=runtime_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.compose.runtime-runtime-1.11.2-commonMain-wNX9OQ.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/app.cash.sqldelight-runtime-2.0.2-commonMain-asQ-DQ.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.compose.runtime-runtime-1.11.1-commonMain-XrlUVg.klib
-w: KLIB resolver: The same 'unique_name=savedstate-compose_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.savedstate-savedstate-compose-1.4.0-commonMain-YfHBdg.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.savedstate-savedstate-compose-1.3.6-commonMain-Fw7d1w.klib
-w: KLIB resolver: The same 'unique_name=savedstate_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/androidx.savedstate-savedstate-1.4.0-commonMain-JkDvJw.klib, /Users/runner/work/eazyCmp/eazyCmp/core/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.savedstate-savedstate-1.3.6-commonMain-Gx5ULw.klib
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/api/ProvideHttpClient.ios.kt:41:62 Elvis operator (?:) always returns the left operand of non-nullable type 'NSUserDefaults'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/network/ConnectivityObserver.ios.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:23:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:29:84 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:64:70 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:72:70 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/SecureStorage.ios.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/SecureStorage.ios.kt:7:38 This declaration needs opt-in. Its usage should be marked with '@com.russhwolf.settings.ExperimentalSettingsImplementation' or '@OptIn(com.russhwolf.settings.ExperimentalSettingsImplementation::class)'
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/util/IosViewController.kt:9:41 No cast needed.
-
-> Task :core:metadataIosMainClasses
-> Task :core:iosArm64MetadataElements
-> Task :core:iosSimulatorArm64MetadataElements
-> Task :core:exportCommonSourceSetsMetadataLocationsForMetadataApiElements
-> Task :platform:transformCommonMainDependenciesMetadata
-
-> Task :platform:compileCommonMainKotlinMetadata
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/AppleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/GoogleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/OtpAutoReader.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/haptic/HapticManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/location/LocationManager.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.kt:12:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/PushTokenManager.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/permission/PermissionManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/ClipboardManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/DeviceInfo.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrGenerator.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrScanner.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/AppLockManager.kt:66:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:30:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:38:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:64 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:84 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:24 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:44 Redundant call of conversion method.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/share/ShareManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/upload/FileCompressor.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-
-> Task :platform:metadataCommonMainClasses
-> Task :platform:transformNativeMainDependenciesMetadata
-> Task :platform:compileNativeMainKotlinMetadata NO-SOURCE
-> Task :platform:metadataNativeMainClasses UP-TO-DATE
-> Task :platform:transformAppleMainDependenciesMetadata
-> Task :platform:compileAppleMainKotlinMetadata NO-SOURCE
-> Task :platform:metadataAppleMainClasses UP-TO-DATE
-> Task :platform:transformIosMainDependenciesMetadata
-
-> Task :ui:compileAndroidMain
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/androidMain/kotlin/com/aj/shared/ui/ImageCacheDirectory.android.kt:7:34 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/CustomDatePicker.kt:187:49 'val Icons.Filled.KeyboardArrowLeft: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.KeyboardArrowLeft.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/CustomDatePicker.kt:211:49 'val Icons.Filled.KeyboardArrowRight: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.KeyboardArrowRight.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/kit/SwipeToDelete.kt:30:17 'fun rememberSwipeToDismissBoxState(initialValue: SwipeToDismissBoxValue = ..., confirmValueChange: (SwipeToDismissBoxValue) -> Boolean = ..., positionalThreshold: (Float) -> Float = ...): SwipeToDismissBoxState' is deprecated. confirmValueChange is deprecated without replacement. Rather than relying on a callback to veto state changes, the anchor set should not include disallowed anchors. See androidx.compose.foundation.samples.AnchoredDraggableDynamicAnchorsSample for an example of using dynamic anchors over confirmValueChange.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/kit/TooltipPopover.kt:36:44 'fun rememberPlainTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API.
-
-> Task :platform:allMetadataJar
-> Task :platform:generateMetadataFileForKotlinMultiplatformPublication
-> Task :platform:publishKotlinMultiplatformPublicationToMavenRepository
+> Task :ui:compileAndroidMain FROM-CACHE
 > Task :ui:bundleAndroidMainClassesToCompileJar
-> Task :shared:extractAndroidMainAnnotations
+> Task :core:compileKotlinIosArm64
+> Task :core:compileKotlinIosSimulatorArm64
+> Task :core:compileKotlinIosSimulatorArm64 FROM-CACHE
+> Task :core:compileKotlinIosArm64 FROM-CACHE
+> Task :shared:extractAndroidMainAnnotations FROM-CACHE
+> Task :core:iosSimulatorArm64Klib
+> Task :core:iosArm64Klib
+> Task :core:generateMetadataFileForIosSimulatorArm64Publication
+> Task :core:generateMetadataFileForIosArm64Publication
+> Task :core:publishIosSimulatorArm64PublicationToMavenRepository
+> Task :core:publishIosArm64PublicationToMavenRepository
+> Task :core:publishAllPublicationsToMavenRepository
 > Task :shared:generateAndroidMainEmptyResourceFiles
 > Task :shared:prepareAndroidMainArtProfile
 > Task :shared:prepareLintJarForPublish
-> Task :shared:processAndroidMainManifest
+> Task :shared:processAndroidMainManifest FROM-CACHE
 > Task :shared:kmpPartiallyResolvedDependenciesChecker
 > Task :shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :shared:compileAndroidMain
+> Task :shared:compileAndroidMain FROM-CACHE
 > Task :shared:processAndroidMainJavaRes
 > Task :shared:mergeAndroidMainJavaResource
-> Task :shared:syncAndroidMainLibJars
+> Task :shared:syncAndroidMainLibJars FROM-CACHE
 > Task :shared:writeAndroidMainAarMetadata
 > Task :shared:bundleAndroidMainAar
 > Task :shared:generateMetadataFileForAndroidPublication
@@ -844,8 +505,25 @@ Please align Skiko dependencies to the same version. If possible, avoid direct S
 > Task :ui:prepareComposeResourcesTaskForJvmMain NO-SOURCE
 > Task :ui:generateResourceAccessorsForJvmMain NO-SOURCE
 > Task :ui:generateActualResourceCollectorsForJvmMain
+> Task :ui:compileKotlinJvm FROM-CACHE
+> Task :ui:compileJvmMainJava NO-SOURCE
+> Task :ui:assembleJvmMainResources
+> Task :ui:jvmProcessResources
+> Task :ui:processJvmMainResources SKIPPED
+> Task :ui:jvmMainClasses
+> Task :ui:jvmJar
+> Task :platform:transformCommonMainDependenciesMetadata
+> Task :platform:compileCommonMainKotlinMetadata FROM-CACHE
+> Task :platform:metadataCommonMainClasses UP-TO-DATE
+> Task :platform:transformNativeMainDependenciesMetadata
+> Task :platform:compileNativeMainKotlinMetadata NO-SOURCE
+> Task :platform:metadataNativeMainClasses UP-TO-DATE
+> Task :platform:transformAppleMainDependenciesMetadata
+> Task :platform:compileAppleMainKotlinMetadata NO-SOURCE
+> Task :platform:metadataAppleMainClasses UP-TO-DATE
+> Task :platform:transformIosMainDependenciesMetadata
 
-> Task :platform:compileIosMainKotlinMetadata FAILED
+> Task :platform:compileIosMainKotlinMetadata
 w: KLIB resolver: The same 'unique_name=annotation_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/androidx.annotation-annotation-1.9.1-commonMain-WmoUwA.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/nativeMain/org.jetbrains.compose.annotation-internal-annotation-1.10.0-commonMain-jG1XTg.klib
 w: KLIB resolver: The same 'unique_name=collection_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/androidx.collection-collection-1.5.0-commonMain-j7f1lg.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/nativeMain/org.jetbrains.compose.collection-internal-collection-1.10.0-commonMain-PdmhIQ.klib
 w: KLIB resolver: The same 'unique_name=lifecycle-common_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/androidx.lifecycle-lifecycle-common-2.11.0-beta01-commonMain-5YDLUQ.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.lifecycle-lifecycle-common-2.11.0-beta01-commonMain-EI9wYA.klib
@@ -857,72 +535,221 @@ w: KLIB resolver: The same 'unique_name=runtime-saveable_commonMain' found in mo
 w: KLIB resolver: The same 'unique_name=runtime_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/androidx.compose.runtime-runtime-1.11.2-commonMain-wNX9OQ.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/app.cash.sqldelight-runtime-2.0.2-commonMain-asQ-DQ.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.compose.runtime-runtime-1.11.1-commonMain-XrlUVg.klib
 w: KLIB resolver: The same 'unique_name=savedstate-compose_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/androidx.savedstate-savedstate-compose-1.4.0-commonMain-YfHBdg.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.savedstate-savedstate-compose-1.3.6-commonMain-Fw7d1w.klib
 w: KLIB resolver: The same 'unique_name=savedstate_commonMain' found in more than one library: /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/androidx.savedstate-savedstate-1.4.0-commonMain-JkDvJw.klib, /Users/runner/work/eazyCmp/eazyCmp/platform/build/kotlinTransformedMetadataLibraries/commonMain/org.jetbrains.androidx.savedstate-savedstate-1.3.6-commonMain-Gx5ULw.klib
-e: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/plugin/adapters/ApnsPushTokenService.kt:36:41 Unresolved reference 'registerForRemoteNotifications'.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.ios.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/AppleAuth.ios.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/GoogleAuth.ios.kt:33:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/GoogleAuth.ios.kt:233:37 This cast can never succeed.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/OtpAutoReader.ios.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/haptic/HapticManager.ios.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/location/LocationManager.ios.kt:18:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.ios.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/PushTokenManager.ios.kt:7:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/permission/PermissionManager.ios.kt:34:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.ios.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.ios.kt:71:43 No cast needed.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/ClipboardManager.ios.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/DeviceInfo.ios.kt:17:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrGenerator.ios.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrScanner.ios.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/security/BiometricAuth.ios.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/share/ShareManager.ios.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/upload/FileCompressor.ios.kt:25:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
 
-> Task :core:compileKotlinIosArm64
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:4:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:32:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:21:26 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:24:16 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:87:18 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:100:26 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:101:24 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:50 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:68 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/ConnectivityObserver.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/SseClient.kt:29:36 'suspend fun ByteReadChannel.readUTF8Line(max: Int = ...): String?' is deprecated. Use readLineStrict or readLine instead. See deprecation notes for more details.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/CacheFileIO.kt:3:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/SecureStorage.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/api/ProvideHttpClient.ios.kt:41:62 Elvis operator (?:) always returns the left operand of non-nullable type 'NSUserDefaults'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/network/ConnectivityObserver.ios.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:23:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:29:84 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:64:70 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:72:70 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/SecureStorage.ios.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/SecureStorage.ios.kt:7:38 This declaration needs opt-in. Its usage should be marked with '@com.russhwolf.settings.ExperimentalSettingsImplementation' or '@OptIn(com.russhwolf.settings.ExperimentalSettingsImplementation::class)'
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/util/IosViewController.kt:9:41 No cast needed.
+> Task :platform:metadataIosMainClasses
+> Task :platform:iosArm64MetadataElements
+> Task :platform:iosSimulatorArm64MetadataElements
+> Task :platform:allMetadataJar
+> Task :platform:generateMetadataFileForKotlinMultiplatformPublication
+> Task :platform:publishKotlinMultiplatformPublicationToMavenRepository
+> Task :platform:exportCommonSourceSetsMetadataLocationsForMetadataApiElements
+> Task :shared:compileKotlinJvm
+> Task :shared:compileJvmMainJava NO-SOURCE
+> Task :shared:assembleJvmMainResources
+> Task :shared:jvmProcessResources
+> Task :shared:processJvmMainResources SKIPPED
+> Task :shared:jvmMainClasses
+> Task :shared:jvmJar
+> Task :shared:jvmSourcesJar
+> Task :shared:generateMetadataFileForJvmPublication
+> Task :platform:exportTargetPublicationCoordinatesForJvmApiElements
+> Task :platform:exportTargetPublicationCoordinatesForJvmRuntimeElements
+> Task :ui:exportTargetPublicationCoordinatesForJvmApiElements
+> Task :ui:exportTargetPublicationCoordinatesForJvmRuntimeElements
+> Task :shared:generatePomFileForJvmPublication
+> Task :shared:publishJvmPublicationToMavenRepository FAILED
+> Task :ui:transformCommonMainDependenciesMetadata
+> Task :platform:compileKotlinIosArm64
+> Task :platform:compileKotlinIosSimulatorArm64
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/AppleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/GoogleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/OtpAutoReader.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/haptic/HapticManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/location/LocationManager.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.kt:12:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/PushTokenManager.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/permission/PermissionManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/ClipboardManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/DeviceInfo.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrGenerator.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrScanner.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/AppLockManager.kt:66:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:30:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:38:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/share/ShareManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/upload/FileCompressor.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.ios.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/AppleAuth.ios.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/GoogleAuth.ios.kt:33:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/GoogleAuth.ios.kt:233:37 This cast can never succeed.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/OtpAutoReader.ios.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/OtpAutoReader.ios.kt:9:1 Annotation `@HostRequired(reason = "Default OtpAutoReader is unavailable until SMS Retriever adapter is installed.", wireVia = <null>)` is missing on actual declaration.
+All annotations from expect `com.aj.shared.auth.OtpAutoReader` must be present with the same arguments on actual `com.aj.shared.auth.OtpAutoReader`, otherwise they might behave incorrectly.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/haptic/HapticManager.ios.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/location/LocationManager.ios.kt:18:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.ios.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/PushTokenManager.ios.kt:7:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/PushTokenManager.ios.kt:7:1 Annotation `@HostRequired(reason = "Default PushTokenManager returns null until FCM or APNs is integrated in the host.", wireVia = <null>)` is missing on actual declaration.
+All annotations from expect `com.aj.shared.notification.PushTokenManager` must be present with the same arguments on actual `com.aj.shared.notification.PushTokenManager`, otherwise they might behave incorrectly.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/permission/PermissionManager.ios.kt:34:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.ios.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.ios.kt:71:43 No cast needed.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/ClipboardManager.ios.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/DeviceInfo.ios.kt:17:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrGenerator.ios.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrScanner.ios.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrScanner.ios.kt:9:1 Annotation `@HostRequired(reason = "Default QrScanner is a stub until CameraX, ZXing, or AVFoundation adapter is installed.", wireVia = <null>)` is missing on actual declaration.
+All annotations from expect `com.aj.shared.platform.QrScanner` must be present with the same arguments on actual `com.aj.shared.platform.QrScanner`, otherwise they might behave incorrectly.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/security/BiometricAuth.ios.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/share/ShareManager.ios.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/upload/FileCompressor.ios.kt:25:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
 
-> Task :core:compileKotlinIosSimulatorArm64
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:4:8 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateExtensionFuncitons.kt:32:23 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:21:26 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:24:16 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:87:18 'typealias Instant = Instant' is deprecated. This type is deprecated in favor of `kotlin.time.Instant`.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:100:26 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:101:24 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:50 'val monthNumber: Int' is deprecated. Use the 'month' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/extension/DateFormatCmp.kt:217:68 'val dayOfMonth: Int' is deprecated. Use the 'day' property instead.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/ConnectivityObserver.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/network/SseClient.kt:29:36 'suspend fun ByteReadChannel.readUTF8Line(max: Int = ...): String?' is deprecated. Use readLineStrict or readLine instead. See deprecation notes for more details.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/CacheFileIO.kt:3:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/commonMain/kotlin/com/aj/shared/storage/SecureStorage.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/api/ProvideHttpClient.ios.kt:41:62 Elvis operator (?:) always returns the left operand of non-nullable type 'NSUserDefaults'.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/db/DatabaseDriverFactory.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/network/ConnectivityObserver.ios.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:23:10 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:29:84 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:64:70 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/CacheFileIO.ios.kt:72:70 No cast needed.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/SecureStorage.ios.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/storage/SecureStorage.ios.kt:7:38 This declaration needs opt-in. Its usage should be marked with '@com.russhwolf.settings.ExperimentalSettingsImplementation' or '@OptIn(com.russhwolf.settings.ExperimentalSettingsImplementation::class)'
-w: file:///Users/runner/work/eazyCmp/eazyCmp/core/src/iosMain/kotlin/com/aj/shared/util/IosViewController.kt:9:41 No cast needed.
-
-> Task :ui:compileKotlinJvm
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/CustomDatePicker.kt:187:49 'val Icons.Filled.KeyboardArrowLeft: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.KeyboardArrowLeft.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/CustomDatePicker.kt:211:49 'val Icons.Filled.KeyboardArrowRight: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.KeyboardArrowRight.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/kit/SwipeToDelete.kt:30:17 'fun rememberSwipeToDismissBoxState(initialValue: SwipeToDismissBoxValue = ..., confirmValueChange: (SwipeToDismissBoxValue) -> Boolean = ..., positionalThreshold: (Float) -> Float = ...): SwipeToDismissBoxState' is deprecated. confirmValueChange is deprecated without replacement. Rather than relying on a callback to veto state changes, the anchor set should not include disallowed anchors. See androidx.compose.foundation.samples.AnchoredDraggableDynamicAnchorsSample for an example of using dynamic anchors over confirmValueChange.
-w: file:///Users/runner/work/eazyCmp/eazyCmp/ui/src/commonMain/kotlin/com/aj/shared/ui/kit/TooltipPopover.kt:36:44 'fun rememberPlainTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API.
-gradle/actions: Writing build results to /Users/runner/work/_temp/.gradle-actions/build-results/__run-1794296193100.json
+> Task :platform:compileKotlinIosArm64
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/AppleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/GoogleAuth.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/auth/OtpAutoReader.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/haptic/HapticManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/location/LocationManager.kt:10:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.kt:12:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/notification/PushTokenManager.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/permission/PermissionManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/ClipboardManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/DeviceInfo.kt:11:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrGenerator.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/platform/QrScanner.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/AppLockManager.kt:66:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:23:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:24:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:27:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:28:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:29:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:30:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:31:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:32:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:34:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:35:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:36:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:38:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:39:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:64 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:40:84 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:24 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/security/EazyCrypto.kt:41:44 Redundant call of conversion method.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/share/ShareManager.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/commonMain/kotlin/com/aj/shared/upload/FileCompressor.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/accessibility/AccessibilityAnnouncements.ios.kt:6:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/AppleAuth.ios.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/GoogleAuth.ios.kt:33:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/GoogleAuth.ios.kt:233:37 This cast can never succeed.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/OtpAutoReader.ios.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/auth/OtpAutoReader.ios.kt:9:1 Annotation `@HostRequired(reason = "Default OtpAutoReader is unavailable until SMS Retriever adapter is installed.", wireVia = <null>)` is missing on actual declaration.
+All annotations from expect `com.aj.shared.auth.OtpAutoReader` must be present with the same arguments on actual `com.aj.shared.auth.OtpAutoReader`, otherwise they might behave incorrectly.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/haptic/HapticManager.ios.kt:8:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/location/LocationManager.ios.kt:18:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/LocalNotificationScheduler.ios.kt:3:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/PushTokenManager.ios.kt:7:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/notification/PushTokenManager.ios.kt:7:1 Annotation `@HostRequired(reason = "Default PushTokenManager returns null until FCM or APNs is integrated in the host.", wireVia = <null>)` is missing on actual declaration.
+All annotations from expect `com.aj.shared.notification.PushTokenManager` must be present with the same arguments on actual `com.aj.shared.notification.PushTokenManager`, otherwise they might behave incorrectly.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/permission/PermissionManager.ios.kt:34:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.ios.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/picker/PlatformMediaPicker.ios.kt:71:43 No cast needed.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/ClipboardManager.ios.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/DeviceInfo.ios.kt:17:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrGenerator.ios.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrScanner.ios.kt:9:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/platform/QrScanner.ios.kt:9:1 Annotation `@HostRequired(reason = "Default QrScanner is a stub until CameraX, ZXing, or AVFoundation adapter is installed.", wireVia = <null>)` is missing on actual declaration.
+All annotations from expect `com.aj.shared.platform.QrScanner` must be present with the same arguments on actual `com.aj.shared.platform.QrScanner`, otherwise they might behave incorrectly.
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/security/BiometricAuth.ios.kt:14:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/share/ShareManager.ios.kt:16:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///Users/runner/work/eazyCmp/eazyCmp/platform/src/iosMain/kotlin/com/aj/shared/upload/FileCompressor.ios.kt:25:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+gradle/actions: Writing build results to /Users/runner/work/_temp/.gradle-actions/build-results/__run-1794299542726.json
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':platform:compileIosMainKotlinMetadata'.
-> Compilation finished with errors
+Execution failed for task ':shared:publishJvmPublicationToMavenRepository'.
+> Failed to publish publication 'jvm' to repository 'maven'
+   > org.codehaus.plexus.util.xml.pull.XmlPullParserException: unexpected character in markup < (position: END_TAG seen ...</versions>\n<<... @75:3) 
 
 * Try:
 > Run with --stacktrace option to get the stack trace.
@@ -930,6 +757,6 @@ Execution failed for task ':platform:compileIosMainKotlinMetadata'.
 > Run with --scan to generate a Build Scan (Powered by Develocity).
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 3m 25s
-206 actionable tasks: 206 executed
+BUILD FAILED in 2m 18s
+233 actionable tasks: 208 executed, 25 from cache
 Configuration cache entry stored.
