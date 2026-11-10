@@ -4,6 +4,7 @@ import com.aj.shared.plugin.PushTokenService
 import com.aj.shared.plugin.ServiceCapability
 import platform.Foundation.NSUserDefaults
 import platform.UIKit.UIApplication
+import platform.UIKit.registerForRemoteNotifications
 
 /**
  * iOS APNs token bridge.
