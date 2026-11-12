@@ -1,0 +1,302 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../shared/1.0.0.1-rc-061/shared-1.0.0.1-rc-061.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "shared",
+    "version": "1.0.0.1-rc-061",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "platform",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "ui",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared-iosSimulatorArm64Main-1.0.0.1-rc-061.klib",
+          "url": "shared-iossimulatorarm64-1.0.0.1-rc-061.klib",
+          "size": 37696,
+          "sha512": "cf96542c43e1ad5f00bb19fcaefc237ca6584d14fefcbf387c1afbcb3269fdacae58db1232e5d6992510b2504fdd75c8646496090a7b409954f846f2ca2ba590",
+          "sha256": "e57b3a8c73a45a30324802c959f56eaf9c8b28afd9f1c2e9be4f60ed6f972ee8",
+          "sha1": "f3244c12781d9b208d3e1f3bee70a1aea2424502",
+          "md5": "741a4a59fe2ff53fd29b037e1b15efee"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64SourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "files": [
+        {
+          "name": "shared-iossimulatorarm64-1.0.0.1-rc-061-sources.jar",
+          "url": "shared-iossimulatorarm64-1.0.0.1-rc-061-sources.jar",
+          "size": 5568,
+          "sha512": "cec19b90c21cb15cb42debf582c3fdd04593906c80463dfc49a20e81bf436e69a09d435edeff30aa5a7d70774402e40f78028614b98d9f7c86a7c147a39729a8",
+          "sha256": "fdf89fa28247e1b6f9c5384c2bf01d78d41ca9cb5cc5a7983cf5d0d7ef81b9c4",
+          "sha1": "520b825e8f92a8f9d39136b9ada18b58a19d970a",
+          "md5": "0dfd7f2de72f061cbc05f117409a11bc"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64ResourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.libraryelements": "kotlin-multiplatformresources",
+        "org.gradle.usage": "kotlin-multiplatformresources",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "platform",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "ui",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared-1.0.0.1-rc-061.kotlin_resources.zip",
+          "url": "shared-iossimulatorarm64-1.0.0.1-rc-061-kotlin_resources.kotlin_resources.zip",
+          "size": 350,
+          "sha512": "9e5c7b99dda20fb62f4c74bc3a7fd162cd6853845d2f42ee8250a9da409cd0c28a9aee455dfcbba2ebf4a55e3eea728aada46aee20eed5e745b424752ff9d7f3",
+          "sha256": "f88d75416ffe7124dfbc9cb0474dae3869916a0f04183e7cc1c05084816ba09d",
+          "sha1": "9baf21f4810ee6489606dd859d5758acd120650f",
+          "md5": "cd8d678f87c7ac7ac4fcea0fe7ae16c9"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "platform",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "ui",
+          "version": {
+            "requires": "1.0.0.1-rc-061"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared-iossimulatorarm64-1.0.0.1-rc-061-metadata.jar",
+          "url": "shared-iossimulatorarm64-1.0.0.1-rc-061-metadata.jar",
+          "size": 2353,
+          "sha512": "0d2c6f6f630950c49eec045fa86aa9a374863a21b48f2431c661fdc16d66e64ae99b795c1c6a148348a3203f189498c35f6c1ed9db4aa18082d7b265483846d4",
+          "sha256": "ab539272b9b152d16f3be7409104e08ebcd537030e6c5ba34f015418aa15dd77",
+          "sha1": "186df63f5960c91fe86080877c205c3141bcccb1",
+          "md5": "ad2379842503f64a9732ef03adafdac0"
+        }
+      ]
+    }
+  ]
+}

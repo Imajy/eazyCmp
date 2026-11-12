@@ -818,7 +818,7 @@
     <section id="install-guide" class="guide-section">
       <div class="guide-header">
         <div>
-          <span class="guide-badge">Quick Start &bull; v1.0.0.1-rc-060</span>
+          <span class="guide-badge">Quick Start &bull; v1.0.0.1-rc-061</span>
           <h2 class="guide-title">How to Install &amp; Use EazyCmp</h2>
           <p class="guide-subtitle">Add the repository, pick either the full <code>shared</code> bundle or light modules, initialize per platform, and call any feature from <code>EazyCmp</code>.</p>
         </div>
@@ -851,13 +851,13 @@
     sourceSets {
         commonMain.dependencies {
             // Option A — Full umbrella (core + platform + ui + plugin SPI)
-            implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-060&quot;)
+            implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-061&quot;)
 
             // Option B — Modular / light (pick only what you need)
-            // implementation(&quot;com.github.Imajy.eazyCmp:core:1.0.0.1-rc-060&quot;)
-            // implementation(&quot;com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-060&quot;)
-            // implementation(&quot;com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-060&quot;)
-            // implementation(&quot;com.github.Imajy.eazyCmp:web:1.0.0.1-rc-060&quot;)
+            // implementation(&quot;com.github.Imajy.eazyCmp:core:1.0.0.1-rc-061&quot;)
+            // implementation(&quot;com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-061&quot;)
+            // implementation(&quot;com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-061&quot;)
+            // implementation(&quot;com.github.Imajy.eazyCmp:web:1.0.0.1-rc-061&quot;)
         }
     }
 }</code></pre>
@@ -968,7 +968,7 @@ fun main() {
         <div id="tab-platform-web" class="tab-panel code-block-wrap">
           <button class="btn-copy btn-copy-abs" onclick="copyCode('code-init-web')" data-copy-id="code-init-web">Copy</button>
           <pre><code id="code-init-web">// build.gradle.kts -&gt; commonMain.dependencies:
-// implementation(&quot;com.github.Imajy.eazyCmp:web:1.0.0.1-rc-060&quot;)
+// implementation(&quot;com.github.Imajy.eazyCmp:web:1.0.0.1-rc-061&quot;)
 
 import com.aj.shared.web.WebEazyCmp
 import com.aj.shared.web.WebPickerType
@@ -1093,15 +1093,15 @@ EazyCmp.serviceCatalog().forEach { status -&gt;
             <span class="status-indicator success"></span> LIVE
           </span>
         </div>
-        <div class="card-value" style="font-family: var(--font-mono); font-size: 1.6rem;">1.0.0.1-rc-060</div>
-        <div class="card-subtext" id="latest-published-time">Published: 10 Nov 2026, 09:01 UTC</div>
+        <div class="card-value" style="font-family: var(--font-mono); font-size: 1.6rem;">1.0.0.1-rc-061</div>
+        <div class="card-subtext" id="latest-published-time">Published: 12 Nov 2026, 16:56 UTC</div>
       </div>
 
       <!-- Card 2: Release Statistics -->
       <div class="card card-stats">
         <div class="card-label">Update Frequency</div>
         <div class="card-value" id="update-frequency-val">Every 2.3 days</div>
-        <div class="card-subtext">Total cataloged releases: 66</div>
+        <div class="card-subtext">Total cataloged releases: 67</div>
       </div>
 
       <!-- Card 3: Usage & Downloads -->
@@ -1178,7 +1178,19 @@ EazyCmp.serviceCatalog().forEach { status -&gt;
         <tbody>
 
         <tr class="latest-row">
-          <td class="version-cell"><code>1.0.0.1-rc-060</code> <span class="badge badge-success">latest</span></td>
+          <td class="version-cell"><code>1.0.0.1-rc-061</code> <span class="badge badge-success">latest</span></td>
+          <td class="message">Fix crash/ANR risks: soft kill-switch, non-blocking JVM connectivity, parallel ApiDispatcher, off-main PDF/media/share I/O, init guards, request timeouts</td>
+          <td class="when">12 Nov 2026, 22:20 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/a5700a7e79416a81c8bb7bd69120ba5913c93273" title="a5700a7e79416a81c8bb7bd69120ba5913c93273" target="_blank" class="commit-link">a5700a7</a></span></td>
+          <td class="code-cell">
+            <div class="code-copy-container">
+              <code class="snippet-code" id="dep-1.0.0.1-rc-061">implementation(&quot;com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-061&quot;)</code>
+              <button class="btn-copy" onclick="copyCode('dep-1.0.0.1-rc-061')" data-copy-id="dep-1.0.0.1-rc-061">Copy</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="version-cell"><code>1.0.0.1-rc-060</code></td>
           <td class="message">Restore corrupted rc-059 maven-repo metadata and trigger rc-060 publish</td>
           <td class="when">10 Nov 2026, 14:16 UTC<br/><span class="muted"><a href="https://github.com/Imajy/eazyCmp/commit/27321c890f9c9fd7b4823dfff0fe30f9787a65a0" title="27321c890f9c9fd7b4823dfff0fe30f9787a65a0" target="_blank" class="commit-link">27321c8</a></span></td>
           <td class="code-cell">
