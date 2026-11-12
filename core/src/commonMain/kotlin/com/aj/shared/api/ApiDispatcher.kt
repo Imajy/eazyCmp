@@ -2,48 +2,35 @@ package com.aj.shared.api
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 object ApiDispatcher {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private val high = Channel<suspend () -> Unit>(Channel.UNLIMITED)
-    private val normal = Channel<suspend () -> Unit>(Channel.UNLIMITED)
-    private val low = Channel<suspend () -> Unit>(Channel.UNLIMITED)
 
-    init {
-        scope.launch {
-            for (action in high) {
-                try { action() } catch (e: Exception) { e.printStackTrace() }
-            }
-        }
-        scope.launch {
-            for (action in normal) {
-                try { action() } catch (e: Exception) { e.printStackTrace() }
-            }
-        }
-        scope.launch {
-            for (action in low) {
-                try { action() } catch (e: Exception) { e.printStackTrace() }
-            }
-        }
-    }
+    // Bounded parallelism per priority — avoids a single hung request stalling the whole lane.
+    private val high = Semaphore(4)
+    private val normal = Semaphore(6)
+    private val low = Semaphore(2)
 
     suspend fun dispatch(
         priority: ApiPriority,
         block: suspend () -> Unit
     ) {
-        val channel = when (priority) {
+        val semaphore = when (priority) {
             ApiPriority.HIGH -> high
             ApiPriority.NORMAL -> normal
             ApiPriority.LOW -> low
         }
         val done = CompletableDeferred<Unit>()
-        channel.send {
+        scope.launch {
             try {
-                block()
+                semaphore.withPermit {
+                    block()
+                }
                 done.complete(Unit)
             } catch (e: Exception) {
                 done.completeExceptionally(e)

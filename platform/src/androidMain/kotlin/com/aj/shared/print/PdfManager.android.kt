@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.pdf.PdfDocument
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
@@ -24,6 +26,12 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.createBitmap
 import java.io.File
 import java.io.FileOutputStream
+import java.util.concurrent.Executors
+
+private val pdfIoExecutor = Executors.newSingleThreadExecutor { r ->
+    Thread(r, "eazyCmp-pdf-io").apply { isDaemon = true }
+}
+private val mainHandler = Handler(Looper.getMainLooper())
 
 @Composable
 actual fun rememberPdfManager(): PdfManager {
@@ -61,7 +69,9 @@ class AndroidPdfManager(
             fileName = fileName,
             content = content,
             onComplete = { file ->
-                sharePdfFile(context, file)
+                if (file != null) {
+                    sharePdfFile(context, file)
+                }
                 onComplete()
             }
         )
@@ -82,13 +92,14 @@ class AndroidPdfManager(
             fileName = fileName,
             content = content,
             onComplete = { file ->
-                openPdfFile(context, file)
+                if (file != null) {
+                    openPdfFile(context, file)
+                }
                 onComplete()
             }
         )
     }
 }
-
 
 fun openPdfFile(context: Context, file: File) {
     val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
@@ -120,20 +131,21 @@ fun captureFullComposeView(
     compositionContext: CompositionContext,
     rootView: View,
     fileName: String,
-    onComplete: (File) -> Unit,
+    onComplete: (File?) -> Unit,
     content: @Composable () -> Unit
 ) {
+    val parent = rootView as? ViewGroup
+    if (parent == null) {
+        onComplete(null)
+        return
+    }
 
     val composeView = ComposeView(context).apply {
-
         setParentCompositionContext(compositionContext)
-
         layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-
-        // 🔥 यहीं UI render होगा
         setContent {
             Column(
                 modifier = Modifier
@@ -141,64 +153,66 @@ fun captureFullComposeView(
                     .background(Color(0xFFF5F7FA))
                     .padding(10.dp)
             ) {
-
                 content()
             }
         }
     }
 
-    val parent = rootView as ViewGroup
     parent.addView(composeView)
 
     composeView.post {
         try {
-
+            val maxHeight = (parent.height.coerceAtLeast(1) * 4).coerceAtMost(8000)
             composeView.measure(
-                View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                View.MeasureSpec.makeMeasureSpec(parent.width.coerceAtLeast(1), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST)
             )
 
-            composeView.layout(
-                0,
-                0,
-                composeView.measuredWidth,
-                composeView.measuredHeight
-            )
+            val width = composeView.measuredWidth.coerceAtLeast(1)
+            val height = composeView.measuredHeight.coerceAtLeast(1).coerceAtMost(maxHeight)
 
-            val bitmap = createBitmap(composeView.measuredWidth, composeView.measuredHeight)
+            composeView.layout(0, 0, width, height)
 
+            val bitmap = createBitmap(width, height)
             val canvas = Canvas(bitmap)
             composeView.draw(canvas)
 
-            val pdfDocument = PdfDocument()
-            val pageInfo = PdfDocument.PageInfo.Builder(
-                bitmap.width,
-                bitmap.height,
-                1
-            ).create()
-
-            val page = pdfDocument.startPage(pageInfo)
-            page.canvas.drawBitmap(bitmap, 0f, 0f, null)
-            pdfDocument.finishPage(page)
-
-            val safeFileName = fileName.ifBlank { "document.pdf" }
-                .substringAfterLast('/')
-                .let { if (it.endsWith(".pdf", ignoreCase = true)) it else "$it.pdf" }
-            val file = File(
-                context.getExternalFilesDir(null),
-                safeFileName
-            )
-
-            pdfDocument.writeTo(FileOutputStream(file))
-            pdfDocument.close()
-
+            // Tear down Compose view on main, encode PDF off the UI thread.
             parent.removeView(composeView)
 
-            onComplete(file)
+            pdfIoExecutor.execute {
+                var outFile: File? = null
+                try {
+                    val pdfDocument = PdfDocument()
+                    val pageInfo = PdfDocument.PageInfo.Builder(width, height, 1).create()
+                    val page = pdfDocument.startPage(pageInfo)
+                    page.canvas.drawBitmap(bitmap, 0f, 0f, null)
+                    pdfDocument.finishPage(page)
 
+                    val safeFileName = fileName.ifBlank { "document.pdf" }
+                        .substringAfterLast('/')
+                        .let { if (it.endsWith(".pdf", ignoreCase = true)) it else "$it.pdf" }
+                    val file = File(context.getExternalFilesDir(null), safeFileName)
+                    FileOutputStream(file).use { pdfDocument.writeTo(it) }
+                    pdfDocument.close()
+                    bitmap.recycle()
+                    outFile = file
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    try {
+                        bitmap.recycle()
+                    } catch (_: Exception) {
+                    }
+                }
+                mainHandler.post { onComplete(outFile) }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
-            parent.removeView(composeView)
+            try {
+                parent.removeView(composeView)
+            } catch (_: Exception) {
+            }
+            onComplete(null)
         }
     }
 }

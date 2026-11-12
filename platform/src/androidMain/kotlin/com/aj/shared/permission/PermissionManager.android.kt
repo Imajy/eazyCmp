@@ -45,25 +45,31 @@ actual class PermissionManager actual constructor() {
         this.callback = { runtimeResults ->
             callback.onResult(autoGranted + runtimeResults)
         }
-        launcher?.launch(
-            runtimePermissions.map { it.toAndroidPermission() }.toTypedArray()
-        )
+        val androidPermissions = runtimePermissions.mapNotNull { it.toAndroidPermissionOrNull() }
+        if (androidPermissions.isEmpty()) {
+            callback.onResult(autoGranted)
+            return
+        }
+        launcher?.launch(androidPermissions.toTypedArray())
     }
 }
 
 fun AppPermission.toAndroidPermission(): String {
+    return toAndroidPermissionOrNull()
+        ?: error("$this does not require a runtime permission on this platform/version")
+}
+
+fun AppPermission.toAndroidPermissionOrNull(): String? {
     return when (this) {
         AppPermission.CAMERA -> Manifest.permission.CAMERA
-        AppPermission.GALLERY, AppPermission.STORAGE -> error(
-            "$this uses the system picker and does not require a runtime permission"
-        )
+        AppPermission.GALLERY, AppPermission.STORAGE -> null
         AppPermission.LOCATION -> Manifest.permission.ACCESS_FINE_LOCATION
         AppPermission.MICROPHONE -> Manifest.permission.RECORD_AUDIO
         AppPermission.NOTIFICATION -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Manifest.permission.POST_NOTIFICATIONS
             } else {
-                error("POST_NOTIFICATIONS is not required below Android 13")
+                null
             }
         }
         AppPermission.CONTACTS -> Manifest.permission.READ_CONTACTS

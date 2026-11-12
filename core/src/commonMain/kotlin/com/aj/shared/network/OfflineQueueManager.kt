@@ -137,9 +137,10 @@ class OfflineQueueManager constructor() : KoinComponent {
                                 payload.bodyString
                             } else null
 
-                            client.client.request(buildUrl("001", req.endpoint)) {
+                            val baseName = com.aj.shared.api.ApiConfig.DEFAULT_BASE_NAME
+                            client.client.request(buildUrl(baseName, req.endpoint)) {
                                 this.method = HttpMethod(req.method)
-                                applyDefaults("001")
+                                applyDefaults(baseName)
                                 
                                 payload.queryParams.forEach { parameter(it.key, it.value) }
 

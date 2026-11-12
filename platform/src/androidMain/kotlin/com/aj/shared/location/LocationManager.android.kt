@@ -8,22 +8,34 @@ import android.location.LocationManager as AndroidLocationManager
 import android.os.Bundle
 import android.os.Looper
 import com.aj.shared.api.appContext
-
+import com.aj.shared.api.isAppContextInitialized
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
 
 actual class LocationManager actual constructor() {
-    private val locationManager = appContext.getSystemService(Context.LOCATION_SERVICE) as AndroidLocationManager
+    private val locationManager: AndroidLocationManager? by lazy {
+        if (!isAppContextInitialized()) return@lazy null
+        appContext.getSystemService(Context.LOCATION_SERVICE) as? AndroidLocationManager
+    }
 
     @SuppressLint("MissingPermission")
     actual suspend fun getCurrentLocation(onResult: (LatLng?) -> Unit) {
+        val lm = locationManager
+        if (lm == null) {
+            onResult(null)
+            return
+        }
+
         try {
-            val providers = locationManager.getProviders(true)
+            val providers = lm.getProviders(true)
             var bestLocation: Location? = null
             for (provider in providers) {
-                val l = locationManager.getLastKnownLocation(provider) ?: continue
+                val l = lm.getLastKnownLocation(provider) ?: continue
                 if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
                     bestLocation = l
                 }
@@ -33,27 +45,44 @@ actual class LocationManager actual constructor() {
                 return
             }
 
-            val provider = if (locationManager.isProviderEnabled(AndroidLocationManager.GPS_PROVIDER)) {
+            val provider = if (lm.isProviderEnabled(AndroidLocationManager.GPS_PROVIDER)) {
                 AndroidLocationManager.GPS_PROVIDER
-            } else if (locationManager.isProviderEnabled(AndroidLocationManager.NETWORK_PROVIDER)) {
+            } else if (lm.isProviderEnabled(AndroidLocationManager.NETWORK_PROVIDER)) {
                 AndroidLocationManager.NETWORK_PROVIDER
             } else {
                 onResult(null)
                 return
             }
 
-            locationManager.requestSingleUpdate(
-                provider,
-                object : LocationListener {
-                    override fun onLocationChanged(location: Location) {
-                        onResult(LatLng(location.latitude, location.longitude))
+            val result = withTimeoutOrNull(10_000L) {
+                suspendCancellableCoroutine { cont ->
+                    val listener = object : LocationListener {
+                        override fun onLocationChanged(location: Location) {
+                            if (cont.isActive) {
+                                cont.resume(LatLng(location.latitude, location.longitude))
+                            }
+                            try {
+                                lm.removeUpdates(this)
+                            } catch (_: Exception) {
+                            }
+                        }
+
+                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+                        override fun onProviderEnabled(provider: String) {}
+                        override fun onProviderDisabled(provider: String) {
+                            if (cont.isActive) cont.resume(null)
+                        }
                     }
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-                    override fun onProviderEnabled(provider: String) {}
-                    override fun onProviderDisabled(provider: String) {}
-                },
-                Looper.getMainLooper()
-            )
+                    cont.invokeOnCancellation {
+                        try {
+                            lm.removeUpdates(listener)
+                        } catch (_: Exception) {
+                        }
+                    }
+                    lm.requestSingleUpdate(provider, listener, Looper.getMainLooper())
+                }
+            }
+            onResult(result)
         } catch (e: SecurityException) {
             e.printStackTrace()
             onResult(null)
@@ -65,7 +94,8 @@ actual class LocationManager actual constructor() {
 
     @SuppressLint("MissingPermission")
     actual fun observeLocation(intervalMillis: Long): Flow<LatLng?> = callbackFlow {
-        if (!LocationPolicy.requireForegroundForContinuousUpdates()) {
+        val lm = locationManager
+        if (lm == null || !LocationPolicy.requireForegroundForContinuousUpdates()) {
             trySend(null)
             close()
             return@callbackFlow
@@ -74,19 +104,20 @@ actual class LocationManager actual constructor() {
             override fun onLocationChanged(location: Location) {
                 trySend(LatLng(location.latitude, location.longitude))
             }
+
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
             override fun onProviderEnabled(provider: String) {}
             override fun onProviderDisabled(provider: String) {}
         }
 
         try {
-            val provider = if (locationManager.isProviderEnabled(AndroidLocationManager.GPS_PROVIDER)) {
+            val provider = if (lm.isProviderEnabled(AndroidLocationManager.GPS_PROVIDER)) {
                 AndroidLocationManager.GPS_PROVIDER
             } else {
                 AndroidLocationManager.NETWORK_PROVIDER
             }
 
-            locationManager.requestLocationUpdates(
+            lm.requestLocationUpdates(
                 provider,
                 intervalMillis,
                 0f,
@@ -102,7 +133,7 @@ actual class LocationManager actual constructor() {
         }
 
         awaitClose {
-            locationManager.removeUpdates(listener)
+            lm.removeUpdates(listener)
         }
     }.distinctUntilChanged()
 }

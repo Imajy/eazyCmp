@@ -8,11 +8,22 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.core.content.FileProvider
 import com.aj.shared.api.appContext
+import com.aj.shared.api.isAppContextInitialized
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 actual class PlatformMediaPicker actual constructor() {
 
-    private val context = appContext
+    private val context by lazy {
+        check(isAppContextInitialized()) {
+            "Call EazyCmp.init(context) before using PlatformMediaPicker."
+        }
+        appContext
+    }
 
     private var callback: ((PickedFile?) -> Unit)? = null
 
@@ -21,6 +32,7 @@ actual class PlatformMediaPicker actual constructor() {
     private var launcher:
             ((PickerType, DocumentConfig?, (PickedFile?) -> Unit) -> Unit)? = null
 
+    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @Composable
     actual fun RegisterLaunchers() {
@@ -72,8 +84,9 @@ actual class PlatformMediaPicker actual constructor() {
                         )
 
                     PickerType.CAMERA -> {
-                        tempCameraUri = createTempUri()
-                        cameraLauncher.launch(tempCameraUri!!)
+                        val uri = createTempUri()
+                        tempCameraUri = uri
+                        cameraLauncher.launch(uri)
                     }
                 }
             }
@@ -98,15 +111,14 @@ actual class PlatformMediaPicker actual constructor() {
             callback?.invoke(null)
             return
         }
-        try {
-            val bytes = context.contentResolver
-                .openInputStream(uri)
-                ?.use {
-                    it.readBytes()
-                }
-            val mime = context.contentResolver.getType(uri)
-            val name = getFileName(uri)
-            callback?.invoke(
+        val cb = callback
+        ioScope.launch {
+            val picked = try {
+                val bytes = context.contentResolver
+                    .openInputStream(uri)
+                    ?.use { it.readBytes() }
+                val mime = context.contentResolver.getType(uri)
+                val name = getFileName(uri)
                 bytes?.let {
                     PickedFile(
                         it,
@@ -114,18 +126,21 @@ actual class PlatformMediaPicker actual constructor() {
                         mime
                     )
                 }
-            )
-        } catch (e: Exception) {
-            callback?.invoke(null)
+            } catch (_: Exception) {
+                null
+            }
+            withContext(Dispatchers.Main.immediate) {
+                cb?.invoke(picked)
+            }
         }
     }
 
     private fun getFileName(uri: Uri): String? {
         return context.contentResolver
-            .query(uri, null, null, null, null)
+            .query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
             ?.use { cursor ->
                 val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                cursor.moveToFirst()
+                if (index < 0 || !cursor.moveToFirst()) return@use null
                 cursor.getString(index)
             }
     }

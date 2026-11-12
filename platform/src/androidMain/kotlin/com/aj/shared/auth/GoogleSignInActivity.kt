@@ -3,6 +3,7 @@ package com.aj.shared.auth
 import android.accounts.AccountManager
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -133,11 +134,15 @@ class GoogleSignInActivity : ComponentActivity() {
                 email = selectedEmail,
                 displayName = selectedEmail.substringBefore("@")
             )
-            finishWithResult(authResult)
+            runOnUiThread { finishWithResult(authResult) }
         }
     }
 
     private fun finishWithResult(result: SocialAuthResult?) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            runOnUiThread { finishWithResult(result) }
+            return
+        }
         if (isFinished) return
         isFinished = true
         onResult?.invoke(result)
@@ -168,8 +173,8 @@ class GoogleSignInActivity : ComponentActivity() {
             .requestEmail()
             .requestProfile()
 
-        if (!webClientId.isNullOrBlank()) {
-            gsoBuilder.requestIdToken(webClientId!!)
+        webClientId?.takeIf { it.isNotBlank() }?.let { clientId ->
+            gsoBuilder.requestIdToken(clientId)
         }
 
         val client = GoogleSignIn.getClient(this, gsoBuilder.build())

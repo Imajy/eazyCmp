@@ -151,8 +151,28 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         options: RequestOptions
     ): Flow<Resource<Res>> = flow {
 
-        com.aj.shared.security.EazyCmpKillSwitch.assertNotBlocked()
+        try {
+            com.aj.shared.security.EazyCmpKillSwitch.assertNotBlocked()
+        } catch (e: com.aj.shared.security.KillSwitchException) {
+            emit(Resource.Error(e.message ?: "EazyCmp kill-switch blocked"))
+            return@flow
+        } catch (e: IllegalStateException) {
+            if (e.message?.contains("EazyCmp") == true) {
+                emit(Resource.Error(e.message ?: "EazyCmp kill-switch blocked"))
+                return@flow
+            }
+            throw e
+        }
+
+        if (!ApiConfig.isRegistered(base) && !ApiConfig.isRegistered(ApiConfig.DEFAULT_BASE_NAME)) {
+            emit(Resource.Error("Base URL not registered for key '$base'. Call EazyCmp.configure / setBaseUrl first."))
+            return@flow
+        }
         val config = ApiConfig.getConfig(base)
+        if (config.baseUrl.isBlank()) {
+            emit(Resource.Error("Base URL is blank for key '$base'."))
+            return@flow
+        }
 
         val url = buildUrl(base, endpoint)
 
@@ -175,9 +195,15 @@ class ApiClient(val client: HttpClient = HttpClientProvider.client) {
         try {
             if (!com.aj.shared.internal.ServiceLocator.networkOrDefault().isOnline) {
                 if (options.retryOnConnection) {
-                    com.aj.shared.internal.ServiceLocator.networkOrDefault().connectivityFlow
-                        .filter { it }
-                        .first()
+                    val cameOnline = kotlinx.coroutines.withTimeoutOrNull(30_000L) {
+                        com.aj.shared.internal.ServiceLocator.networkOrDefault().connectivityFlow
+                            .filter { it }
+                            .first()
+                    }
+                    if (cameOnline != true) {
+                        emit(Resource.Error("No internet"))
+                        return@flow
+                    }
                 } else if (options.useCacheFallback) {
                     val cachedText = com.aj.shared.internal.ServiceLocator.apiCacheOrDefault().getResponseBody(cacheKey)
                     if (cachedText != null) {

@@ -49,8 +49,8 @@ fun AppLockGate(
             modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
             singleLine = true,
         )
-        if (error != null) {
-            Text(error!!, color = MaterialTheme.colorScheme.error)
+        error?.let { message ->
+            Text(message, color = MaterialTheme.colorScheme.error)
         }
         Button(
             onClick = {

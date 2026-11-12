@@ -1,19 +1,36 @@
 package com.aj.shared.storage
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.aj.shared.api.appContext
+import com.aj.shared.api.isAppContextInitialized
 
 actual class SecureStorage actual constructor() {
-    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        "secure_eazy_cmp_prefs",
-        masterKeyAlias,
-        appContext,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+
+    private val sharedPreferences: SharedPreferences by lazy {
+        createPrefs()
+    }
+
+    private fun createPrefs(): SharedPreferences {
+        if (!isAppContextInitialized()) {
+            error("Call EazyCmp.init(context) before using SecureStorage.")
+        }
+        return try {
+            val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+            EncryptedSharedPreferences.create(
+                "secure_eazy_cmp_prefs",
+                masterKeyAlias,
+                appContext,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (_: Exception) {
+            // Fallback if Keystore/EncryptedSharedPreferences fails — avoids startup crash/ANR loops.
+            appContext.getSharedPreferences("secure_eazy_cmp_prefs_fallback", Context.MODE_PRIVATE)
+        }
+    }
 
     actual fun putString(key: String, value: String) {
         sharedPreferences.edit().putString(key, value).apply()

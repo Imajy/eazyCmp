@@ -100,7 +100,13 @@ class IosPdfManager : PdfManager {
             view.setFrame(pageRect)
             view.layoutIfNeeded()
 
-            val pdfData = NSMutableData.dataWithCapacity(0uL)!!
+            val pdfData = NSMutableData.dataWithCapacity(0uL)
+            if (pdfData == null) {
+                view.removeFromSuperview()
+                controller.removeFromParentViewController()
+                onComplete()
+                return@launch
+            }
             UIGraphicsBeginPDFContextToData(pdfData, pageRect, null)
             UIGraphicsBeginPDFPage()
 
@@ -182,7 +188,13 @@ class IosPdfManager : PdfManager {
             view.setFrame(pageRect)
             view.layoutIfNeeded()
 
-            val pdfData = NSMutableData.dataWithCapacity(0uL)!!
+            val pdfData = NSMutableData.dataWithCapacity(0uL)
+            if (pdfData == null) {
+                view.removeFromSuperview()
+                controller.removeFromParentViewController()
+                onComplete()
+                return@launch
+            }
             UIGraphicsBeginPDFContextToData(pdfData, pageRect, null)
             UIGraphicsBeginPDFPage()
 

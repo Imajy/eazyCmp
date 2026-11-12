@@ -9,8 +9,9 @@ fun topViewController(): UIViewController? {
     val window = (application.keyWindow as? UIWindow)
         ?: application.windows.firstOrNull() as? UIWindow
     var controller = window?.rootViewController ?: return null
-    while (controller.presentedViewController != null) {
-        controller = controller.presentedViewController!!
+    while (true) {
+        val presented = controller.presentedViewController ?: break
+        controller = presented
     }
     return controller
 }

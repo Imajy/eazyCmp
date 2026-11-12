@@ -64,13 +64,19 @@ object ApiConfig {
         val config = configs[name] ?: configs[DEFAULT_BASE_NAME]
         if (config != null) return config
 
-        error(
-            """
-            Base URL not registered for key '$name'.
-            Please call EazyCmp.configure { baseUrl = "https://api.example.com" } or EazyCmp.setBaseUrl(...) before making API requests.
-            Registered bases: [${configs.keys.joinToString()}]
-            """.trimIndent()
+        // Soft placeholder — ApiClient emits Resource.Error instead of crashing collectors.
+        return BaseConfig(
+            baseUrl = "",
+            token = null,
+            tokenProvider = null,
+            defaultHeaders = emptyMap(),
+            defaultQueryParams = emptyMap(),
+            defaultBodyParams = emptyMap()
         )
+    }
+
+    fun getConfigOrNull(name: String = DEFAULT_BASE_NAME): BaseConfig? {
+        return configs[name] ?: configs[DEFAULT_BASE_NAME]
     }
 
     fun isRegistered(name: String = DEFAULT_BASE_NAME): Boolean {

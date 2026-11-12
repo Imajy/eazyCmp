@@ -36,7 +36,8 @@ suspend fun <T> kotlinx.coroutines.flow.Flow<Resource<T>>.await(): T {
             is Resource.Loading -> {}
         }
     }
-    if (resultData != null) return resultData!!
+    val data = resultData
+    if (data != null) return data
     throw IllegalStateException(lastError ?: "Request completed without data")
 }
 
