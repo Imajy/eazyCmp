@@ -1,26 +1,27 @@
 package com.aj.shared.parser
 
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UByteVar
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.alloc
 import kotlinx.cinterop.convert
-import kotlinx.cinterop.refTo
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.usePinned
+import kotlinx.cinterop.value
 import platform.CoreCrypto.CCCrypt
 import platform.CoreCrypto.CC_SHA1
-import platform.CoreCrypto.CC_SHA256
-import platform.CoreCrypto.CC_SHA512
 import platform.CoreCrypto.CC_SHA1_DIGEST_LENGTH
+import platform.CoreCrypto.CC_SHA256
 import platform.CoreCrypto.CC_SHA256_DIGEST_LENGTH
+import platform.CoreCrypto.CC_SHA512
 import platform.CoreCrypto.CC_SHA512_DIGEST_LENGTH
 import platform.CoreCrypto.kCCAlgorithmAES
 import platform.CoreCrypto.kCCBlockSizeAES128
 import platform.CoreCrypto.kCCDecrypt
 import platform.CoreCrypto.kCCSuccess
 import platform.posix.size_tVar
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.value
 
 @OptIn(ExperimentalForeignApi::class)
 internal actual object PlatformCrypto {
@@ -28,7 +29,8 @@ internal actual object PlatformCrypto {
         val out = ByteArray(CC_SHA1_DIGEST_LENGTH)
         data.usePinned { inp ->
             out.usePinned { o ->
-                CC_SHA1(inp.addressOf(0), data.size.convert(), o.addressOf(0))
+                // CommonCrypto md buffer is UByteVar*; ByteArray pins as ByteVar*.
+                CC_SHA1(inp.addressOf(0), data.size.convert(), o.addressOf(0).reinterpret<UByteVar>())
             }
         }
         return out
@@ -38,7 +40,7 @@ internal actual object PlatformCrypto {
         val out = ByteArray(CC_SHA256_DIGEST_LENGTH)
         data.usePinned { inp ->
             out.usePinned { o ->
-                CC_SHA256(inp.addressOf(0), data.size.convert(), o.addressOf(0))
+                CC_SHA256(inp.addressOf(0), data.size.convert(), o.addressOf(0).reinterpret<UByteVar>())
             }
         }
         return out
@@ -48,7 +50,7 @@ internal actual object PlatformCrypto {
         val out = ByteArray(CC_SHA512_DIGEST_LENGTH)
         data.usePinned { inp ->
             out.usePinned { o ->
-                CC_SHA512(inp.addressOf(0), data.size.convert(), o.addressOf(0))
+                CC_SHA512(inp.addressOf(0), data.size.convert(), o.addressOf(0).reinterpret<UByteVar>())
             }
         }
         return out
