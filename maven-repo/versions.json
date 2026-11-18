@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-061",
+  "latest": "1.0.0.1-rc-062",
   "versions": [
+    "1.0.0.1-rc-062",
     "1.0.0.1-rc-061",
     "1.0.0.1-rc-060",
     "1.0.0.1-rc-059",
@@ -73,6 +74,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-062",
+      "message": "Fix iOS PlatformCrypto SHA digest buffer types for CommonCrypto.\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+      "publishedAt": "2026-11-18T10:20:53+05:30",
+      "commit": "f5d7227ed73d9d2963d01fdbb41c7d69e0f043a8"
+    },
     {
       "version": "1.0.0.1-rc-061",
       "message": "Fix crash/ANR risks: soft kill-switch, non-blocking JVM connectivity, parallel ApiDispatcher, off-main PDF/media/share I/O, init guards, request timeouts",
@@ -477,13 +484,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-11-18T04:40:39Z",
-  "failures": [
-    {
-      "version": "1.0.0.1-rc-062",
-      "commit": "ce0567198a80f9e6d6b51a8c09e13e961d2578a5",
-      "publishedAt": "2026-11-18T04:40:39Z",
-      "logFile": "logs/build-1.0.0.1-rc-062-failed.log"
-    }
-  ]
+  "updatedAt": "2026-11-18T04:57:20Z",
+  "failures": []
 }
