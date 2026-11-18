@@ -55,6 +55,7 @@ kotlin {
         commonMain.dependencies {
             api(project(":core"))
             api(project(":platform"))
+            api(project(":parser"))
             api(libs.runtime)
             api(libs.foundation)
             api(libs.material3)

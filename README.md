@@ -66,20 +66,21 @@ dependencyResolutionManagement {
 
 ### Step 2: Add Dependencies (Full Umbrella or Light Modules)
 
-Latest version: **`1.0.0.1-rc-060`** (see [`version.properties`](version.properties) / [`versions.json`](versions.json) and the [live version catalog](https://imajy.github.io/eazyCmp/)).
+Latest version: **`1.0.0.1-rc-061`** (see [`version.properties`](version.properties) / [`versions.json`](versions.json) and the [live version catalog](https://imajy.github.io/eazyCmp/)).
 
 ```kotlin
 kotlin {
     sourceSets {
         commonMain.dependencies {
             // Option A — full toolkit (core + platform + ui + plugin SPI)
-            implementation("com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-060")
+            implementation("com.github.Imajy.eazyCmp:shared:1.0.0.1-rc-061")
 
             // Option B — light / pick only what you need
-            // implementation("com.github.Imajy.eazyCmp:core:1.0.0.1-rc-060")       // API, SQLDelight, storage, networking, validators
-            // implementation("com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-060")   // permissions, media picker, GPS, auth, PDF, adapters
-            // implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-060")         // Compose UI kit, theme, snackbars, Coil/SVG/Lottie
-            // implementation("com.github.Imajy.eazyCmp:web:1.0.0.1-rc-060")        // JS / WasmJs helpers (WebEazyCmp)
+            // implementation("com.github.Imajy.eazyCmp:core:1.0.0.1-rc-061")       // API, SQLDelight, storage, networking, validators
+            // implementation("com.github.Imajy.eazyCmp:platform:1.0.0.1-rc-061")   // permissions, media picker, GPS, auth, PDF, adapters
+            // implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-061")         // Compose UI kit, theme, snackbars, Coil/SVG/Lottie
+            // implementation("com.github.Imajy.eazyCmp:web:1.0.0.1-rc-061")        // JS / WasmJs helpers (WebEazyCmp)
+            // implementation("com.github.Imajy.eazyCmp:parser:1.0.0.1-rc-061")     // Excel/CSV/TSV/vCard → JSON (standalone, zero 3rd-party parsers)
         }
     }
 }
@@ -92,6 +93,41 @@ kotlin {
 | `platform` | `PermissionManager`, `PlatformMediaPicker`, `LocationManager`, `BiometricAuth`, `PdfManager`, adapters | Native device features without UI kit |
 | `ui` | Material 3 theme, `CustomScaffold`, `CustomImage`, `SnackBarBoxApp`, UI kit widgets | Shared Compose screens |
 | `web` | `WebEazyCmp` (`WebSecureStorage`, `WebMediaPicker`, plugin registry) | Compose Web (`js` / `wasmJs`) apps |
+| `parser` | Custom `EazyFileParser` — XLSX / CSV / TSV / vCard → JSON (**no third-party parser libs**) | Import sheets/contacts only |
+
+---
+
+
+### Excel / CSV parser + viewer (`parser` + `ui`)
+
+**Goal:** Excel/CSV → JSON (`columnName` → value) + on-screen table. Android / iOS / Desktop.
+
+```kotlin
+// settings.gradle.kts
+maven { url = uri("https://imajy.github.io/eazyCmp/maven-repo/") }
+
+// commonMain — pick one:
+implementation("com.github.Imajy.eazyCmp:parser:1.0.0.1-rc-061") // JSON only
+implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-061")     // viewer (+ parser)
+```
+
+```kotlin
+// JSON (first row = column keys when hasHeader = true)
+val json = EazyFileParser.parseToJson(
+    bytes = fileBytes,
+    fileName = "data.xlsx", // .xlsx / .xls / .csv / .tsv
+    options = FileParseOptions(hasHeader = true),
+)
+// → [{"name":"Ajay","age":28}, ...]
+
+val rows = EazyFileParser.parse(fileBytes, fileName = "data.xlsx").getOrThrow().rows
+
+// View on screen
+FileDataViewer(bytes = fileBytes, fileName = "report.xlsx")
+FileDataViewerFromPath(path = "/path/to/report.xlsx")
+```
+
+Formats: `.xlsx`, `.xls` (basic), `.csv`, `.tsv`, `.vcf`. Password Excel: `FileParseOptions(password = "…")`.
 
 ---
 
