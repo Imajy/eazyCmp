@@ -1,0 +1,281 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../pdf/1.0.0.1-rc-063/pdf-1.0.0.1-rc-063.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "pdf",
+    "version": "1.0.0.1-rc-063",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "pdf-iosSimulatorArm64Main-1.0.0.1-rc-063.klib",
+          "url": "pdf-iossimulatorarm64-1.0.0.1-rc-063.klib",
+          "size": 348734,
+          "sha512": "ca16725abe09dfc7091625f3b93f3cddd11604a086729b5e531959ac8d58d6d520bb0dcac49ae7e67130864d881b535c610317862fea417524af7c3e8b468dd2",
+          "sha256": "a0babcd9cab59befeaf71577582c653413ba9347481a22140fcf13aec95dbafd",
+          "sha1": "5b558ec16c58283cee6bf18aff10d1bb8ae50b09",
+          "md5": "ccf1cdc530b679cdafb2c6dd8f754c64"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64SourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "files": [
+        {
+          "name": "pdf-iossimulatorarm64-1.0.0.1-rc-063-sources.jar",
+          "url": "pdf-iossimulatorarm64-1.0.0.1-rc-063-sources.jar",
+          "size": 40548,
+          "sha512": "ac11c7a860fb50f9a254f5f2f57e25f56f68fb38524c6ef8dabd78ab16cd856c974bf324f71e2dbbea7d7e926fbc6f8f0c472bde3a336bc148803d5933f77301",
+          "sha256": "28891b83e4eca8b715bf520b87d74b1a80c292a5ac517bc5b449f63b020ce17d",
+          "sha1": "c684bd057769cbd21a7fb7fa3aaadc8854cb2b84",
+          "md5": "bc416e3ed8996fc0b3aacc1e75fff891"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64ResourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.libraryelements": "kotlin-multiplatformresources",
+        "org.gradle.usage": "kotlin-multiplatformresources",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "pdf-1.0.0.1-rc-063.kotlin_resources.zip",
+          "url": "pdf-iossimulatorarm64-1.0.0.1-rc-063-kotlin_resources.kotlin_resources.zip",
+          "size": 344,
+          "sha512": "4371f4dbfb38518f402f722ecf499730a745d760f7b52bcbeaa57987e3bebea317746b7272e4b32add2f23d2d52c2178d86f40a2ee23cae6121ab582e102519a",
+          "sha256": "0704d2db8fc0edaee6448ef13585ca81edc7dc0453b619fd51cc8304d878e502",
+          "sha1": "c9526f5b93ce972e22ca8a5c487a0d7005cb8969",
+          "md5": "8f447be563d156d205f8e8fa6f5122ab"
+        }
+      ]
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "pdf-iossimulatorarm64-1.0.0.1-rc-063-metadata.jar",
+          "url": "pdf-iossimulatorarm64-1.0.0.1-rc-063-metadata.jar",
+          "size": 2875,
+          "sha512": "1acceff9f48477317c2a76ab742cfe36329dffd0edcf866f1527f79fb7d9a14edfa5da6997a0bbd0ce5ca194a1fbb429c8e594d24f6d5fcd91c448df35b93834",
+          "sha256": "d89392315424dc8c51cc952d44a818354e30f0a4b0f2bb515cd819cf783da8b5",
+          "sha1": "5012772262b7534d163aae46856942783d4cb2ef",
+          "md5": "b304b788f5a34b089aa0127311d1e998"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../parser/1.0.0.1-rc-063/parser-1.0.0.1-rc-063.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "parser",
+    "version": "1.0.0.1-rc-063",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "iosArm64ApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "parser-iosArm64Main-1.0.0.1-rc-063.klib",
+          "url": "parser-iosarm64-1.0.0.1-rc-063.klib",
+          "size": 383457,
+          "sha512": "caf2d82125cb61713e8a85a925ac94e104d573d0bc53357cd8cdb5f2f7dfff6da837b63753e78b3b1b2dea660f1f9759972b8811365a85f4cc4596e08d7b6c53",
+          "sha256": "514b747f2d221cea57eb3fdb07f024ec7aeec3c130819c114052627f9e95c2d7",
+          "sha1": "66f6413304a244793020b3e701f022e8c4065166",
+          "md5": "fd4636ca2f724a48aa783427298873d4"
+        }
+      ]
+    },
+    {
+      "name": "iosArm64SourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "files": [
+        {
+          "name": "parser-iosarm64-1.0.0.1-rc-063-sources.jar",
+          "url": "parser-iosarm64-1.0.0.1-rc-063-sources.jar",
+          "size": 65883,
+          "sha512": "0e0ed97c24c123d3834c9f02d09aa7c15613e2b6b64c4cd32eb742ea24a04d050bae16e9011211f08e939cd11225dee7bf9dd4a138912ec3b0935c764078b8d8",
+          "sha256": "1cafd2b510734aeff26bea3afb0cea0d43b1ed4a891424428bc53ba23be8f8e4",
+          "sha1": "3986d5a64cb61d9d3cb6cc4ad5341bd40de37fac",
+          "md5": "5c47bf965f3e8aecc2027b7ece5c1b05"
+        }
+      ]
+    },
+    {
+      "name": "iosArm64MetadataElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "parser-iosarm64-1.0.0.1-rc-063-metadata.jar",
+          "url": "parser-iosarm64-1.0.0.1-rc-063-metadata.jar",
+          "size": 4822,
+          "sha512": "c701ca2e7495f2e14f5db35aaa3bd1b1012a3e883ce6017db1649728d4b31865c74cf9509241e9269e14a1d975247c4710a5f490e6b37fe7ebb4266da28b4e7d",
+          "sha256": "d8907c4077f815a79aa81d356848fc85582192fc23912b4be96ceaa936926a07",
+          "sha1": "05021649e242a37aaf1fd5ff90b9d9a55cd0469a",
+          "md5": "09734f63d62c2300536fe2f955e8ef72"
+        }
+      ]
+    }
+  ]
+}

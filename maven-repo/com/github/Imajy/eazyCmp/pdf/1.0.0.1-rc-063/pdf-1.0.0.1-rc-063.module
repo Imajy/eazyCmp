@@ -1,0 +1,354 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "pdf",
+    "version": "1.0.0.1-rc-063",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadataApiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "pdf-metadata-1.0.0.1-rc-063.jar",
+          "url": "pdf-1.0.0.1-rc-063.jar",
+          "size": 19133,
+          "sha512": "48f36c1516ec17f35177d6381256dae039b6fb2695c00433940a2059e796bc83ddbd4bfd711ad76d3d2af459689460a684f0055973f39522c83d6a68bc1e5fe3",
+          "sha256": "a8dab2316429b5ecaceb0cd3c2ac88f4cab78ac1041c8a44d927210d8c65031b",
+          "sha1": "2da89ea80dfb6f9ea90fc0b1499a92c99805701e",
+          "md5": "2c3cdde562eba29a1e23e07ed2397abc"
+        }
+      ]
+    },
+    {
+      "name": "metadataSourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "files": [
+        {
+          "name": "pdf-kotlin-1.0.0.1-rc-063-sources.jar",
+          "url": "pdf-1.0.0.1-rc-063-sources.jar",
+          "size": 38645,
+          "sha512": "a2a45968b1ab09b0ecc4fd471c7749265526f89826e6b120fdb1b7962e53c899834fda86a766e6d43eb8f3a3ecc1585c561319516dab07ce3600123ad71f8b3d",
+          "sha256": "16435d441dac1f59f513682992cd1666ff41e704cdc9b254fcade45048543bed",
+          "sha1": "17cca9c00dbbbf83dbeb862f24318ebdf5eb3a8d",
+          "md5": "680f5451f34ce12ca3a6ff28e798a637"
+        }
+      ]
+    },
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../pdf-android/1.0.0.1-rc-063/pdf-android-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-android",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../pdf-android/1.0.0.1-rc-063/pdf-android-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-android",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../pdf-android/1.0.0.1-rc-063/pdf-android-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-android",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosArm64ApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iosarm64/1.0.0.1-rc-063/pdf-iosarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iosarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosArm64SourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iosarm64/1.0.0.1-rc-063/pdf-iosarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iosarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosArm64ResourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.libraryelements": "kotlin-multiplatformresources",
+        "org.gradle.usage": "kotlin-multiplatformresources",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iosarm64/1.0.0.1-rc-063/pdf-iosarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iosarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosArm64MetadataElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iosarm64/1.0.0.1-rc-063/pdf-iosarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iosarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosSimulatorArm64ApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iossimulatorarm64/1.0.0.1-rc-063/pdf-iossimulatorarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iossimulatorarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosSimulatorArm64SourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iossimulatorarm64/1.0.0.1-rc-063/pdf-iossimulatorarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iossimulatorarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosSimulatorArm64ResourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.libraryelements": "kotlin-multiplatformresources",
+        "org.gradle.usage": "kotlin-multiplatformresources",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iossimulatorarm64/1.0.0.1-rc-063/pdf-iossimulatorarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iossimulatorarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "iosSimulatorArm64MetadataElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "ios_simulator_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../pdf-iossimulatorarm64/1.0.0.1-rc-063/pdf-iossimulatorarm64-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-iossimulatorarm64",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../pdf-jvm/1.0.0.1-rc-063/pdf-jvm-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-jvm",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../pdf-jvm/1.0.0.1-rc-063/pdf-jvm-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-jvm",
+        "version": "1.0.0.1-rc-063"
+      }
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../pdf-jvm/1.0.0.1-rc-063/pdf-jvm-1.0.0.1-rc-063.module",
+        "group": "com.github.Imajy.eazyCmp",
+        "module": "pdf-jvm",
+        "version": "1.0.0.1-rc-063"
+      }
+    }
+  ]
+}

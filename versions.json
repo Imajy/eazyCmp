@@ -2,8 +2,9 @@
   "groupId": "com.github.Imajy.eazyCmp",
   "artifactId": "shared",
   "totalDownloads": "5,200+",
-  "latest": "1.0.0.1-rc-062",
+  "latest": "1.0.0.1-rc-063",
   "versions": [
+    "1.0.0.1-rc-063",
     "1.0.0.1-rc-062",
     "1.0.0.1-rc-061",
     "1.0.0.1-rc-060",
@@ -74,6 +75,12 @@
     "1.0.04-alpha-077"
   ],
   "releases": [
+    {
+      "version": "1.0.0.1-rc-063",
+      "message": "pdf reader implemented",
+      "publishedAt": "2026-11-24T10:48:24+05:30",
+      "commit": "752991f9da4051f29bef23287582cbc91118194e"
+    },
     {
       "version": "1.0.0.1-rc-062",
       "message": "Fix iOS PlatformCrypto SHA digest buffer types for CommonCrypto.\nCo-authored-by: Cursor <cursoragent@cursor.com>",
@@ -484,6 +491,6 @@
     }
   ],
   "repository": "https://imajy.github.io/eazyCmp/maven-repo/",
-  "updatedAt": "2026-11-18T04:57:20Z",
+  "updatedAt": "2026-11-24T05:25:34Z",
   "failures": []
 }

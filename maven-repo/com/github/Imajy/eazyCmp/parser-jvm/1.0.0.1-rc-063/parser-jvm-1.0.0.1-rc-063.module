@@ -1,0 +1,102 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../parser/1.0.0.1-rc-063/parser-1.0.0.1-rc-063.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "parser",
+    "version": "1.0.0.1-rc-063",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "parser-jvm-1.0.0.1-rc-063.jar",
+          "url": "parser-jvm-1.0.0.1-rc-063.jar",
+          "size": 235506,
+          "sha512": "2a80be0f48fdd727faba58c5118bf009f470f7b05525d157bf0ef5dd692ae0a3503c1622cef921297cc227bb17924c08e52f44fbf9f5199f742a63356b526b68",
+          "sha256": "11bd73e1af84d8e699370313d62be9983726208f3d670e467f10ac478bf3acc3",
+          "sha1": "b92b7be9c9fe84bc0253dd54e34c8cd9ed6c5e84",
+          "md5": "6466ce5626cabcc9a9b72a3a5ea9dec7"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "parser-jvm-1.0.0.1-rc-063.jar",
+          "url": "parser-jvm-1.0.0.1-rc-063.jar",
+          "size": 235506,
+          "sha512": "2a80be0f48fdd727faba58c5118bf009f470f7b05525d157bf0ef5dd692ae0a3503c1622cef921297cc227bb17924c08e52f44fbf9f5199f742a63356b526b68",
+          "sha256": "11bd73e1af84d8e699370313d62be9983726208f3d670e467f10ac478bf3acc3",
+          "sha1": "b92b7be9c9fe84bc0253dd54e34c8cd9ed6c5e84",
+          "md5": "6466ce5626cabcc9a9b72a3a5ea9dec7"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "parser-jvm-1.0.0.1-rc-063-sources.jar",
+          "url": "parser-jvm-1.0.0.1-rc-063-sources.jar",
+          "size": 63578,
+          "sha512": "ef7046233baff44b1571b219d4e6aea0f35b133d5d4b0ed5217c668397e82e42056278dba7b4d0fac85ae446c1984aedb13bdce87cb6f3137aadfd353bc17a6f",
+          "sha256": "72039e7660226285d888572e58068ac78c1a5b19c02978ab6113743b1b7f75b8",
+          "sha1": "88e5cf247f5b39ff3ad05097b4bcd5583db90402",
+          "md5": "fddce66428403aeb354a87c0de8becad"
+        }
+      ]
+    }
+  ]
+}

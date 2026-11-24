@@ -1,0 +1,214 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../pdf/1.0.0.1-rc-063/pdf-1.0.0.1-rc-063.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "pdf",
+    "version": "1.0.0.1-rc-063",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "pdf-jvm-1.0.0.1-rc-063.jar",
+          "url": "pdf-jvm-1.0.0.1-rc-063.jar",
+          "size": 434801,
+          "sha512": "311d137ff149e8d81acfda9b3fafc39d53aa96ed92f594d1f52f7b8d211ff78d789c6b74184ed6a78bf5b578cc21990babfb2e45a37734debefcace5b41abac4",
+          "sha256": "c5fcc91df02ad08f104479db96d8fff94b61eea6934208688bc860a8a9f0ef48",
+          "sha1": "4c18d124164e5b55df91061ca5355a63d9227c12",
+          "md5": "ef71bc9e6eb3f2e34568a8899ae2a043"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.components",
+          "module": "components-resources",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.apache.pdfbox",
+          "module": "pdfbox",
+          "version": {
+            "requires": "3.0.7"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-swing",
+          "version": {
+            "requires": "1.11.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "pdf-jvm-1.0.0.1-rc-063.jar",
+          "url": "pdf-jvm-1.0.0.1-rc-063.jar",
+          "size": 434801,
+          "sha512": "311d137ff149e8d81acfda9b3fafc39d53aa96ed92f594d1f52f7b8d211ff78d789c6b74184ed6a78bf5b578cc21990babfb2e45a37734debefcace5b41abac4",
+          "sha256": "c5fcc91df02ad08f104479db96d8fff94b61eea6934208688bc860a8a9f0ef48",
+          "sha1": "4c18d124164e5b55df91061ca5355a63d9227c12",
+          "md5": "ef71bc9e6eb3f2e34568a8899ae2a043"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "pdf-jvm-1.0.0.1-rc-063-sources.jar",
+          "url": "pdf-jvm-1.0.0.1-rc-063-sources.jar",
+          "size": 39192,
+          "sha512": "3435fcb186b63045ba17dd0e46c5759b519d8a65c1d586a0b2d06e5cc9e17e850eff1ca7a07050971607df1f782167fc59c8b05584b5d2fee155163d2379eaa2",
+          "sha256": "f8627e36eb1849267e479b7738a41a8d88f8cd3489d5b4da560232d917837977",
+          "sha1": "0d66bc334a1f9976999ff58cf6dd7c8ac72e1dff",
+          "md5": "31a1d0d1d4bb40eeb02cb00fd8d377bf"
+        }
+      ]
+    }
+  ]
+}

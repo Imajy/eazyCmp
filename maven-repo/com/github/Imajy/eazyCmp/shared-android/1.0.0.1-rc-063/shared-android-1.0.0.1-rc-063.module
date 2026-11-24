@@ -1,0 +1,214 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../shared/1.0.0.1-rc-063/shared-1.0.0.1-rc-063.module",
+    "group": "com.github.Imajy.eazyCmp",
+    "module": "shared",
+    "version": "1.0.0.1-rc-063",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "platform",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "ui",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared.aar",
+          "url": "shared-android-1.0.0.1-rc-063.aar",
+          "size": 21121,
+          "sha512": "40e9c279d25cf3cc9f9b487e8b2c8123b0faed2d6d1e9289b499f38ebdb441f3ac24189301333cbb48cbded142804fcb853fcafca9500acf9c453099211cc7c4",
+          "sha256": "a75b31df60faa567b28bf3be69ff0433c761512885705d5b6e2e387f8382830e",
+          "sha1": "6f3f7ef394eac0eca43416e0c4eff9a8725e760d",
+          "md5": "6810bb2a64f5063f34a0671176978f8f"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "core",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "platform",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "com.github.Imajy.eazyCmp",
+          "module": "ui",
+          "version": {
+            "requires": "1.0.0.1-rc-063"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.11.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.material3",
+          "module": "material3",
+          "version": {
+            "requires": "1.11.0-alpha07"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.2.1"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.2.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shared.aar",
+          "url": "shared-android-1.0.0.1-rc-063.aar",
+          "size": 21121,
+          "sha512": "40e9c279d25cf3cc9f9b487e8b2c8123b0faed2d6d1e9289b499f38ebdb441f3ac24189301333cbb48cbded142804fcb853fcafca9500acf9c453099211cc7c4",
+          "sha256": "a75b31df60faa567b28bf3be69ff0433c761512885705d5b6e2e387f8382830e",
+          "sha1": "6f3f7ef394eac0eca43416e0c4eff9a8725e760d",
+          "md5": "6810bb2a64f5063f34a0671176978f8f"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "files": [
+        {
+          "name": "shared-android-1.0.0.1-rc-063-sources.jar",
+          "url": "shared-android-1.0.0.1-rc-063-sources.jar",
+          "size": 5795,
+          "sha512": "a8fcc731206a2c1739fe546cf1d2e0e6d8cfcdb5e595b37c7b99660ecface522b7ad3f38ec0e17edfb479ab076726ca816f6bbece7b030ef2052d430e62c7fa5",
+          "sha256": "6ea4bc6a2c3331a5cc09ef1ad69d0fcb1c03d940c4d1f8e9a3e48ac2abdb1b00",
+          "sha1": "93cf778eb1305f23085b16124dcddb1ce5b46d0f",
+          "md5": "810a7abf53224eaa10e663d45797045a"
+        }
+      ]
+    }
+  ]
+}
