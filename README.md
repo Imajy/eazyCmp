@@ -81,6 +81,7 @@ kotlin {
             // implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-061")         // Compose UI kit, theme, snackbars, Coil/SVG/Lottie
             // implementation("com.github.Imajy.eazyCmp:web:1.0.0.1-rc-061")        // JS / WasmJs helpers (WebEazyCmp)
             // implementation("com.github.Imajy.eazyCmp:parser:1.0.0.1-rc-061")     // Excel/CSV/TSV/vCard → JSON (standalone, zero 3rd-party parsers)
+            // implementation("com.github.Imajy.eazyCmp:pdf:1.0.0.1-rc-061")        // PDF viewer & editor (view, annotate, draw, sign, edit, export)
         }
     }
 }
@@ -91,9 +92,54 @@ kotlin {
 | `shared` | Umbrella (`core` + `platform` + `ui` + `EazyCmp` facade) | Most apps wanting everything with one dependency |
 | `core` | Ktor `ApiClient`, `ApiCacheStorage`, `OfflineQueueManager`, `SecureStorage`, SQLDelight, validators | Headless / business-logic-only modules |
 | `platform` | `PermissionManager`, `PlatformMediaPicker`, `LocationManager`, `BiometricAuth`, `PdfManager`, adapters | Native device features without UI kit |
-| `ui` | Material 3 theme, `CustomScaffold`, `CustomImage`, `SnackBarBoxApp`, UI kit widgets | Shared Compose screens |
+| `ui` | Material 3 theme, `CustomScaffold`, `CustomImage`, `SnackBarBoxApp`, UI kit widgets (+ `pdf` & `parser`) | Shared Compose screens |
 | `web` | `WebEazyCmp` (`WebSecureStorage`, `WebMediaPicker`, plugin registry) | Compose Web (`js` / `wasmJs`) apps |
 | `parser` | Custom `EazyFileParser` — XLSX / CSV / TSV / vCard → JSON (**no third-party parser libs**) | Import sheets/contacts only |
+| `pdf` | Multiplatform PDF Viewer & Editor — continuous scroll, zoom, search, thumbnails, annotations, freehand pen, digital signatures, stamps, shapes, page management, and export | View or edit PDFs in Compose |
+
+---
+
+### PDF viewer & editor (`pdf`)
+
+**Goal:** Multiplatform PDF viewing, page-by-page or continuous scrolling, pinch-to-zoom, pan, in-document keyword search, thumbnail drawer, freehand pen drawing, highlighter, text annotations, digital signatures, stamps, geometric shapes, page reordering/rotation/deletion, and saving/exporting. Android / iOS / Desktop.
+
+```kotlin
+// settings.gradle.kts
+maven { url = uri("https://imajy.github.io/eazyCmp/maven-repo/") }
+
+// commonMain — pick one:
+implementation("com.github.Imajy.eazyCmp:pdf:1.0.0.1-rc-061") // PDF viewer & editor module
+implementation("com.github.Imajy.eazyCmp:ui:1.0.0.1-rc-061")  // full UI kit (+ includes pdf & parser)
+```
+
+```kotlin
+// 1. Programmatic PDF Inspection & Text Search
+val info = EazyPdf.readInfo(pdfBytes)
+println("Title: ${info.title}, Pages: ${info.pageCount}")
+
+val matches = EazyPdf.searchText(pdfBytes, query = "Invoice")
+println("Found ${matches.size} matches")
+
+// 2. View PDF on screen (Continuous scroll, Pinch-to-zoom, Search, Thumbnails, Night Mode)
+PdfViewer(
+    bytes = pdfBytes,
+    fileName = "contract.pdf",
+    enableSearch = true,
+    enableThumbnails = true,
+    onPageChanged = { page, totalPages ->
+        println("Viewing page $page of $totalPages")
+    }
+)
+
+// 3. Edit PDF on screen (Pen, Highlighter, Text, Signature Pad, Stamps, Shapes, Page Manager, Save)
+PdfEditor(
+    bytes = pdfBytes,
+    fileName = "contract.pdf",
+    onSave = { modifiedPdfBytes ->
+        println("Saved modified PDF: ${modifiedPdfBytes.size} bytes")
+    }
+)
+```
 
 ---
 

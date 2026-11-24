@@ -56,6 +56,7 @@ kotlin {
             api(project(":core"))
             api(project(":platform"))
             api(project(":parser"))
+            api(project(":pdf"))
             api(libs.runtime)
             api(libs.foundation)
             api(libs.material3)
